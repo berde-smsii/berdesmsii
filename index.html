@@ -15,184 +15,186 @@
             overflow-x: hidden;
         }
 
-        /* Arxa fonda su hərəkəti effekti */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #0a2a4a 0%, #020b16 100%);
-            z-index: -1;
-        }
-
+        /* HEADER & LOGO */
         header {
-            padding: 25px 5%;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            background: rgba(2, 11, 22, 0.8);
+            border-bottom: 1px solid rgba(0, 210, 255, 0.3);
             position: sticky;
             top: 0; z-index: 100;
         }
 
-        .logo { 
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-img { 
+            width: 50px; height: 50px; 
+            border-radius: 50%; 
+            border: 2px solid #00d2ff;
+            object-fit: cover;
+        }
+        .logo-text { 
             font-family: 'Orbitron', sans-serif; 
-            font-size: 1.8rem; 
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: bold;
+            font-size: 1.5rem; 
+            color: #fff;
+            letter-spacing: 2px;
         }
 
-        /* Hero: Modern & Minimalist */
+        /* HERO SECTION (ARXA FON ŞƏKLİ) */
         .hero {
-            height: 80vh;
+            height: 70vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 10%;
-            background: url('https://images.unsplash.com/photo-1468476396571-4d6f2a427ee7?q=80&w=1500') center/cover no-repeat;
+            /* ARXA FON ŞƏKLİNİ BURADAN DƏYİŞƏCƏKSƏN */
+            background: linear-gradient(rgba(2, 11, 22, 0.7), rgba(2, 11, 22, 0.7)), 
+                        url('https://images.unsplash.com/photo-1541075217473-93119871682d?q=80&w=1500'); 
+            background-size: cover;
+            background-position: center;
             background-attachment: fixed;
-            box-shadow: inset 0 0 0 2000px rgba(2, 11, 22, 0.7);
+            border-bottom: 2px solid #00d2ff;
         }
 
         .hero h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            margin-bottom: 20px;
-            letter-spacing: 5px;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+        }
+
+        /* PROFİL ŞƏKLİ BÖLMƏSİ */
+        .profile-section {
+            margin-top: -60px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #00d2ff;
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.4);
+            object-fit: cover;
+            background: #fff;
+        }
+
+        .profile-name {
+            margin-top: 10px;
+            font-size: 1.5rem;
+            color: #00d2ff;
+            font-weight: bold;
             text-transform: uppercase;
         }
 
-        .hero p {
-            font-size: 1.5rem;
-            color: #00d2ff;
-            font-weight: 300;
-            max-width: 800px;
-        }
-
-        /* Video Bölməsi: Glassmorphism (Şüşə effekti) */
-        .content-section {
-            padding: 80px 5%;
-        }
-
+        /* VİDEO BÖLMƏSİ */
+        .content-section { padding: 60px 5%; }
         .section-title {
             font-family: 'Orbitron', sans-serif;
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 50px;
+            font-size: 2rem;
+            margin-bottom: 40px;
             color: #fff;
+            letter-spacing: 3px;
         }
 
-        .video-container {
+        .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            gap: 25px;
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            border-radius: 15px;
             overflow: hidden;
-            backdrop-filter: blur(15px);
             transition: 0.4s;
         }
 
         .glass-card:hover {
-            transform: translateY(-10px);
-            border: 1px solid #00d2ff;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+            transform: translateY(-5px);
+            border-color: #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
         }
 
-        .video-box {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-        }
+        .video-box iframe { width: 100%; height: 200px; border: none; }
+        .card-body { padding: 15px; }
+        .card-body h3 { color: #00d2ff; font-size: 1.2rem; margin-bottom: 5px; }
 
-        .video-box iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border: none;
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-body h3 {
-            color: #00d2ff;
-            margin-bottom: 10px;
-            font-size: 1.4rem;
-        }
-
-        /* Sosial Linklər: Neon Effektli */
-        .social-grid {
+        /* SOSİAL MEDİA */
+        .social-flex {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-top: 50px;
+            margin-top: 40px;
         }
 
-        .social-icon {
-            padding: 15px 30px;
-            border-radius: 50px;
+        .social-link {
+            padding: 10px 25px;
+            border-radius: 30px;
             text-decoration: none;
             color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid #00d2ff;
             transition: 0.3s;
-            background: rgba(255,255,255,0.05);
             font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        .social-icon:hover {
+        .social-link:hover {
             background: #00d2ff;
             color: #020b16;
-            box-shadow: 0 0 20px #00d2ff;
+            box-shadow: 0 0 15px #00d2ff;
         }
 
         footer {
             text-align: center;
-            padding: 50px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        /* Mobil uyğunluq */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            .hero p { font-size: 1.1rem; }
+            padding: 40px;
+            background: rgba(0,0,0,0.5);
+            font-size: 0.8rem;
+            color: #888;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">BƏRDƏ SMSİİ</div>
-    <div>Rəqəmsal İnformasiya Sistemi</div>
+    <div class="logo-area">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Emblem_of_Azerbaijan.svg/1200px-Emblem_of_Azerbaijan.svg.png" alt="Logo" class="logo-img">
+        <div class="logo-text">BƏRDƏ SMSİİ</div>
+    </div>
+    <div style="color: #00d2ff; font-weight: bold;">RƏQƏMSAL SİSTEM</div>
 </header>
 
 <section class="hero">
-    <h1>SUYUN GÜCÜ</h1>
-    <p>Bərdə Su Meliorasiya Sistemlərinin İstismarı İdarəsi olaraq gələcəyi rəqəmsal idarəetmə ilə qururuq.</p>
+    <h1>SU TƏSƏRRÜFATI</h1>
+    <p style="letter-spacing: 2px;">MÜASİR İDARƏETMƏ VƏ NƏZARƏT</p>
 </section>
 
+<div class="profile-section">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Qərib Səfərli" class="profile-img">
+    <div class="profile-name">QƏRİB SƏFƏRLİ</div>
+    <p style="font-size: 0.9rem; color: #888;">Baş Admin / Rəqəmsal Menecer</p>
+</div>
+
 <section class="content-section">
-    <h2 class="section-title">MULTİMEDİA</h2>
+    <h2 class="section-title">VİDEO HESABATLAR</h2>
     
-    <div class="video-container">
+    <div class="video-grid">
         <div class="glass-card">
             <div class="video-box">
                 <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
             </div>
             <div class="card-body">
-                <h3>YOUTUBE HESABAT</h3>
-                <p>Rayonun magistral suvarma kanallarında görülən təmizlik işləri.</p>
+                <h3>YOUTUBE KANALI</h3>
+                <p>Ərazidə görülən genişmiqyaslı işlərin icmalı.</p>
             </div>
         </div>
 
@@ -201,8 +203,8 @@
                 <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
             </div>
             <div class="card-body">
-                <h3>TİKTOK / REELS</h3>
-                <p>Ərazidə texnikanın işləmə anından qısa görüntülər.</p>
+                <h3>TİKTOK VİDEOLARI</h3>
+                <p>İdarənin gündəlik dinamik iş prosesləri.</p>
             </div>
         </div>
 
@@ -211,24 +213,23 @@
                 <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
             </div>
             <div class="card-body">
-                <h3>LİNKEDİN / XƏBƏR</h3>
-                <p>İdarənin rəsmi nümayəndələrinin görüşləri və rəsmi çıxışlar.</p>
+                <h3>INSTAGRAM REELS</h3>
+                <p>Meliorasiya sahəsində yeniliklər.</p>
             </div>
         </div>
     </div>
 
-    <div class="social-grid">
-        <a href="#" class="social-icon">FACEBOOK</a>
-        <a href="#" class="social-icon">INSTAGRAM</a>
-        <a href="#" class="social-icon">TIKTOK</a>
-        <a href="#" class="social-icon">YOUTUBE</a>
-        <a href="#" class="social-icon">LINKEDIN</a>
+    <div class="social-flex">
+        <a href="#" class="social-link">FACEBOOK</a>
+        <a href="#" class="social-link">INSTAGRAM</a>
+        <a href="#" class="social-link">TIKTOK</a>
+        <a href="#" class="social-link">YOUTUBE</a>
     </div>
 </section>
 
 <footer>
     <p>© 2026 BƏRDƏ SMSİİ - BÜTÜN HÜQUQLAR QORUNUR</p>
-    <p style="margin-top:10px;">Dizayn və Kodlaşdırma: Qərib Səfərli</p>
+    <p style="margin-top:5px;">Sistem İdarəçisi: Qərib Səfərli</p>
 </footer>
 
 </body>
