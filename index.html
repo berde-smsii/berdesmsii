@@ -3,248 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bərdə SMSİİ | Rəsmi Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Bərdə SMSİİ | Rəsmi İnformasiya Portalı</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Şriftlər və Əsas Stillər */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         
-        body { 
-            background: #020b16; 
-            color: #e0e0e0; 
-            font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-        }
+        body { background-color: #f4f7f9; color: #333; line-height: 1.6; }
 
-        /* HEADER */
+        /* Üst Menyu */
         header {
-            padding: 15px 5%;
+            background: #ffffff;
+            padding: 10px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(15px);
-            background: rgba(2, 11, 22, 0.9);
-            border-bottom: 2px solid #00d2ff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: sticky;
-            top: 0; z-index: 1000;
+            top: 0;
+            z-index: 1000;
         }
 
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-img { 
-            width: 60px; height: 60px; 
-            border-radius: 50%; 
-            border: 2px solid #fff;
-            background: white;
-            padding: 2px;
-        }
-        .logo-text { 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: 1.2rem; 
-            color: #fff;
-            line-height: 1.2;
-        }
+        .logo-box { display: flex; align-items: center; gap: 15px; }
+        .logo-box img { width: 65px; height: 65px; object-fit: contain; }
+        .logo-text h1 { font-size: 1.2rem; color: #01579b; font-weight: 700; margin: 0; }
+        .logo-text p { font-size: 0.8rem; color: #555; margin: 0; }
 
-        /* HERO SECTION */
+        /* Hero (Başlıq) Hissəsi - Sənin Fon Şəklin */
         .hero {
-            height: 75vh;
+            height: 450px;
+            background: linear-gradient(rgba(1, 87, 155, 0.7), rgba(1, 87, 155, 0.7)), 
+                        url('fon.png') center/cover no-repeat;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             text-align: center;
-            background: linear-gradient(rgba(2, 11, 22, 0.6), rgba(2, 11, 22, 0.8)), 
-                        url('https://images.unsplash.com/photo-1541075217473-93119871682d?q=80&w=1500'); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            color: white;
+            padding: 0 20px;
         }
 
-        .hero h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(0, 210, 255, 0.8);
-            margin-bottom: 10px;
-        }
+        .hero-content h2 { font-size: 2.5rem; margin-bottom: 10px; text-transform: uppercase; }
+        .hero-content p { font-size: 1.2rem; opacity: 0.9; }
 
-        .contact-top {
-            background: rgba(0, 210, 255, 0.1);
-            padding: 10px 20px;
-            border-radius: 50px;
-            margin-bottom: 20px;
-            border: 1px solid #00d2ff;
-            font-weight: bold;
-            color: #00d2ff;
-        }
-
-        /* CONTENT SECTIONS */
-        .container { padding: 60px 5%; max-width: 1200px; margin: auto; }
+        /* Məlumat Kartları */
+        .container { max-width: 1100px; margin: -50px auto 50px; padding: 0 20px; }
         
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 40px;
-            color: #00d2ff;
-            text-transform: uppercase;
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid #01579b;
         }
 
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
+        .card h3 { color: #01579b; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: 0.4s;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-10px);
-            border-color: #00d2ff;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
-        }
-
-        .video-box iframe { width: 100%; height: 250px; border: none; }
-
-        /* SOSİAL MEDİA DÜYMƏLƏRİ */
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 40px;
-        }
-
-        .social-btn {
-            padding: 15px;
-            text-align: center;
+        /* Sosial Linklər */
+        .social-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .social-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
             text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .social-item:hover { background: #01579b; color: #fff; }
+
+        /* Video Bölməsi */
+        .video-section { margin-top: 40px; text-align: center; }
+        .video-btn {
+            display: inline-block;
+            background: #cc0000;
             color: #fff;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0, 210, 255, 0.3);
-            border-radius: 10px;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
             font-weight: bold;
-            transition: 0.3s;
+            margin-bottom: 20px;
         }
 
-        .social-btn:hover {
-            background: #00d2ff;
-            color: #020b16;
-            box-shadow: 0 0 20px #00d2ff;
-        }
+        /* Xəritə */
+        .map-box { margin-top: 30px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* ƏLAQƏ BÖLMƏSİ */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        /* Footer */
+        footer {
+            background: #1a237e;
+            color: #fff;
+            padding: 40px 5%;
+            text-align: center;
             margin-top: 50px;
         }
 
-        .info-card {
-            background: rgba(0, 210, 255, 0.05);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border-left: 5px solid #00d2ff;
-        }
-
-        .info-card h4 { color: #00d2ff; margin-bottom: 10px; font-size: 1.3rem; }
-        .info-card a { color: #fff; text-decoration: none; font-size: 1.1rem; }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            background: #010810;
-            border-top: 1px solid #00d2ff;
-            margin-top: 60px;
-        }
-
-        .map-container {
-            margin-top: 40px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid #00d2ff;
+        .contact-info p { margin: 5px 0; font-size: 0.9rem; }
+        
+        /* Mobil Uyğunluq */
+        @media (max-width: 768px) {
+            .hero-content h2 { font-size: 1.8rem; }
+            header { flex-direction: column; text-align: center; gap: 10px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-area">
-        <img src="https://berde-smsii.github.io/berdesmsii/logo.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Emblem_of_Azerbaijan.svg/100px-Emblem_of_Azerbaijan.svg.png'" class="logo-img">
-        <div class="logo-text">BƏRDƏ SMSİİ<br><span style="font-size: 0.8rem; color: #00d2ff;">SU MELİORASİYA SİSTEMLƏRİ</span></div>
+    <div class="logo-box">
+        <img src="logo.png" alt="Bərdə SMSİİ Logo">
+        <div class="logo-text">
+            <h1>BƏRDƏ SMSİİ</h1>
+            <p>Su Meliorasiya Sistemlərinin İstismarı İdarəsi</p>
+        </div>
     </div>
-    <a href="https://wa.me/994709720209" style="text-decoration:none;" class="contact-top">CANLI DƏSTƏK (WP)</a>
+    <a href="https://wa.me/994709720209" style="background:#25d366; color:white; padding:8px 15px; border-radius:5px; text-decoration:none; font-weight:bold;">WhatsApp Destek</a>
 </header>
 
 <section class="hero">
-    <div class="contact-top">RƏSMİ İNFORMASİYA PORTALI</div>
-    <h1>BƏRDƏ SMSİİ</h1>
-    <p style="font-size: 1.5rem; color: #00d2ff;">MÜASİR SU İDARƏETMƏ SİSTEMİ</p>
+    <div class="hero-content">
+        <h2>Su Təsərrüfatı Portalı</h2>
+        <p>Rayon ərazisində suvarma sistemlərinin rəqəmsal idarəolunması</p>
+    </div>
 </section>
 
 <div class="container">
-    <h2 class="section-title">MULTİMEDİA QALEREYA</h2>
-    
-    <div class="video-grid">
-        <div class="glass-card">
-            <div class="video-box">
-                <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=Berde_smsii" allowfullscreen></iframe>
+    <div class="grid">
+        <div class="card">
+            <h3>Sosial Şəbəkələr</h3>
+            <div class="social-links">
+                <a href="https://www.facebook.com/p/B%C9%99rd%C9%99-Su-Meliorasiya-Sisteml%C9%99rinin-%C4%B0stismar%C4%B0-61565938869736/" class="social-item" target="_blank">Facebook</a>
+                <a href="https://www.instagram.com/berde_smsii/" class="social-item" target="_blank">Instagram</a>
+                <a href="https://www.tiktok.com/@berde_smsii_" class="social-item" target="_blank">TikTok</a>
+                <a href="https://az.linkedin.com/in/b%C9%99rd%C9%99-su-meliorasiya-sisteml%C9%99rinin-istismar%C4%B1-idar%C9%99si-b5a068339" class="social-item" target="_blank">LinkedIn</a>
             </div>
-            <div class="card-body" style="padding:15px;">
-                <h3>YOUTUBE KANALI</h3>
-                <p>İdarənin rəsmi video hesabatları və yenilikləri.</p>
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="https://www.youtube.com/@Berde_smsii" class="video-btn" target="_blank">YOUTUBE KANALIMIZ</a>
             </div>
         </div>
 
-        <div class="glass-card">
-            <div class="video-box">
-                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fp%2FB%25C9%2599rd%25C9%2599-Su-Meliorasiya-Sisteml%25C9%2599rinin-%25C4%25B0stismar%25C4%25B0-61565938869736%2F&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" style="height:500px;"></iframe>
-            </div>
-            <div class="card-body" style="padding:15px;">
-                <h3>FACEBOOK XƏBƏRLƏR</h3>
+        <div class="card">
+            <h3>Əlaqə Məlumatları</h3>
+            <div style="font-size: 0.95rem;">
+                <p><strong>📞 Telefon:</strong> +994 20 208 25 60</p>
+                <p><strong>📱 WhatsApp:</strong> +994 70 972 02 09</p>
+                <p><strong>📧 Email:</strong> Bardasmsii@rsmx.gov.az</p>
+                <p style="margin-top:10px; padding:10px; background:#e3f2fd; border-radius:5px; color:#01579b;">
+                    <strong>İş vaxtı:</strong> B.e - Cüma | 09:00 - 18:00
+                </p>
             </div>
         </div>
     </div>
 
-    <h2 class="section-title" style="margin-top: 80px;">SOSİAL ŞƏBƏKƏLƏR</h2>
-    <div class="social-grid">
-        <a href="https://www.facebook.com/p/B%C9%99rd%C9%99-Su-Meliorasiya-Sisteml%C9%99rinin-%C4%B0stismar%C4%B0-61565938869736/" class="social-btn" target="_blank">FACEBOOK</a>
-        <a href="https://www.instagram.com/berde_smsii/" class="social-btn" target="_blank">INSTAGRAM</a>
-        <a href="https://www.tiktok.com/@berde_smsii_" class="social-btn" target="_blank">TIKTOK</a>
-        <a href="https://www.youtube.com/@Berde_smsii" class="social-btn" target="_blank">YOUTUBE</a>
-        <a href="https://az.linkedin.com/in/b%C9%99rd%C9%99-su-meliorasiya-sisteml%C9%99rinin-istismar%C4%B1-idar%C9%99si-b5a068339" class="social-btn" target="_blank">LINKEDIN</a>
-    </div>
-
-    <h2 class="section-title" style="margin-top: 80px;">ƏLAQƏ VƏ ÜNVAN</h2>
-    <div class="contact-grid">
-        <div class="info-card">
-            <h4>TELEFON</h4>
-            <a href="tel:+994202082560">+994 20 208 25 60</a>
+    <div class="video-section">
+        <h2 style="color:#01579b; margin-bottom:20px;">Xəritədə Ünvanımız</h2>
+        <div class="map-box">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1m3!1d12224.630017122115!2d47.1189456!3d40.3733611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x403916962f928a7d%3A0x6b2e6988226079c6!2sBarda%2C%20Azerbaijan!5e0!3m2!1sen!2s!4v1700000000000" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
-        <div class="info-card">
-            <h4>WHATSAPP</h4>
-            <a href="https://wa.me/994709720209">+994 70 972 02 09</a>
-        </div>
-        <div class="info-card">
-            <h4>E-POÇT</h4>
-            <a href="mailto:Bardasmsii@rsmx.gov.az">Bardasmsii@rsmx.gov.az</a>
-        </div>
-    </div>
-
-    <div class="map-container">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3053.475683416413!2d47.1264!3d40.3744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIyJzI3LjgiTiA0N8KwMDcnMzUuMCJF!5e0!3m2!1saz!2saz!4v1710000000000!5m2!1saz!2saz" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
     </div>
 </div>
 
 <footer>
-    <p style="font-family: 'Orbitron'; color: #00d2ff; margin-bottom: 10px;">BƏRDƏ SMSİİ</p>
-    <p>© 2026 Bütün Hüquqlar Qorunur.</p>
-    <p style="font-size: 0.8rem; margin-top: 15px; color: #555;">Dizayn və Proqramlaşdırma: Qərib Səfərli</p>
+    <div class="contact-info">
+        <h3>BƏRDƏ SMSİİ</h3>
+        <p>Bərdə Su Meliorasiya Sistemlərinin İstismarı İdarəsi</p>
+        <p>© 2026 Bütün Hüquqlar Qorunur</p>
+        <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.6;">Dizayn və Kodlaşdırma: Qərib Səfərli</p>
+    </div>
 </footer>
 
 </body>
