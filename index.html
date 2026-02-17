@@ -2,68 +2,209 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <title>Bərdə SMSİİ - Rəsmi Sayt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bərdə SMSİİ - Rəsmi İnformasiya Portalı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --main-blue: #0077b6; --water-light: #caf0f8; --dark-blue: #03045e; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0faff; color: #333; }
-        header { background: var(--dark-blue); color: white; padding: 40px 20px; text-align: center; border-bottom: 8px solid var(--main-blue); }
-        .hero { background: linear-gradient(rgba(3,4,94,0.7), rgba(3,4,94,0.7)), url('https://images.unsplash.com/photo-1541075217473-93119871682d?q=80&w=1200'); 
-                height: 400px; background-size: cover; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
-        .container { max-width: 1200px; margin: -50px auto 50px; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
-        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; }
-        .card-header { background: var(--main-blue); color: white; padding: 15px; font-weight: bold; text-align: center; }
-        .video-box { position: relative; padding-bottom: 56.25%; height: 0; }
-        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .info-text { padding: 20px; font-size: 15px; line-height: 1.6; }
-        .social-links { background: #eee; padding: 10px; text-align: center; }
-        .social-links a { margin: 0 10px; text-decoration: none; color: var(--main-blue); font-weight: bold; }
+        :root {
+            --primary-blue: #0077b6;
+            --secondary-blue: #023e8a;
+            --water-accent: #ade8f4;
+            --nature-green: #2d6a4f;
+            --light-bg: #f8fbff;
+            --dark-text: #1d3557;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body { background-color: var(--light-bg); color: var(--dark-text); line-height: 1.6; }
+
+        /* Header & Navigation */
+        header {
+            background: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-weight: 700; font-size: 24px; color: var(--secondary-blue); text-transform: uppercase; }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(45deg, rgba(2, 62, 138, 0.8), rgba(0, 119, 182, 0.6)), 
+                        url('https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 { font-size: 3rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero-content p { font-size: 1.2rem; max-width: 700px; margin: auto; }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 40px 5%;
+            background: var(--secondary-blue);
+            color: white;
+            text-align: center;
+        }
+        .stat-item h2 { font-size: 2.5rem; color: var(--water-accent); }
+
+        /* Main Content Container */
+        .container { padding: 60px 5%; max-width: 1300px; margin: auto; }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            width: 80px;
+            height: 4px;
+            background: var(--primary-blue);
+            display: block;
+            margin: 10px auto;
+        }
+
+        /* Video Showcase Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        .video-card:hover { transform: translateY(-10px); }
+
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        .video-info { padding: 20px; }
+        .video-info h3 { margin-bottom: 10px; color: var(--secondary-blue); }
+        .badge { background: var(--water-accent); color: var(--secondary-blue); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+        /* Social Links Floating Bar */
+        .social-bar {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            border: 1px solid #e1eef6;
+        }
+        .social-btn {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .social-btn:hover { background: var(--water-accent); color: var(--secondary-blue); }
+
+        footer {
+            background: #111;
+            color: white;
+            padding: 50px 5% 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2rem; }
+            .video-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Bərdə Su Meliorasiya Sistemlərinin İstismarı İdarəsi</h1>
-    <p style="font-size: 1.2rem;">Su ehtiyatlarının idarə olunmasında müasir həllər</p>
+    <div class="logo">Bərdə SMSİİ</div>
+    <div class="badge">Rəsmi İnformasiya Portalı</div>
 </header>
 
-<div class="hero">
-    <div>
-        <h2 style="font-size: 2.5rem;">Su Həyatdır, Onu Birlikdə Qoruyaq!</h2>
-        <p>Bərdə SMSİİ - Rayonumuzun suvarma və meliorasiya xidmətində</p>
+<section class="hero">
+    <div class="hero-content">
+        <h1>Su Var Olmaqdır</h1>
+        <p>Bərdə rayonunun meliorasiya və su təsərrüfatı sistemlərinin istismarı, torpaqların su təminatının yaxşılaşdırılması üçün var gücümüzlə çalışırıq.</p>
     </div>
-</div>
+</section>
+
+<section class="stats">
+    <div class="stat-item"><h2>24/7</h2><p>Nəzarət və İstismar</p></div>
+    <div class="stat-item"><h2>100+</h2><p>Texnika və Avadanlıq</p></div>
+    <div class="stat-item"><h2>800+</h2><p>Hektar Suvarılan Sahə</p></div>
+    <div class="stat-item"><h2>15+</h2><p>Kənd və Yaşayış Məntəqəsi</p></div>
+</section>
 
 <div class="container">
-    <div class="card">
-        <div class="card-header">🎥 YouTube & Video İcmal</div>
-        <div class="video-box">
-            <iframe src="https://www.youtube.com/embed/S_vT-D8T7uI" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="info-text">Rayonumuzun su kanallarında aparılan təmizlik və bərpa işlərini buradan izləyə bilərsiniz.</div>
+    <div class="section-title">
+        <h2>Media və Video Hesabatlar</h2>
+        <p>Gördüyümüz işləri sosial media hesablarımızdan canlı izləyin</p>
     </div>
 
-    <div class="card">
-        <div class="card-header">📱 TikTok & Instagram Reels</div>
-        <div class="info-text" style="text-align: center; height: 250px; display: flex; align-items: center;">
-            <p>Bura TikTok və ya Instagram linkinizi qoyaraq videoları birbaşa saytın içində göstərə bilərsiniz.</p>
+    <div class="video-grid">
+        <div class="video-card">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/S_vT-D8T7uI" allowfullscreen></iframe>
+            </div>
+            <div class="video-info">
+                <span class="badge">YouTube</span>
+                <h3>Magistral Kanalların Təmizlənməsi</h3>
+                <p>Rayon ərazisindəki əsas su kanallarında lil təmizləmə prosesi.</p>
+            </div>
         </div>
-        <div class="social-links">
-            <a href="#">TikTok</a> | <a href="#">Instagram</a> | <a href="#">YouTube</a>
+
+        <div class="video-card">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/Vp_O00n6Lg8" allowfullscreen></iframe>
+            </div>
+            <div class="video-info">
+                <span class="badge">Qısa Videolar</span>
+                <h3>Gündəlik İş Rejimimiz</h3>
+                <p>Su paylayıcı qurğuların cari təmiri və nizamlanması.</p>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">📢 Son Yeniliklər</div>
-        <div class="info-text">
-            <h3>Bərdə SMSİİ Xəbərdarlıq edir!</h3>
-            <p>Suvarma mövsümünə hazırlıq məqsədilə kənd təsərrüfatı subyektləri ilə maarifləndirmə görüşləri keçirilir.</p>
-            <p><strong>Bizi LinkedIn və Facebook-da izləyin!</strong></p>
-        </div>
+    <div class="social-bar">
+        <a href="#" class="social-btn">🔵 Facebook</a>
+        <a href="#" class="social-btn">📸 Instagram</a>
+        <a href="#" class="social-btn">🎬 YouTube</a>
+        <a href="#" class="social-btn">🎵 TikTok</a>
+        <a href="#" class="social-btn">💼 LinkedIn</a>
     </div>
 </div>
 
-<footer style="text-align: center; padding: 30px; background: var(--dark-blue); color: white;">
-    <p>&copy; 2026 Bərdə SMSİİ - Qərib Səfərli tərəfindən hazırlanmışdır.</p>
+<footer>
+    <p>&copy; 2026 Bərdə SMSİİ. Bütün hüquqlar qorunur.</p>
+    <p style="color: #666; font-size: 13px; margin-top: 10px;">Hazırladı: Qərib Səfərli</p>
 </footer>
 
 </body>
