@@ -6,15 +6,11 @@
     <title>Bərdə SMSİİ | Rəsmi Portal</title>
 
     <style>
-        /* ============================================================
-           1. ÜMUMİ DİZAYN AYARLARI (Rənglər və Şriftlər)
-           ============================================================ */
+        /* 1. ÜMUMİ DİZAYN */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background: #e6f4ff; color: #333; overflow-x: hidden; }
 
-        /* ============================================================
-           2. YUXARI MENYU (Logo və WhatsApp Düyməsi)
-           ============================================================ */
+        /* 2. HEADER - Sənin WhatsApp düymən və Menyu burada */
         header {
             background: #f5f7fa;
             padding: 10px 5%;
@@ -50,9 +46,7 @@
         }
         .menu-toggle { font-size: 30px; cursor: pointer; color: #0056b3; }
 
-        /* ============================================================
-           3. YAN MENU (SIDEBAR)
-           ============================================================ */
+        /* 3. SIDEBAR (Yan Menyu) */
         .sidebar {
             height: 100%; width: 0; position: fixed; z-index: 2000;
             top: 0; right: 0; background-color: #003366;
@@ -62,13 +56,10 @@
             padding: 15px 30px; text-decoration: none; font-size: 1.1rem;
             color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .sidebar a:hover { color: white; background: #0056b3; }
         .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
         .sidebar .dev-info { position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem; }
 
-        /* ============================================================
-           4. GİRİŞ ŞƏKİLİ VƏ CANLI HAVA (Hero Bölməsi)
-           ============================================================ */
+        /* 4. HERO - Canlı Hava burada */
         .hero {
             height: 320px;
             background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
@@ -92,108 +83,31 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-weight: 500;
         }
 
-        /* ============================================================
-           5. ƏSAS KONTEYNER (Məzmunun mərkəzdə durması üçün)
-           ============================================================ */
+        /* 5. KONTEYNER VƏ DİGƏR BÖLMƏLƏR */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
 
-        /* ============================================================
-           6. VİDEO PƏNCƏRƏSİ (YouTube Videosu)
-           ============================================================ */
-        .main-video {
-            background: #fff;
-            padding: 6px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.05);
-            margin-bottom: 25px;
-        }
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border: none;
-        }
+        .main-video { background: #fff; padding: 6px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.05); margin-bottom: 25px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; overflow: hidden; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        /* ============================================================
-           7. SOSİAL ŞƏBƏKƏ DÜYMƏLƏRİ
-           ============================================================ */
-        .social-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            background: #fff;
-            text-decoration: none;
-            color: #0056b3;
-            font-weight: bold;
-            border-radius: 8px;
-            border: 1px solid #0056b3;
-            font-size: 0.9rem;
-            transition: .3s;
-        }
+        .social-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 30px; }
+        .social-btn { display: flex; align-items: center; justify-content: center; padding: 10px; background: #fff; text-decoration: none; color: #0056b3; font-weight: bold; border-radius: 8px; border: 1px solid #0056b3; font-size: 0.9rem; transition: .3s; }
         .social-btn:hover { background: #0056b3; color: #fff; }
 
-        /* ============================================================
-           8. MƏLUMAT KARTLARI (Əlaqə, Email, Saat)
-           ============================================================ */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #0056b3;
-            box-shadow: 0 2px 8px rgba(0,0,0,.05);
-        }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .card { background: #fff; padding: 15px; border-radius: 10px; border-left: 4px solid #0056b3; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
         .card h3 { font-size: 1rem; color: #0056b3; margin-bottom: 8px; }
         .card p, .card a { font-size: 0.9rem; color: #333; text-decoration: none; }
 
-        /* ============================================================
-           9. XƏRİTƏ BÖLMƏSİ (Google Maps)
-           ============================================================ */
-        .map-section {
-            background: #fff;
-            padding: 4px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.08);
-            overflow: hidden;
-        }
-        /* Sənin orijinal xəritə konumu bura əlavə edildi */
+        /* 6. XƏRİTƏ - Sənin göndərdiyin köhnə konum koda tətbiq edildi */
+        .map-section { background: #fff; padding: 4px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.08); overflow: hidden; }
         .map-section iframe { width: 100%; height: 300px; border: none; }
 
-        /* ============================================================
-           10. FOOTER (Saytın ən aşağı hissəsi)
-           ============================================================ */
-        footer {
-            background: #003366;
-            color: #fff;
-            padding: 30px 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
+        footer { background: #003366; color: #fff; padding: 30px 20px; text-align: center; margin-top: 40px; }
 
-        /* ============================================================
-           11. MOBİL OPTİMİZASİYA
-           ============================================================ */
+        /* MOBİL AYARLAR */
         @media (max-width: 768px) {
             header { padding: 8px 3%; }
             .logo-img { width: 45px; height: 45px; }
@@ -203,9 +117,7 @@
             .hero h2 { font-size: 1.1rem; }
             .weather-box { font-size: 0.85rem; padding: 6px 15px; }
             .social-section { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .info-grid { grid-template-columns: 1fr; gap: 10px; }
             .map-section iframe { height: 200px; }
-            footer { padding: 20px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -236,9 +148,9 @@
 
     <section class="hero">
         <h2>Bərdə Su Meliorasiya Sistemlərinin<br>İstismarı İdarəsi</h2>
-        <div class="weather-box" id="weather">
+        <div class="weather-box">
             <span>Bərdə Rayonu:</span>
-            <span id="temp">Yüklənir...</span>
+            <strong id="temp">Yüklənir...</strong>
         </div>
     </section>
 
@@ -278,7 +190,7 @@
 
         <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">📍 İdarənin Ünvanı</h3>
         <div class="map-section">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1m1!1zNDDCsDMzJzM3LjAiTiA0N8KwMDUnNDguMiJF!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDMzJzM3LjAiTiA0N8KwMDUnNDguMiJF!5e0!3m2!1saz!2saz!4v1700000000000" allowfullscreen loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d191.03756303213032!2d47.13441516890717!3d40.361561050367975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIxJzQxLjYiTiA0N8KwMDgnMDMuOSJF!5e0!3m2!1saz!2saz!4v1700000000000" allowfullscreen loading="lazy"></iframe>
         </div>
     </div>
 
@@ -289,9 +201,11 @@
     </footer>
 
     <script>
+        // Menyu idarəsi
         function openNav() { document.getElementById("sideNav").style.width = "280px"; }
         function closeNav() { document.getElementById("sideNav").style.width = "0"; }
 
+        // Canlı hava funksiyası
         async function getBardaWeather() {
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
