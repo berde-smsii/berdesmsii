@@ -119,28 +119,56 @@
 
         /* Mobil üçün */
         @media (max-width: 768px) {
-            .hero h2 { font-size: 1.3rem; }
-            header { 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: center;
-                padding: 8px 3%;
-                }
-            .logo-img {
-                width: 42px;
-                height: 42px;
-                }
-            .logo-text h1 {
-                font-size: 0.9rem;
-                }
-            .logo-text p {
-                font-size: 0.7rem;
-                }
-            header a {
-                padding: 5px 10px;
-                font-size: 0.75rem;
-                    }
-                }
+
+    .hero {
+        height: 250px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero h2 { font-size: 1.3rem; }
+
+    header { 
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center;
+        padding: 8px 3%;
+    }
+
+    .logo-img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .logo-text h1 {
+        font-size: 0.9rem;
+    }
+
+    .logo-text p {
+        font-size: 0.7rem;
+    }
+
+    header a {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    .map-section iframe {
+        height: 280px;
+        border-radius: 10px;
+    }
+
+    .social-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .social-btn {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+}
+
         
     </style>
 </head>
