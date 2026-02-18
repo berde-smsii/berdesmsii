@@ -177,6 +177,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,.08);
             overflow: hidden;
         }
+        /* Sənin orijinal xəritə konumu bura əlavə edildi */
         .map-section iframe { width: 100%; height: 300px; border: none; }
 
         /* ============================================================
@@ -277,7 +278,7 @@
 
         <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">📍 İdarənin Ünvanı</h3>
         <div class="map-section">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.875323861501!2d47.13222657577537!3d40.36156107144866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x403919c0b1e42767%3A0xc39110d931593796!2sBarda%2C%20Azerbaijan!5e0!3m2!1sen!2saz!4v1708270000000!5m2!1sen!2saz" allowfullscreen loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1m1!1zNDDCsDMzJzM3LjAiTiA0N8KwMDUnNDguMiJF!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDMzJzM3LjAiTiA0N8KwMDUnNDguMiJF!5e0!3m2!1saz!2saz!4v1700000000000" allowfullscreen loading="lazy"></iframe>
         </div>
     </div>
 
@@ -288,23 +289,20 @@
     </footer>
 
     <script>
-        // Menyu Funksiyaları
         function openNav() { document.getElementById("sideNav").style.width = "280px"; }
         function closeNav() { document.getElementById("sideNav").style.width = "0"; }
 
-        // CANLI HAVA FUNKSİYASI (Bərdə üçün)
         async function getBardaWeather() {
             try {
-                // Bu açıq API Bərdənin koordinatlarına görə real havanı çəkir
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
                 const data = await res.json();
                 const temp = Math.round(data.current_weather.temperature);
                 document.getElementById('temp').innerText = `☀️ ${temp}°C`;
             } catch (error) {
-                document.getElementById('temp').innerText = "☀️ +18°C"; // Xəta olsa ehtiyat variant
+                document.getElementById('temp').innerText = "☀️ +18°C";
             }
         }
-        getBardaWeather(); // Səhifə açılanda işə düşür
+        getBardaWeather();
     </script>
 
 </body>
