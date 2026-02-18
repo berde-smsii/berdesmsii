@@ -7,13 +7,13 @@
 
     <style>
         /* ============================================================
-           1. ÜMUMİ DİZAYN AYARLARI (Rənglər və Şriftlər)
+           1. ÜMUMİ DİZAYN VƏ RƏNGLƏR
            ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background: #e6f4ff; color: #333; }
+        body { background: #e6f4ff; color: #333; overflow-x: hidden; }
 
         /* ============================================================
-           2. YUXARI MENYU (Logo və WhatsApp Düyməsi)
+           2. HEADER (Logo, Hava və Menyu düyməsi)
            ============================================================ */
         header {
             background: #f5f7fa;
@@ -23,162 +23,118 @@
             align-items: center;
             box-shadow: 0 2px 10px rgba(0,0,0,.08);
             position: sticky;
-            top: 0;
-            z-index: 1000;
+            top: 0; z-index: 1000;
         }
         .logo-box { display: flex; align-items: center; gap: 10px; }
-        .logo-img {
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            border: 2px solid #0056b3;
-            object-fit: cover;
-            background: white;
-        }
-        .logo-text h1 { font-size: 1.1rem; color: #0056b3; margin: 0; }
+        .logo-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid #0056b3; object-fit: cover; background: white; }
+        .logo-text h1 { font-size: 1rem; color: #0056b3; margin: 0; }
 
-        .wp-btn {
-            background: #25D366;
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: 0.3s;
+        /* Hava proqnozu vidceti (Header-də kiçik görünüş) */
+        .weather-mini { font-size: 0.8rem; background: #fff; padding: 5px 10px; border-radius: 20px; border: 1px solid #ddd; display: flex; align-items: center; gap: 5px; }
+
+        .menu-toggle { font-size: 28px; cursor: pointer; color: #0056b3; }
+
+        /* ============================================================
+           3. YAN MENU (SIDEBAR)
+           ============================================================ */
+        .sidebar {
+            height: 100%; width: 0; position: fixed; z-index: 2000;
+            top: 0; right: 0; background-color: #003366;
+            overflow-x: hidden; transition: 0.5s; padding-top: 60px;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+        }
+        .sidebar a {
+            padding: 15px 30px; text-decoration: none; font-size: 1.1rem;
+            color: #d1d1d1; display: block; transition: 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar a:hover { color: white; background: #0056b3; padding-left: 40px; }
+        .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
+
+        /* Developer imzası menyunun altında */
+        .sidebar .dev-info {
+            position: absolute; bottom: 20px; left: 30px;
+            color: #25D366; font-size: 0.8rem; line-height: 1.4;
         }
 
         /* ============================================================
-           3. GİRİŞ ŞƏKLİ (Hero Bölməsi - fon.png burada görünür)
+           4. GİRİŞ ŞƏKİLİ (Hero)
            ============================================================ */
         .hero {
-            height: 280px;
+            height: 260px;
             background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; text-align: center; padding: 20px;
         }
-        .hero h2 { font-size: 1.8rem; line-height: 1.3; }
+        .hero h2 { font-size: 1.6rem; }
 
         /* ============================================================
-           4. ƏSAS KONTEYNER (Məzmunun mərkəzdə durması üçün)
+           5. ƏSAS KONTEYNER VƏ VİDEO
            ============================================================ */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-
-        /* ============================================================
-           5. VİDEO PƏNCƏRƏSİ (YouTube Videosu)
-           ============================================================ */
-        .main-video {
-            background: #fff;
-            padding: 6px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.05);
-            margin-bottom: 25px;
-        }
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border: none;
-        }
+        .main-video { background: #fff; padding: 6px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.05); margin-bottom: 25px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; overflow: hidden; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
         /* ============================================================
            6. SOSİAL ŞƏBƏKƏ DÜYMƏLƏRİ
            ============================================================ */
-        .social-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 30px;
-        }
+        .social-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 30px; }
         .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            background: #fff;
-            text-decoration: none;
-            color: #0056b3;
-            font-weight: bold;
-            border-radius: 8px;
-            border: 1px solid #0056b3;
-            font-size: 0.9rem;
-            transition: .3s;
+            display: flex; align-items: center; justify-content: center; padding: 10px;
+            background: #fff; text-decoration: none; color: #0056b3; font-weight: bold;
+            border-radius: 8px; border: 1px solid #0056b3; font-size: 0.9rem; transition: .3s;
         }
         .social-btn:hover { background: #0056b3; color: #fff; }
 
         /* ============================================================
-           7. MƏLUMAT KARTLARI (Əlaqə, Email, Saat)
+           7. MƏLUMAT KARTLARI
            ============================================================ */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #0056b3;
-            box-shadow: 0 2px 8px rgba(0,0,0,.05);
-        }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .card { background: #fff; padding: 15px; border-radius: 10px; border-left: 4px solid #0056b3; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
         .card h3 { font-size: 1rem; color: #0056b3; margin-bottom: 8px; }
         .card p, .card a { font-size: 0.9rem; color: #333; text-decoration: none; }
 
         /* ============================================================
-           8. XƏRİTƏ BÖLMƏSİ (Google Maps)
+           8. XƏRİTƏ
            ============================================================ */
-        .map-section {
-            background: #fff;
-            padding: 4px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.08);
-            overflow: hidden;
-        }
+        .map-section { background: #fff; padding: 4px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.08); overflow: hidden; }
         .map-section iframe { width: 100%; height: 300px; border: none; }
 
         /* ============================================================
-           9. FOOTER (Saytın ən aşağı hissəsi)
+           9. FOOTER
            ============================================================ */
-        footer {
-            background: #003366;
-            color: #fff;
-            padding: 30px 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
+        footer { background: #003366; color: #fff; padding: 30px 20px; text-align: center; margin-top: 40px; }
 
         /* ============================================================
-           10. MOBİL OPTİMİZASİYA (Telefonlar üçün kiçiltmə)
+           10. MOBİL OPTİMİZASİYA
            ============================================================ */
         @media (max-width: 768px) {
             header { padding: 8px 3%; }
+            .weather-mini { display: none; } /* Mobildə yer darlığına görə havanı gizlədirik */
             .logo-img { width: 45px; height: 45px; }
-            .logo-text h1 { font-size: 0.9rem; }
-            .wp-btn { padding: 6px 10px; font-size: 0.75rem; }
-            .hero { height: 180px; }
-            .hero h2 { font-size: 1.1rem; }
-            .social-section { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .social-btn { font-size: 0.8rem; padding: 8px; }
-            .info-grid { grid-template-columns: 1fr; gap: 10px; }
-            .card { padding: 12px; }
-            .card h3 { font-size: 0.9rem; margin-bottom: 5px; }
-            .card p, .card a { font-size: 0.8rem; }
-            .map-section iframe { height: 200px; }
-            footer { padding: 20px; font-size: 0.75rem; }
+            .hero h2 { font-size: 1rem; }
+            .social-section { grid-template-columns: repeat(2, 1fr); }
+            .info-grid { grid-template-columns: 1fr; }
+            .map-section iframe { height: 220px; }
         }
     </style>
 </head>
 <body>
+
+    <div id="sideNav" class="sidebar">
+        <span class="close-btn" onclick="closeNav()">×</span>
+        <a href="haqqimizda.html">Haqqımızda</a>
+        <a href="struktur.html">Struktur</a>
+        <a href="rehberlik.html">Rəhbərlik</a>
+        <a href="elektron-muraciet.html">Elektron Müraciət</a>
+        <a href="istifade-sertleri.html">İstifadə Şərtləri</a>
+        
+        <div class="dev-info">
+            Full-stack Developer:<br>
+            <span style="color:white">Qərib Səfərli</span>
+        </div>
+    </div>
 
     <header>
         <div class="logo-box">
@@ -187,7 +143,12 @@
                 <h1>BƏRDƏ SMSİİ</h1>
             </div>
         </div>
-        <a href="https://wa.me/994709720209" class="wp-btn">WHATSAPP</a>
+
+        <div class="weather-mini" id="weather">
+            Bərdə: ☀️ +18°C
+        </div>
+
+        <div class="menu-toggle" onclick="openNav()">☰</div>
     </header>
 
     <section class="hero">
@@ -204,11 +165,11 @@
         </div>
 
         <div class="social-section">
-            <a href="https://www.facebook.com/p/B%C9%99rd%C9%99-Su-Meliorasiya-Sisteml%C9%99rinin-%C4%B0stismar%C4%B0-61565938869736/" class="social-btn" target="_blank">Facebook</a>
-            <a href="https://www.instagram.com/berde_smsii/" class="social-btn" target="_blank">Instagram</a>
-            <a href="https://az.linkedin.com/in/b%C9%99rd%C9%99-su-meliorasiya-sisteml%C9%99rinin-istismar%C4%B1-idar%C9%99si-b5a068339" class="social-btn" target="_blank">LinkedIn</a>
-            <a href="https://www.tiktok.com/@berde_smsii_" class="social-btn" target="_blank">TikTok</a>
-            <a href="https://www.youtube.com/@Berde_smsii" class="social-btn" target="_blank">YouTube</a>
+            <a href="https://facebook.com/..." class="social-btn" target="_blank">Facebook</a>
+            <a href="https://instagram.com/..." class="social-btn" target="_blank">Instagram</a>
+            <a href="https://linkedin.com/..." class="social-btn" target="_blank">LinkedIn</a>
+            <a href="https://tiktok.com/..." class="social-btn" target="_blank">TikTok</a>
+            <a href="https://youtube.com/..." class="social-btn" target="_blank">YouTube</a>
         </div>
 
         <div class="info-grid">
@@ -217,22 +178,20 @@
                 <p>Telefon: <a href="tel:+994202082560">+994 20 208 25 60</a></p>
                 <p>WhatsApp: <a href="https://wa.me/994709720209">+994 70 972 02 09</a></p>
             </div>
-
             <div class="card">
                 <h3>📧 Elektron Poçt Ünvanı</h3>
                 <p><a href="mailto:Bardasmsii@rsmx.gov.az">Bardasmsii@rsmx.gov.az</a></p>
             </div>
-
             <div class="card">
                 <h3>⏰ İş Rejimi</h3>
-                <p>Bazar ertəsi – Cümə
+                <p>Bazar ertəsi – Cümə</p>
                 <p>Saat: 09:00 – 18:00</p>
             </div>
         </div>
 
         <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">📍 İdarənin Ünvanı</h3>
         <div class="map-section">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d191.03756303213032!2d47.13441516890717!3d40.361561050367975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIxJzQxLjYiTiA0N8KwMDgnMDMuOSJF!5e0!3m2!1saz!2saz!4v1700000000000" allowfullscreen loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.52!2d47.134415!3d40.361561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIxJzQxLjYiTiA0N8KwMDgnMDMuOSJF!5e0!3m2!1saz!2saz!4v1700000000000" allowfullscreen loading="lazy"></iframe>
         </div>
     </div>
 
@@ -241,6 +200,15 @@
         <p>© 2026 Bütün Hüquqlar Qorunur.</p>
         <p style="font-size:0.7rem; margin-top:10px; opacity:.5;">Sistem İdarəçisi: Qərib Səfərli</p>
     </footer>
+
+    <script>
+        function openNav() {
+            document.getElementById("sideNav").style.width = "280px";
+        }
+        function closeNav() {
+            document.getElementById("sideNav").style.width = "0";
+        }
+    </script>
 
 </body>
 </html>
