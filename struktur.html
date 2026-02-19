@@ -6,11 +6,11 @@
     <title>Struktur | Bərdə SMSİİ</title>
 
     <style>
-        /* 1. ÜMUMİ VƏ ƏSAS ÖLÇÜLƏR - Ana səhifə ilə 1:1 */
+        /* 1. ÜMUMİ VƏ ƏSAS ÖLÇÜLƏR */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background: #e6f4ff; color: #333; overflow-x: hidden; }
 
-        /* 2. HEADER - Sənin əsas koduna uyğun */
+        /* 2. HEADER - Ana səhifə ilə tam eyni */
         header {
             background: #f5f7fa; padding: 10px 5%; display: flex;
             justify-content: space-between; align-items: center;
@@ -28,7 +28,7 @@
         }
         .menu-toggle { font-size: 30px; cursor: pointer; color: #0056b3; }
 
-        /* 3. SIDEBAR */
+        /* 3. SIDEBAR - Developer hissəsi ana səhifə stilində */
         .sidebar {
             height: 100%; width: 0; position: fixed; z-index: 2000;
             top: 0; right: 0; background-color: #003366;
@@ -36,6 +36,12 @@
         }
         .sidebar a { padding: 15px 30px; text-decoration: none; font-size: 1.1rem; color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
+        
+        .sidebar .dev-info { 
+            position: absolute; bottom: 20px; left: 30px; 
+            color: #25D366; font-size: 0.8rem; line-height: 1.5;
+        }
+        .sidebar .dev-info span { color: white; font-weight: bold; font-size: 0.85rem; }
 
         /* 4. HERO VƏ HAVA DURUMU */
         .hero {
@@ -52,7 +58,7 @@
             display: flex; align-items: center; gap: 12px;
         }
 
-        /* 5. STRUKTUR KONTEYNER */
+        /* 5. STRUKTUR KONTEYNER VƏ CANLI ANİMASİYALAR */
         .container { max-width: 1200px; margin: 30px auto; padding: 0 15px; }
         
         .structure-main-box {
@@ -61,12 +67,11 @@
             margin: 0 auto 40px; box-shadow: 0 6px 15px rgba(0,68,204,0.3);
             font-size: 1.2rem; border: 2px solid #fff; transition: 0.3s; cursor: pointer;
         }
-        .structure-main-box:hover { background: #003399; transform: translateY(-3px); }
+        .structure-main-box:hover { background: #003399; transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
 
         .structure-grid { display: flex; justify-content: space-between; gap: 15px; }
         .structure-column { flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
-        /* BAŞLIQLAR ÜÇÜN STİL (Baş mühəndis, Rəis müavinləri və 4-cü sütun şöbələri) */
         .branch-head {
             background: #0077be; color: white; padding: 14px 10px;
             border-radius: 8px; font-weight: bold; text-align: center;
@@ -74,29 +79,23 @@
             transition: 0.3s; cursor: pointer; border: 1px solid transparent;
         }
         .branch-head:hover { 
-            background: #005f99; 
-            transform: scale(1.02); 
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            border-color: #fff;
+            background: #005f99; transform: scale(1.03); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15); border-color: #fff;
         }
 
-        /* ALT BÖLMƏLƏR ÜÇÜN STİL */
         .sub-unit {
             background: #fff; padding: 12px 10px; border-radius: 8px;
             font-size: 0.85rem; border: 1px solid #bde0fe;
             min-height: 55px; display: flex; align-items: center; justify-content: center;
             text-align: center; color: #003366; transition: 0.3s;
-            word-wrap: break-word; overflow-wrap: break-word;
-            cursor: pointer;
+            word-wrap: break-word; overflow-wrap: break-word; cursor: pointer;
         }
         .sub-unit:hover { 
-            background: #e0f2fe; 
-            border-color: #0077be; 
-            transform: scale(1.02);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            background: #e0f2fe; border-color: #0077be; 
+            transform: scale(1.03); box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
-        /* 6. MOBİL AYARLAR */
+        /* 6. MOBİL OPTİMİZASİYA */
         @media (max-width: 1024px) {
             .structure-grid { display: grid; grid-template-columns: 1fr 1fr; }
         }
@@ -120,12 +119,15 @@
 
     <div id="sideNav" class="sidebar">
         <span class="close-btn" onclick="closeNav()">×</span>
+        <a href="index.html">Ana Səhifə</a>
         <a href="haqqimizda.html">Haqqımızda</a>
-        <a href="struktur.html">Struktur</a>
+        <a href="struktur.html" style="color:white; background:#0056b3;">Struktur</a>
         <a href="rehberlik.html">Rəhbərlik</a>
         <a href="elektron-muraciet.html">Elektron Müraciət</a>
-        <a href="istifade-sertleri.html">İstifadə Şərtləri</a>
-        <div class="dev-info">Full-stack Developer:<br><span style="color:white">Qərib Səfərli</span></div>
+        <div class="dev-info">
+            Full-stack Developer:<br>
+            <span>Qərib Səfərli</span>
+        </div>
     </div>
 
     <header>
