@@ -6,11 +6,11 @@
     <title>Haqqımızda | Bərdə SMSİİ</title>
 
     <style>
-        /* 1. ÜMUMİ DİZAYN (Əsas kodunla tam eyni) */
+        /* 1. ÜMUMİ DİZAYN AYARLARI */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background: #e6f4ff; color: #333; overflow-x: hidden; }
+        body { background: #e6f4ff; color: #333; overflow-x: hidden; line-height: 1.6; }
 
-        /* 2. HEADER - Mobil standartlar qorundu */
+        /* 2. HEADER - Sənin ana səhifənlə 1:1 eyni */
         header {
             background: #f5f7fa;
             padding: 10px 5%;
@@ -30,7 +30,8 @@
             object-fit: cover;
             background: white;
         }
-        .logo-text h1 { font-size: 1.1rem; color: #0056b3; margin: 0; }
+        .logo-text h1 { font-size: 1.1rem; color: #0056b3; margin: 0; font-weight: bold; }
+
         .header-right { display: flex; align-items: center; gap: 15px; }
 
         .wp-btn {
@@ -41,6 +42,7 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 0.9rem;
+            transition: 0.3s;
         }
         .menu-toggle { font-size: 30px; cursor: pointer; color: #0056b3; }
 
@@ -54,14 +56,13 @@
             padding: 15px 30px; text-decoration: none; font-size: 1.1rem;
             color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .sidebar a:hover { color: white; background: #0056b3; }
         .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
         .sidebar .dev-info { position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem; }
 
-        /* 4. HERO - Haqqımızda başlığı */
+        /* 4. HERO BÖLMƏSİ */
         .hero {
             height: 280px;
-            background: linear-gradient(rgba(0,86,179,.7),rgba(0,86,179,.7)), url('fon.png') center/cover no-repeat;
+            background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -69,33 +70,56 @@
             text-align: center;
             padding: 20px;
         }
-        .hero h2 { font-size: 1.8rem; text-transform: uppercase; }
+        .hero h2 { font-size: 1.8rem; line-height: 1.3; }
 
-        /* 5. MƏZMUN KARTI */
-        .container { max-width: 900px; margin: -30px auto 40px; padding: 0 15px; position: relative; z-index: 10; }
+        /* 5. ƏSAS MƏZMUN (Konteyner və Kartlar) */
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+
         .info-card {
             background: #fff;
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            line-height: 1.7;
+            box-shadow: 0 4px 15px rgba(0,0,0,.05);
+            margin-bottom: 25px;
+            border-left: 4px solid #0056b3;
         }
-        .info-card h3 { color: #0056b3; margin-bottom: 15px; border-left: 4px solid #0056b3; padding-left: 10px; }
-        .info-card p { margin-bottom: 15px; text-align: justify; font-size: 0.95rem; }
+        .info-card h3 { 
+            font-size: 1.1rem; 
+            color: #0056b3; 
+            margin-bottom: 12px; 
+            text-transform: uppercase;
+        }
+        .info-card p { 
+            font-size: 0.95rem; 
+            color: #333; 
+            margin-bottom: 15px;
+            text-align: justify;
+        }
 
-        /* 6. MOBİL AYARLAR (Sənin ana səhifə kodunla eyni) */
+        /* 6. MOBİL OPTİMİZASİYA - ƏSAS KODUNLA TAM UYĞUN */
         @media (max-width: 768px) {
             header { padding: 8px 3%; }
             .logo-img { width: 45px; height: 45px; }
             .logo-text h1 { font-size: 0.9rem; }
             .wp-btn { padding: 6px 10px; font-size: 0.75rem; }
-            .hero { height: 200px; }
-            .hero h2 { font-size: 1.4rem; }
-            .info-card { padding: 18px; margin-top: -20px; }
-            footer { font-size: 0.75rem; }
+            .hero { height: 180px; }
+            .hero h2 { font-size: 1.1rem; }
+            
+            .info-card { padding: 15px; }
+            .info-card h3 { font-size: 1rem; }
+            .info-card p { font-size: 0.85rem; }
+            
+            footer { padding: 20px; font-size: 0.75rem; }
         }
 
-        footer { background: #003366; color: #fff; padding: 25px; text-align: center; margin-top: 40px; }
+        footer {
+            background: #003366;
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        footer h3 { font-size: 1.1rem; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -113,7 +137,9 @@
     <header>
         <div class="logo-box">
             <img src="logo.png" class="logo-img" alt="Bərdə SMSİİ Logo">
-            <div class="logo-text"><h1>BƏRDƏ SMSİİ</h1></div>
+            <div class="logo-text">
+                <h1>BƏRDƏ SMSİİ</h1>
+            </div>
         </div>
         <div class="header-right">
             <a href="https://wa.me/994709720209" class="wp-btn">WHATSAPP</a>
@@ -127,28 +153,23 @@
 
     <div class="container">
         <div class="info-card">
-            <h3>İdarənin Missiyası</h3>
+            <h3>Biz Kimik?</h3>
             <p>
-                Bərdə Su Meliorasiya Sistemlərinin İstismarı İdarəsi, rayonun suvarma infrastrukturunun qorunması, 
-                su ehtiyatlarının ədalətli bölgüsü və torpaqların meliorativ vəziyyətinin yaxşılaşdırılması məqsədilə fəaliyyət göstərir.
+                Bərdə Su Meliorasiya Sistemlərinin İstismarı İdarəsi olaraq əsas hədəfimiz Bərdə rayonu ərazisində su təsərrüfatı və meliorasiya işlərini ən yüksək səviyyədə təşkil etməkdir. Torpaqların suvarılması və məhsuldarlığın artırılması üçün su ehtiyatlarının idarə olunması bizim əsas vəzifəmizdir.
             </p>
-            
-            <h3>Əsas Fəaliyyət Sahələri</h3>
-            <p>
-                Bizim işimiz suvarma kanallarının lildən təmizlənməsi, nasos stansiyalarının fasiləsiz işinin təmin edilməsi 
-                və kənd təsərrüfatı istehsalçılarına suyun vaxtında çatdırılmasından ibarətdir.
-            </p>
+        </div>
 
+        <div class="info-card">
+            <h3>Məqsədimiz</h3>
             <p>
-                Dövlət dəstəyi ilə həyata keçirilən yenidənqurma işləri nəticəsində Bərdə rayonunda su itkisi minimuma endirilir 
-                və əkin sahələrinin su təminatı hər il daha da yaxşılaşdırılır.
+                Müasir texnologiyaların tətbiqi ilə su itkisini azaltmaq, suvarma kanallarını daim işlək vəziyyətdə saxlamaq və fermerlərimizin suya olan tələbatını vaxtında qarşılamaqdır. İdarəmiz illərdir ki, rayonun kənd təsərrüfatı sektoruna öz töhfəsini verməkdədir.
             </p>
         </div>
     </div>
 
     <footer>
         <h3>BƏRDƏ SMSİİ</h3>
-        <p>© 2026 Bütün Hüquqlar Qorunur.</p>
+        <p style="font-size:0.75rem; opacity: 0.8;">© 2026 Bütün Hüquqlar Qorunur.</p>
     </footer>
 
     <script>
