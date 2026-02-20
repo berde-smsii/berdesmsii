@@ -84,6 +84,17 @@
         .sub-card .sub-pos { color: #00b4db; font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; display: block; }
         .sub-card p { font-size: 0.9rem; color: #666; line-height: 1.4; }
 
+        /* Əlaqə Butonları Stili */
+        .contact-btns { display: flex; gap: 8px; margin-top: 15px; }
+        .c-btn {
+            flex: 1; padding: 7px; border-radius: 6px; text-decoration: none;
+            font-size: 0.75rem; font-weight: bold; color: #fff; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
+        .call-btn { background: #0056b3; }
+        .whatsapp-btn { background: #25D366; }
+        .c-btn:hover { opacity: 0.8; }
+
         /* 6. MOBİL UYĞUNLUQ */
         @media (max-width: 768px) {
             header { padding: 8px 3%; }
@@ -160,18 +171,30 @@
                 <span class="sub-pos">Rəis müavini</span>
                 <h4>Sərdar Qasımov</h4>
                 <p>İstehsalat və istismar sahələri üzrə rəis müavini.</p>
+                <div class="contact-btns">
+                    <a href="tel:+994507891616" class="c-btn call-btn">📞 ZƏNG</a>
+                    <a href="https://wa.me/994507891616" class="c-btn whatsapp-btn">💬 WP</a>
+                </div>
             </div>
             <div class="sub-card">
                 <img src="bas_muhendis_ilqar.png" class="sub-img" alt="Baş mühəndis">
                 <span class="sub-pos">Baş mühəndis</span>
                 <h4>İlqar Mahmudov</h4>
                 <p>İstehsalat və texniki istismar işlərinin rəhbəri.</p>
+                <div class="contact-btns">
+                    <a href="tel:+994557637337" class="c-btn call-btn">📞 ZƏNG</a>
+                    <a href="https://wa.me/994557637337" class="c-btn whatsapp-btn">💬 WP</a>
+                </div>
             </div>
             <div class="sub-card">
                 <img src="muavin_vusal.png" class="sub-img" alt="Rəis müavini">
                 <span class="sub-pos">Rəis müavini</span>
                 <h4>Vüsal Alıyev</h4>
                 <p>Abonent xidmətləri, su uçotu və nəzarət üzrə rəis müavini.</p>
+                <div class="contact-btns">
+                    <a href="tel:+994515893149" class="c-btn call-btn">📞 ZƏNG</a>
+                    <a href="https://wa.me/994515893149" class="c-btn whatsapp-btn">💬 WP</a>
+                </div>
             </div>
         </div>
     </div>
