@@ -8,11 +8,11 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* 1. ÜMUMİ DİZAYN STANDARTLARI */
+        /* 1. ÜMUMİ STANDARTLAR */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background: #e6f4ff; color: #333; overflow-x: hidden; }
+        body { background: #f0f7ff; color: #333; overflow-x: hidden; }
 
-        /* 2. HEADER */
+        /* 2. HEADER (Tam qorunub) */
         header {
             background: #f5f7fa; padding: 10px 5%; display: flex;
             justify-content: space-between; align-items: center;
@@ -34,72 +34,83 @@
         .sidebar {
             height: 100%; width: 0; position: fixed; z-index: 2000;
             top: 0; right: 0; background-color: #003366;
-            overflow-x: hidden; transition: 0.5s; padding-top: 60px;
+            transition: 0.5s; padding-top: 60px;
         }
         .sidebar a { padding: 15px 30px; text-decoration: none; font-size: 1.1rem; color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
-        .sidebar .dev-info { position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem; }
 
-        /* 4. HERO VƏ HAVA (Ana səhifə stili) */
+        /* 4. HERO */
         .hero {
-            height: 280px;
-            background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; padding: 20px;
+            height: 250px;
+            background: linear-gradient(rgba(0,86,179,.7),rgba(0,86,179,.7)), url('fon.png') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center;
         }
-        .hero h2 { font-size: 1.8rem; line-height: 1.3; margin-bottom: 15px; }
+        .hero h2 { font-size: 1.8rem; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
 
         .weather-box {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 25px; border-radius: 50px; backdrop-filter: blur(8px);
-            font-size: 1.1rem; border: 1px solid rgba(255, 255, 255, 0.4);
-            display: flex; align-items: center; gap: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 20px; border-radius: 50px; backdrop-filter: blur(5px);
+            font-size: 1rem; border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex; align-items: center; gap: 10px;
         }
 
-        /* 5. FORMA KONTEYNERİ */
-        .container { max-width: 850px; margin: -40px auto 60px; padding: 0 15px; position: relative; z-index: 10; }
+        /* 5. FORMA DİZAYNI */
+        .container { max-width: 850px; margin: -50px auto 60px; padding: 0 15px; }
         .form-card {
-            background: #fff; padding: 35px; border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,86,179,0.15); border-top: 6px solid #0056b3;
+            background: #fff; padding: 40px; border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0,51,102,0.1); border: 1px solid #e0e8f0;
         }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 7px; font-weight: bold; color: #003366; font-size: 0.9rem; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 12px; border: 1px solid #cce0ff; border-radius: 10px;
-            font-size: 1rem; outline: none; background: #fcfdfe; transition: 0.3s;
-        }
-        .form-group input:focus, .form-group textarea:focus { border-color: #0056b3; background: #fff; box-shadow: 0 0 8px rgba(0,86,179,0.1); }
+        .section-title { color: #0056b3; font-size: 1.2rem; margin-bottom: 20px; border-left: 4px solid #0056b3; padding-left: 10px; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; font-size: 0.85rem; text-transform: uppercase; }
         
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 14px; border: 1px solid #d1d9e6; border-radius: 12px;
+            font-size: 1rem; outline: none; background: #f8fbff; transition: 0.3s;
+            max-width: 100%; /* Sağa daşmanın qarşısını alır */
+        }
+        
+        /* Mətn sahəsinin sadəcə aşağı uzanması */
+        .form-group textarea { resize: vertical; min-height: 120px; }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #0056b3; background: #fff; box-shadow: 0 0 10px rgba(0,86,179,0.1);
+        }
+
+        /* Fayl Yükləmə Sahəsi */
+        .file-upload {
+            border: 2px dashed #0056b3; padding: 20px; border-radius: 12px;
+            text-align: center; background: #f0f7ff; cursor: pointer; transition: 0.3s;
+        }
+        .file-upload:hover { background: #e1efff; }
+        .file-upload input { display: none; }
+        .file-label { color: #0056b3; font-weight: bold; cursor: pointer; }
+
         .submit-btn {
-            width: 100%; padding: 16px; background: #0056b3; color: white;
-            border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold;
-            cursor: pointer; transition: 0.3s; margin-top: 15px; text-transform: uppercase;
+            width: 100%; padding: 18px; background: linear-gradient(45deg, #0056b3, #003d80);
+            color: white; border: none; border-radius: 12px; font-size: 1.1rem;
+            font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,86,179,0.3);
         }
-        .submit-btn:hover { background: #003d80; transform: translateY(-2px); }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,86,179,0.4); }
 
+        /* 6. UĞUR MESAJI */
         #success-msg {
-            display: none; text-align: center; padding: 40px 20px;
-            background: #fff; color: #155724; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none; text-align: center; padding: 50px 20px;
+            background: #fff; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
         }
 
-        /* 6. MOBİL UYĞUNLUQ */
+        /* 7. MOBİL UYGUNLUQ */
         @media (max-width: 768px) {
-            header { padding: 8px 3%; }
-            .logo-img { width: 45px; height: 45px; }
-            .logo-text h1 { font-size: 0.9rem; }
-            .wp-btn { padding: 6px 10px; font-size: 0.75rem; }
-            
-            .hero { height: 230px; }
-            .hero h2 { font-size: 1.2rem; }
-            .weather-box { font-size: 0.85rem; padding: 6px 15px; }
-
-            .form-card { padding: 25px 15px; }
-            .form-row { grid-template-columns: 1fr; gap: 10px; }
+            .hero { height: 200px; }
+            .hero h2 { font-size: 1.3rem; }
+            .form-card { padding: 30px 20px; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
             .container { margin-top: -30px; }
         }
 
-        footer { background: #003366; color: #fff; padding: 30px 20px; text-align: center; margin-top: 40px; }
+        footer { background: #003366; color: #fff; padding: 40px 20px; text-align: center; }
     </style>
 </head>
 <body>
@@ -108,11 +119,9 @@
         <span class="close-btn" onclick="closeNav()">×</span>
         <a href="index.html">Ana Səhifə</a>
         <a href="haqqimizda.html">Haqqımızda</a>
-        <a href="struktur.html">Struktur</a>
         <a href="rehberlik.html">Rəhbərlik</a>
-        <a href="elektron-muraciet.html" style="color:white; background:#0056b3;">Elektron Müraciət</a>
-        <a href="istifade-sertleri.html">İstifadə Şərtləri</a>
-        <div class="dev-info">Full-stack Developer:<br><span style="color:white">Qərib Səfərli</span></div>
+        <a href="elektron-muraciet.html" style="background:#0056b3; color:white;">Elektron Müraciət</a>
+        <div style="position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem;">Dev: Qərib Səfərli</div>
     </div>
 
     <header>
@@ -127,148 +136,144 @@
     </header>
 
     <section class="hero">
-        <h2>Elektron Müraciət Sistemi</h2>
+        <h2>Elektron Müraciət Portalı</h2>
         <div class="weather-box">
-            <span>Bərdə Rayonu:</span>
-            <strong id="temp">Yüklənir...</strong>
+            <span>Bərdə:</span> <strong id="temp">...</strong>
         </div>
     </section>
 
     <div class="container">
-        <div id="form-area">
-            <div class="form-card">
-                <form id="muraciet-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Adınız</label>
-                            <input type="text" id="name" required placeholder="Adınız">
-                        </div>
-                        <div class="form-group">
-                            <label>Soyadınız</label>
-                            <input type="text" id="surname" required placeholder="Soyadınız">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>FİN Kod</label>
-                            <input type="text" id="fin" maxlength="7" style="text-transform: uppercase;" required placeholder="7 rəqəmli FİN">
-                        </div>
-                        <div class="form-group">
-                            <label>Əlaqə Nömrəsi</label>
-                            <input type="tel" id="phone" required placeholder="Məs: 0507891616">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Müraciət Növü</label>
-                            <select id="type">
-                                <option>Şikayət</option>
-                                <option>Təklif</option>
-                                <option>Məlumat sorğusu</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Xidmət Sahəsi</label>
-                            <select id="area">
-                                <option>Su təminatı</option>
-                                <option>Artezian quyuları</option>
-                                <option>Kanalların təmizlənməsi</option>
-                                <option>Su sızması və qəza</option>
-                                <option>Digər</option>
-                            </select>
-                        </div>
-                    </div>
-
+        <div id="form-area" class="form-card">
+            <h3 class="section-title">Şəxsi Məlumatlar</h3>
+            <form id="muraciet-form">
+                <div class="form-row">
                     <div class="form-group">
-                        <label>Tam Ünvan (Kənd, küçə və ya ərazi)</label>
-                        <input type="text" id="address" required placeholder="Problemin olduğu dəqiq ünvan">
+                        <label>Adınız</label>
+                        <input type="text" id="name" required placeholder="Məs: Əli">
                     </div>
-
                     <div class="form-group">
-                        <label>Müraciətin Məzmunu</label>
-                        <textarea id="message" rows="5" required placeholder="Müraciətinizi bura ətraflı qeyd edin..."></textarea>
+                        <label>Soyadınız</label>
+                        <input type="text" id="surname" required placeholder="Məs: Məmmədov">
                     </div>
+                </div>
 
-                    <button type="submit" class="submit-btn" id="send-btn">Müraciəti Göndər</button>
-                </form>
-            </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>FİN Kod</label>
+                        <input type="text" id="fin" maxlength="7" style="text-transform: uppercase;" required placeholder="7 simvol">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="tel" id="phone" required placeholder="050XXXXXXX">
+                    </div>
+                </div>
+
+                <h3 class="section-title">Müraciət Detalları</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Növ</label>
+                        <select id="type">
+                            <option>Şikayət</option>
+                            <option>Təklif</option>
+                            <option>Məlumat sorğusu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sahə</label>
+                        <select id="area">
+                            <option>Su təminatı</option>
+                            <option>Artezian quyuları</option>
+                            <option>Kanalların təmizlənməsi</option>
+                            <option>Digər</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ünvan</label>
+                    <input type="text" id="address" required placeholder="Kənd, küçə, bina...">
+                </div>
+
+                <div class="form-group">
+                    <label>Müraciətin Məzmunu</label>
+                    <textarea id="message" required placeholder="Problemi ətraflı təsvir edin..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Şəkil/Video Əlavə Et (Max 50KB)</label>
+                    <div class="file-upload" onclick="document.getElementById('file-input').click()">
+                        <span class="file-label" id="file-name">📁 Fayl seçin və ya bura sürükləyin</span>
+                        <input type="file" id="file-input" onchange="updateFileName()">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="send-btn">MÜRACİƏTİ GÖNDƏR</button>
+            </form>
         </div>
 
         <div id="success-msg">
-            <div style="font-size: 50px; margin-bottom: 20px;">✅</div>
-            <h2 style="color: #0056b3; margin-bottom: 10px;">Müraciətiniz Uğurla Göndərildi!</h2>
-            <p style="color: #666; font-size: 1.1rem;">Sizin müraciətiniz qeydə alındı və rəsmi Gmail ünvanına yönləndirildi.</p>
-            <div style="background: #e6f4ff; padding: 15px; border-radius: 10px; margin: 25px 0; border: 1px dashed #0056b3;">
-                <span style="display: block; font-size: 0.9rem; color: #555;">Müraciət ID (FİN + Təsadüfi):</span>
-                <strong id="display-id" style="font-size: 1.4rem; color: #0056b3;"></strong>
-            </div>
-            <button onclick="location.reload()" style="background: #0056b3; color: white; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: bold;">YENİ MÜRACİƏT</button>
+            <div style="font-size: 60px; color: #25D366;">✔</div>
+            <h2 style="margin: 20px 0;">Müraciətiniz Qəbul Edildi!</h2>
+            <p style="color: #666;">ID: <strong id="display-id" style="color: #0056b3; font-size: 1.3rem;"></strong></p>
+            <button onclick="location.reload()" style="margin-top: 30px; padding: 10px 30px; border: none; background: #0056b3; color: white; border-radius: 8px; cursor: pointer;">Yeni Form</button>
         </div>
     </div>
 
     <footer>
-        <h3>BƏRDƏ SMSİİ</h3>
-        <p style="font-size:0.7rem; margin-top:10px; opacity:.5;">© 2026 Bütün Hüquqlar Qorunur. <br> Full-stack Developer: Qərib Səfərli</p>
+        <p>© 2026 Bərdə SMSİİ - Bütün Hüquqlar Qorunur.</p>
     </footer>
 
     <script>
-        // Sidebar funksiyaları
         function openNav() { document.getElementById("sideNav").style.width = "280px"; }
         function closeNav() { document.getElementById("sideNav").style.width = "0"; }
 
-        // Bərdə Hava Durumu
+        function updateFileName() {
+            const input = document.getElementById('file-input');
+            const label = document.getElementById('file-name');
+            label.innerText = input.files[0] ? input.files[0].name : "📁 Fayl seçin";
+        }
+
         async function getBardaWeather() {
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
                 const data = await res.json();
-                document.getElementById('temp').innerText = `☀️ ${Math.round(data.current_weather.temperature)}°C`;
-            } catch { document.getElementById('temp').innerText = "☀️ +18°C"; }
+                document.getElementById('temp').innerText = `${Math.round(data.current_weather.temperature)}°C`;
+            } catch { document.getElementById('temp').innerText = "18°C"; }
         }
         getBardaWeather();
 
-        // EmailJS Başlatma
-        (function() {
-            emailjs.init("tatcA8fFwhzTeu39T"); // Sənin Public Key-in
-        })();
+        emailjs.init("tatcA8fFwhzTeu39T");
 
-        // Form Göndərmə Prosesi
-        document.getElementById('muraciet-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
+        document.getElementById('muraciet-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             const btn = document.getElementById('send-btn');
             btn.innerText = "GÖNDƏRİLİR...";
             btn.disabled = true;
 
-            // ID Yaradılması (FİN + 6 rəqəm)
-            const finVal = document.getElementById('fin').value.toUpperCase();
-            const randomSuffix = Math.floor(100000 + Math.random() * 900000);
-            const finalID = finVal + randomSuffix;
+            const fin = document.getElementById('fin').value.toUpperCase();
+            const orderID = fin + Math.floor(100000 + Math.random() * 900000);
 
-            // Email-ə gedəcək məlumatlar
-            const templateParams = {
+            const params = {
                 name: document.getElementById('name').value,
                 surname: document.getElementById('surname').value,
-                fin: finVal,
+                fin: fin,
                 phone: document.getElementById('phone').value,
                 type: document.getElementById('type').value,
                 area: document.getElementById('area').value,
                 address: document.getElementById('address').value,
                 message: document.getElementById('message').value,
-                order_id: finalID
+                order_id: orderID
             };
 
-            // EmailJS ilə Göndərmə
-            emailjs.send('service_l4gqfcz', 'template_3i1yl1e', templateParams)
-                .then(function() {
+            emailjs.send('service_l4gqfcz', 'template_3i1yl1e', params)
+                .then(() => {
                     document.getElementById('form-area').style.display = 'none';
                     document.getElementById('success-msg').style.display = 'block';
-                    document.getElementById('display-id').innerText = finalID;
-                }, function(error) {
-                    alert("Xəta baş verdi! İnternet bağlantısını yoxlayın: " + JSON.stringify(error));
-                    btn.innerText = "MÜRACİƏTİ GÖNDƏR";
+                    document.getElementById('display-id').innerText = orderID;
+                }, (err) => {
+                    alert("Xəta: " + JSON.stringify(err));
                     btn.disabled = false;
+                    btn.innerText = "MÜRACİƏTİ GÖNDƏR";
                 });
         });
     </script>
