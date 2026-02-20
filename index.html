@@ -200,12 +200,6 @@
     </footer>
 
     <script>
-        // Menyu idarəsi
-        function openNav() { document.getElementById("sideNav").style.width = "280px"; }
-        function closeNav() { document.getElementById("sideNav").style.width = "0"; }
-
-        // Canlı hava funksiyası
-        <script>
 async function getBardaWeather() {
     try {
         const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
@@ -256,6 +250,7 @@ async function getBardaWeather() {
 
 getBardaWeather();
 </script>
+
 
 </body>
 </html>
