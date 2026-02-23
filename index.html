@@ -10,7 +10,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background: #e6f4ff; color: #333; overflow-x: hidden; }
 
-        /* 2. HEADER - Sənin WhatsApp düymən və Menyu burada */
+        /* 2. HEADER */
         header {
             background: #f5f7fa;
             padding: 10px 5%;
@@ -46,7 +46,7 @@
         }
         .menu-toggle { font-size: 30px; cursor: pointer; color: #0056b3; }
 
-        /* 3. SIDEBAR (Yan Menyu) */
+        /* 3. SIDEBAR */
         .sidebar {
             height: 100%; width: 0; position: fixed; z-index: 2000;
             top: 0; right: 0; background-color: #003366;
@@ -59,7 +59,7 @@
         .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
         .sidebar .dev-info { position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem; }
 
-        /* 4. HERO - Canlı Hava burada */
+        /* 4. HERO */
         .hero {
             height: 320px;
             background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
@@ -101,7 +101,33 @@
         .card h3 { font-size: 1rem; color: #0056b3; margin-bottom: 8px; }
         .card p, .card a { font-size: 0.9rem; color: #333; text-decoration: none; }
 
-        /* 6. XƏRİTƏ - Sənin göndərdiyin köhnə konum koda tətbiq edildi */
+        /* YENİ ƏLAVƏ OLUNAN FAYDALI KEÇİDLƏR STİLİ */
+        .useful-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 20px 0 35px 0;
+        }
+        .useful-item {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+            border: 1px solid #eee;
+        }
+        .useful-item:hover { transform: translateY(-5px); border-color: #0056b3; box-shadow: 0 6px 15px rgba(0,86,179,0.1); }
+        .gov-img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; }
+        .useful-item p { font-size: 0.8rem; color: #003366; font-weight: bold; line-height: 1.2; }
+
+        /* 6. XƏRİTƏ */
         .map-section { background: #fff; padding: 4px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.08); overflow: hidden; }
         .map-section iframe { width: 100%; height: 300px; border: none; }
 
@@ -117,6 +143,7 @@
             .hero h2 { font-size: 1.1rem; }
             .weather-box { font-size: 0.85rem; padding: 6px 15px; }
             .social-section { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .useful-links-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .map-section iframe { height: 200px; }
         }
     </style>
@@ -188,9 +215,37 @@
             </div>
         </div>
 
+        <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1.1rem;">Faydalı Keçidlər</h3>
+        <div class="useful-links-grid">
+            <a href="https://www.heydaraliyevcenter.az/" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/169/01K40WDW9ZFXDHXFRMF54D8880.png" alt="Heydər Əliyev">
+                <p>Ümummilli lider <br> Heydər Əliyev</p>
+            </a>
+            <a href="https://president.az" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/430/01KB3F2AZ6RM6B082VT74EA6SH.png" alt="Prezident">
+                <p>Azərbaycan Respublikasının Prezidenti</p>
+            </a>
+            <a href="http://mehriban-aliyeva.az" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/429/01KB3F29P4DS6XBRN9HE0E85EB.png" alt="Vitse-prezident">
+                <p>Azərbaycan Respublikasının I vitse-prezidenti</p>
+            </a>
+            <a href="https://heydar-aliyev-foundation.org" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/111/01K1B245Z758XX7QW2E8KHZEQZ.png" alt="Fond">
+                <p>Heydər Əliyev Fondu</p>
+            </a>
+            <a href="https://nk.gov.az" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/16/cabmin.png" alt="Nazirlər Kabineti">
+                <p>Azərbaycan Respublikası Nazirlər Kabineti</p>
+            </a>
+            <a href="http://millimajlis.gov.az" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/17/millimajlis.png" alt="Milli Məclis">
+                <p>Azərbaycan Respublikasının Milli Məclisi</p>
+            </a>
+        </div>
+
         <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">📍 İdarənin Ünvanı<br>(Bərdə şəhər, S.Zöhrabbəyov küç. 10)</h3>
         <div class="map-section">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d191.03756303213032!2d47.13441516890717!3d40.361561050367975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIxJzQxLjYiTiA0N8KwMDgnMDMuOSJF!5e0!3m2!1saz!2saz!4v1700000000000" allowfullscreen loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.123456789!2d47.1261!3d40.3758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIyJzMyLjkiTiA0N8KwMDcnMzQuMCJF!5e0!3m2!1saz!2saz!4v1625000000000!5m2!1saz!2saz" allowfullscreen loading="lazy"></iframe>
         </div>
     </div>
 
@@ -200,11 +255,9 @@
     </footer>
 
     <script>
-        // Menyu idarəsi
         function openNav() { document.getElementById("sideNav").style.width = "280px"; }
         function closeNav() { document.getElementById("sideNav").style.width = "0"; }
 
-        // Canlı hava funksiyası
         async function getBardaWeather() {
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
