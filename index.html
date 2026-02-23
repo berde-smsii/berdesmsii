@@ -151,7 +151,10 @@
             min-height: 80px;
         }
         .useful-item:hover { transform: translateY(-3px); border-color: #0056b3; }
-        .gov-img { width: 35px; height: 35px; object-fit: contain; flex-shrink: 0; }
+        
+        /* KOMPÜTERDƏ İKONLARI BİR AZ BÖYÜTDÜM */
+        .gov-img { width: 50px; height: 50px; object-fit: contain; flex-shrink: 0; }
+        
         .useful-item p { font-size: 0.75rem; color: #003366; font-weight: bold; line-height: 1.2; text-align: left; }
 
         /* BÖLMƏ AYIRICI XƏTT */
@@ -168,12 +171,7 @@
 
         footer { background: #003366; color: #fff; padding: 30px 20px; text-align: center; margin-top: 40px; }
 
-        /* MOBİL AYARLAR */
-        @media (max-width: 992px) {
-            .grid-4-cols { grid-template-columns: repeat(2, 1fr); }
-            .grid-3-cols { grid-template-columns: repeat(2, 1fr); }
-        }
-
+        /* MOBİL AYARLAR (TELEFON ÜÇÜN 2 SÜTUN VƏ YIĞCAMLIQ) */
         @media (max-width: 768px) {
             header { padding: 8px 3%; }
             .logo-img { width: 45px; height: 45px; }
@@ -182,7 +180,20 @@
             .hero { height: 260px; }
             .hero h2 { font-size: 1.1rem; }
             .weather-box { font-size: 0.85rem; padding: 6px 15px; }
-            .grid-4-cols, .grid-3-cols { grid-template-columns: 1fr; }
+            
+            /* TELEFONDA HƏR İKİSİ 2 SÜTUN */
+            .grid-4-cols, .grid-3-cols { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+            }
+            .useful-item {
+                min-height: 65px;
+                padding: 8px;
+                gap: 6px;
+            }
+            .gov-img { width: 30px; height: 30px; }
+            .useful-item p { font-size: 0.65rem; }
+            
             .map-section iframe { height: 200px; }
         }
     </style>
@@ -247,8 +258,10 @@
             </a>
         </div>
 
-        <div class="divider"></div> <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Dövlət Qurumları</h3>
-        <div class="useful-links-grid grid-3-cols"> <a href="https://www.heydaraliyevcenter.az/" target="_blank" class="useful-item">
+        <div class="divider"></div> 
+        <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Dövlət Qurumları</h3>
+        <div class="useful-links-grid grid-3-cols"> 
+            <a href="https://www.heydaraliyevcenter.az/" target="_blank" class="useful-item">
                 <img class="gov-img" src="https://rsmx.gov.az/storage/169/01K40WDW9ZFXDHXFRMF54D8880.png">
                 <p>Ulu Öndər <br> Heydər Əliyev</p>
             </a>
@@ -276,7 +289,8 @@
 
         <div class="divider"></div> 
         <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Elektron Xidmətlər və Portallar</h3>
-        <div class="useful-links-grid grid-4-cols"> <a href="https://asan.gov.az/" target="_blank" class="useful-item">
+        <div class="useful-links-grid grid-4-cols"> 
+            <a href="https://asan.gov.az/" target="_blank" class="useful-item">
                 <img class="gov-img" src="https://rsmx.gov.az/storage/20/asan.jpg">
                 <p>ASAN xidmət</p>
             </a>
