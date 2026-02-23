@@ -101,12 +101,12 @@
         .card h3 { font-size: 1rem; color: #0056b3; margin-bottom: 8px; }
         .card p, .card a { font-size: 0.9rem; color: #333; text-decoration: none; }
 
-        /* YENİ ƏLAVƏ OLUNAN FAYDALI KEÇİDLƏR STİLİ */
+        /* FAYDALI KEÇİDLƏR STİLLƏRİ */
         .useful-links-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
-            margin: 20px 0 35px 0;
+            margin: 20px 0;
         }
         .useful-item {
             background: #fff;
@@ -120,12 +120,20 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 160px;
+            min-height: 140px;
             border: 1px solid #eee;
         }
-        .useful-item:hover { transform: translateY(-5px); border-color: #0056b3; box-shadow: 0 6px 15px rgba(0,86,179,0.1); }
-        .gov-img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; }
-        .useful-item p { font-size: 0.8rem; color: #003366; font-weight: bold; line-height: 1.2; }
+        .useful-item:hover { transform: translateY(-5px); border-color: #0056b3; }
+        .gov-img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; }
+        .useful-item p { font-size: 0.75rem; color: #003366; font-weight: bold; line-height: 1.2; }
+
+        /* BÖLMƏ AYIRICI XƏTT */
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #0056b3, transparent);
+            margin: 30px 0;
+            opacity: 0.3;
+        }
 
         /* 6. XƏRİTƏ */
         .map-section { background: #fff; padding: 4px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.08); overflow: hidden; }
@@ -133,7 +141,7 @@
 
         footer { background: #003366; color: #fff; padding: 30px 20px; text-align: center; margin-top: 40px; }
 
-        /* MOBİL AYARLAR */
+        /* MOBİL AYARLAR (3-lü düzülüş üçün) */
         @media (max-width: 768px) {
             header { padding: 8px 3%; }
             .logo-img { width: 45px; height: 45px; }
@@ -143,7 +151,19 @@
             .hero h2 { font-size: 1.1rem; }
             .weather-box { font-size: 0.85rem; padding: 6px 15px; }
             .social-section { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .useful-links-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            
+            /* Mobildə 3-lü düzülüş */
+            .useful-links-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 8px; 
+            }
+            .useful-item { 
+                padding: 8px 5px; 
+                min-height: 110px; 
+            }
+            .gov-img { width: 35px; height: 35px; }
+            .useful-item p { font-size: 0.6rem; }
+            
             .map-section iframe { height: 200px; }
         }
     </style>
@@ -215,31 +235,63 @@
             </div>
         </div>
 
-        <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1.1rem;">Faydalı Keçidlər</h3>
+        <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Dövlət Qurumları</h3>
         <div class="useful-links-grid">
             <a href="https://www.heydaraliyevcenter.az/" target="_blank" class="useful-item">
-                <img class="gov-img" src="https://rsmx.gov.az/storage/169/01K40WDW9ZFXDHXFRMF54D8880.png" alt="Heydər Əliyev">
-                <p>Ümummilli lider <br> Heydər Əliyev</p>
+                <img class="gov-img" src="https://rsmx.gov.az/storage/169/01K40WDW9ZFXDHXFRMF54D8880.png">
+                <p>Ümummilli lider Heydər Əliyev</p>
             </a>
             <a href="https://president.az" target="_blank" class="useful-item">
-                <img class="gov-img" src="https://rsmx.gov.az/storage/430/01KB3F2AZ6RM6B082VT74EA6SH.png" alt="Prezident">
-                <p>Azərbaycan Respublikasının Prezidenti</p>
+                <img class="gov-img" src="https://rsmx.gov.az/storage/430/01KB3F2AZ6RM6B082VT74EA6SH.png">
+                <p>Azərbaycan Prezidenti</p>
             </a>
             <a href="http://mehriban-aliyeva.az" target="_blank" class="useful-item">
-                <img class="gov-img" src="https://rsmx.gov.az/storage/429/01KB3F29P4DS6XBRN9HE0E85EB.png" alt="Vitse-prezident">
-                <p>Azərbaycan Respublikasının I vitse-prezidenti</p>
+                <img class="gov-img" src="https://rsmx.gov.az/storage/429/01KB3F29P4DS6XBRN9HE0E85EB.png">
+                <p>I vitse-prezident</p>
             </a>
             <a href="https://heydar-aliyev-foundation.org" target="_blank" class="useful-item">
-                <img class="gov-img" src="https://rsmx.gov.az/storage/111/01K1B245Z758XX7QW2E8KHZEQZ.png" alt="Fond">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/111/01K1B245Z758XX7QW2E8KHZEQZ.png">
                 <p>Heydər Əliyev Fondu</p>
             </a>
             <a href="https://nk.gov.az" target="_blank" class="useful-item">
-                <img class="gov-img" src="https://rsmx.gov.az/storage/16/cabmin.png" alt="Nazirlər Kabineti">
-                <p>Azərbaycan Respublikası Nazirlər Kabineti</p>
+                <img class="gov-img" src="https://rsmx.gov.az/storage/16/cabmin.png">
+                <p>Nazirlər Kabineti</p>
             </a>
             <a href="http://millimajlis.gov.az" target="_blank" class="useful-item">
-                <img class="gov-img" src="https://rsmx.gov.az/storage/17/millimajlis.png" alt="Milli Məclis">
-                <p>Azərbaycan Respublikasının Milli Məclisi</p>
+                <img class="gov-img" src="https://rsmx.gov.az/storage/17/millimajlis.png">
+                <p>Milli Məclis</p>
+            </a>
+        </div>
+
+        <div class="divider"></div> <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Elektron Xidmətlər və Portallar</h3>
+        <div class="useful-links-grid">
+            <a href="https://asan.gov.az/" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/20/asan.jpg">
+                <p>ASAN xidmət</p>
+            </a>
+            <a href="https://e-gov.az" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/88/01JTRBF4FPFPMDATXBYX9R9GJ3.jpg">
+                <p>E-Hökumət Portalı</p>
+            </a>
+            <a href="https://my.gov.az" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/72/01JS2TG04D8PJ5WTDXMA4SR5P1.jpg">
+                <p>MyGov Portalı</p>
+            </a>
+            <a href="https://dxr.az/?lang=az" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/25/gerb.svg">
+                <p>Dövlət Xidmətləri Portalı</p>
+            </a>
+            <a href="https://opendata.az/" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/19/open-data.jpg">
+                <p>Açıq Məlumatlar</p>
+            </a>
+            <a href="https://birdamci.az/" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/23/birdamci.jpg">
+                <p>Bir damcı dəstək</p>
+            </a>
+            <a href="https://azranking.az/" target="_blank" class="useful-item">
+                <img class="gov-img" src="https://rsmx.gov.az/storage/22/gerb.svg">
+                <p>Biznes mühiti Portalı</p>
             </a>
         </div>
 
