@@ -8,177 +8,66 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* 1. ÜMUMİ DİZAYN (Haqqımızda səhifəsi ilə eyni) */
+        /* 1. ÜMUMİ DİZAYN */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background: #e6f4ff; color: #333; overflow-x: hidden; }
 
-        /* 2. HEADER - Tam standart */
+        /* 2. HEADER */
         header { 
-            background: #f5f7fa;
-            padding: 10px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,.08);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: #f5f7fa; padding: 10px 5%; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08); position: sticky; top: 0; z-index: 1000;
         }
         .logo-box { display: flex; align-items: center; gap: 10px; }
-        .logo-img {
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            border: 2px solid #0056b3;
-            object-fit: cover;
-            background: white;
-        }
+        .logo-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #0056b3; object-fit: cover; background: white; }
         .logo-text h1 { font-size: 1.1rem; color: #0056b3; margin: 0; }
-        .header-right { display: flex; align-items: center; gap: 15px; }
-
-        .wp-btn {
-            background: #25D366;
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
+        .wp-btn { background: #25D366; color: #fff; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
         .menu-toggle { font-size: 30px; cursor: pointer; color: #0056b3; }
 
-        /* 3. SIDEBAR - Sənin kodundakı tam siyahı */
-        .sidebar {
-            height: 100%; width: 0; position: fixed; z-index: 2000;
-            top: 0; right: 0; background-color: #003366;
-            overflow-x: hidden; transition: 0.5s; padding-top: 60px;
-        }
-        .sidebar a {
-            padding: 15px 30px; text-decoration: none; font-size: 1.1rem;
-            color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        /* 3. SIDEBAR */
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 2000; top: 0; right: 0; background-color: #003366; overflow-x: hidden; transition: 0.5s; padding-top: 60px; }
+        .sidebar a { padding: 15px 30px; text-decoration: none; font-size: 1.1rem; color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
         .sidebar .dev-info { position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem; }
 
         /* 4. HERO */
-        .hero {
-            height: 320px;
-            background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-            width: 100%;
-        }
+        .hero { height: 320px; background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; padding: 20px; width: 100%; }
         .hero h2 { font-size: 1.8rem; line-height: 1.3; margin-bottom: 15px; }
 
-        .weather-box {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 25px;
-            border-radius: 50px;
-            backdrop-filter: blur(8px);
-            font-size: 1.1rem;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* 5. FORM KARTI (info-card stilində) */
+        /* 5. FORM KARTI */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        .form-card { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.05); margin-bottom: 25px; border-left: 4px solid #0056b3; }
         
-        .form-card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.05);
-            margin-bottom: 25px;
-            border-left: 4px solid #0056b3;
-        }
+        /* Bildiriş qutusu */
+        .info-box { background-color: #f5f9fd; padding: 15px 25px; border-radius: 12px; border: 1px solid #ecf1f9; margin-bottom: 25px; }
+        .info-box p { font-size: 14px; font-weight: 500; margin-bottom: 5px; }
 
-        .form-card h3 { font-size: 1.1rem; color: #0056b3; margin-bottom: 15px; }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 15px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 0.9rem; font-weight: bold; color: #555; }
-        
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 10px;
-            border: 1px solid #d1d9e6;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            outline: none;
-            background: #fdfdfd;
-            max-width: 100%; /* Daşma burda həll olundu */
-        }
+        .form-group label span { color: #049dc3; }
 
-        /* Mətn sahəsi üçün xüsusi ayar */
-        textarea#message {
-            resize: vertical;
-            min-height: 120px;
-            width: 100%;
-        }
+        input, select, textarea { padding: 12px; border: 1px solid #d1d9e6; border-radius: 8px; font-size: 0.95rem; outline: none; background: #fdfdfd; width: 100%; }
+        textarea { resize: vertical; min-height: 180px; }
 
-        .send-btn {
-            background: #0056b3;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
-            width: 100%;
-        }
+        .send-btn { background: #0056b3; color: white; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; width: 100%; transition: 0.3s; }
         .send-btn:hover { background: #003366; }
 
         /* UĞUR MESAJI */
-        #success-area {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
+        #success-area { display: none; text-align: center; padding: 40px 20px; }
+        .id-box { background: #e6f4ff; padding: 15px; border-radius: 8px; margin: 20px auto; border: 1px dashed #0056b3; font-weight: bold; color: #0056b3; max-width: 400px; font-size: 1.2rem; }
 
-        .id-box {
-            background: #e6f4ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px auto;
-            border: 1px dashed #0056b3;
-            font-weight: bold;
-            color: #0056b3;
-            max-width: 400px;
-        }
-
-        /* 6. MOBİL OPTİMİZASİYA - Sənin kodundakı tam ayarlar */
+        /* 6. MOBİL OPTİMİZASİYA */
         @media (max-width: 768px) {
             header { padding: 8px 3%; }
             .logo-img { width: 45px; height: 45px; }
             .logo-text h1 { font-size: 0.9rem; }
-            .wp-btn { padding: 6px 10px; font-size: 0.75rem; }
             .hero { height: 260px; }
             .hero h2 { font-size: 1.1rem; }
-            .weather-box { font-size: 0.85rem; padding: 6px 15px; }
             .form-card { padding: 15px; }
-            .form-group input, .form-group select, .form-group textarea { font-size: 0.85rem; }
         }
 
-        footer {
-            background: #003366;
-            color: #fff;
-            padding: 30px 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
+        footer { background: #003366; color: #fff; padding: 30px; text-align: center; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -187,10 +76,7 @@
         <span class="close-btn" onclick="closeNav()">×</span>
         <a href="index.html">Ana Səhifə</a>
         <a href="haqqimizda.html">Haqqımızda</a>
-        <a href="struktur.html">Struktur</a>
-        <a href="rehberlik.html">Rəhbərlik</a>
         <a href="elektron-muraciet.html" style="color:white; background:#0056b3;">Elektron Müraciət</a>
-        <a href="istifade-sertleri.html">İstifadə Şərtləri</a>
         <div class="dev-info">Full-stack Developer:<br><span style="color:white">Qərib Səfərli</span></div>
     </div>
 
@@ -206,78 +92,78 @@
     </header>
 
     <section class="hero">
-        <h2>Bərdə Su Meliorasiya Sistemlərinin<br>İstismarı İdarəsinin Elektron Müraciət Portalı</h2>
-        <div class="weather-box">
-            <span>Bərdə Rayonu:</span>
-            <strong id="temp">Yüklənir...</strong>
-        </div>
+        <h2>Elektron Müraciət Portalı</h2>
     </section>
 
     <div class="container">
         <div id="form-container" class="form-card">
-            <h3>Müraciət Formu</h3>
+            <div class="info-box">
+                <p style="color: #049dc3;">Müraciətinizi göndərməzdən əvvəl nəzərdə tutulmuş formanın düzgün doldurulması vacibdir</p>
+                <p style="color: #252638; font-size: 13px;">• Müraciət aydın və etik qaydalara uyğun yazılmalıdır</p>
+                <p style="color: #252638; font-size: 13px;">• Elektron müraciətin mətni 1500 işarədən çox olmamalıdır (<span>*</span> - vacib sahələr)</p>
+            </div>
+
             <form id="muraciet-form">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Ad</label>
-                        <input type="text" id="name" required placeholder="Adınız">
+                        <label>Ad və Soyad <span>*</span></label>
+                        <input type="text" id="full_name" required placeholder="Ad və Soyad">
                     </div>
                     <div class="form-group">
-                        <label>Soyad</label>
-                        <input type="text" id="surname" required placeholder="Soyadınız">
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>FİN (7 simvol)</label>
-                        <input type="text" id="fin" maxlength="7" style="text-transform: uppercase;" required placeholder="ABC1234">
+                        <label>Əlaqə telefonu <span>*</span></label>
+                        <input type="tel" id="phone" required placeholder="Əlaqə telefonu">
                     </div>
                     <div class="form-group">
-                        <label>Telefon</label>
-                        <input type="tel" id="phone" required placeholder="050-000-00-00">
+                        <label>Ünvan <span>*</span></label>
+                        <input type="text" id="address" required placeholder="Ünvan">
                     </div>
-                </div>
-
-                <div class="form-grid">
                     <div class="form-group">
-                        <label>Müraciət Növü</label>
-                        <select id="type">
-                            <option>Şikayət</option>
+                        <label>Elektron poçt <span>*</span></label>
+                        <input type="email" id="email" required placeholder="Elektron poçt">
+                    </div>
+                    <div class="form-group">
+                        <label>Şəxsiyyət vəsiqəsinin nömrəsi <span>*</span></label>
+                        <input type="text" id="id_card" required placeholder="Şəxsiyyət vəsiqəsinin nömrəsi">
+                    </div>
+                    <div class="form-group">
+                        <label>Şəxsiyyət vəsiqəsinin FİN kodu <span>*</span></label>
+                        <input type="text" id="fin_code" maxlength="7" style="text-transform: uppercase;" required placeholder="FİN kodu">
+                    </div>
+                    <div class="form-group">
+                        <label>Müraciət növü <span>*</span></label>
+                        <select id="app_type" required>
+                            <option value="">- Müraciət növünü seçin -</option>
+                            <option>Ərizə</option>
                             <option>Təklif</option>
-                            <option>Məlumat sorğusu</option>
+                            <option>Şikayət</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Xidmət Sahəsi</label>
-                        <select id="area">
-                            <option>Su təminatı</option>
-                            <option>Artezian quyuları</option>
-                            <option>Kanalların təmizlənməsi</option>
+                        <label>Mövzu <span>*</span></label>
+                        <select id="subject" required>
+                            <option value="">- Mövzunu seçin -</option>
+                            <option>Su təchizatı ilə bağlı</option>
+                            <option>Kanalizasiya xidməti ilə bağlı</option>
+                            <option>Borc və ödənişlərlə bağlı</option>
+                            <option>Sayğacla bağlı</option>
                             <option>Digər</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Tam Ünvan</label>
-                    <input type="text" id="address" required placeholder="Kənd, küçə və ya ərazi">
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Müraciət mətni <span>*</span></label>
+                    <textarea id="message" required maxlength="1500" placeholder="Müraciət mətni"></textarea>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label>Müraciətin Məzmunu</label>
-                    <textarea id="message" required placeholder="Müraciətinizi bura yazın..."></textarea>
-                </div>
-
-                <button type="submit" class="send-btn" id="submit-btn">MÜRACİƏTİ GÖNDƏR</button>
+                <button type="submit" class="send-btn" id="submit-btn" style="margin-top: 20px;">GÖNDƏR</button>
             </form>
         </div>
 
         <div id="success-area" class="form-card">
             <h2 style="color: #0056b3;">Təşəkkür edirik!</h2>
-            <p style="margin-top: 10px;">Müraciətiniz qəbul olundu. ID nömrəniz:</p>
+            <p>Müraciətiniz qəbul olundu. ID nömrəniz:</p>
             <div class="id-box" id="id-display"></div>
-            <p style="font-size: 0.85rem; color: #666; margin-bottom: 20px;">Şəkil və ya video sənədlərinizi bu ID-ni qeyd edərək bizə WhatsApp-la göndərin.</p>
             <a id="final-wp" href="#" class="wp-btn" style="display: inline-block;">WhatsApp-la Sənəd Göndər</a>
             <br><br>
             <button onclick="location.reload()" style="background: none; border: 1px solid #ccc; padding: 5px 15px; cursor: pointer; border-radius: 4px;">Yeni Müraciət</button>
@@ -286,47 +172,33 @@
 
     <footer>
         <h3>BƏRDƏ SMSİİ</h3>
-        <p style="font-size:0.7rem; margin-top:10px; opacity:.5;">© 2026 Bütün Hüquqlar Qorunur.</p>
+        <p>© 2026 Bütün Hüquqlar Qorunur.</p>
     </footer>
 
     <script>
-        // Sidebar idarəsi
         function openNav() { document.getElementById("sideNav").style.width = "280px"; }
         function closeNav() { document.getElementById("sideNav").style.width = "0"; }
 
-        // Hava durumu
-        async function getBardaWeather() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
-                const data = await res.json();
-                document.getElementById('temp').innerText = `☀️ ${Math.round(data.current_weather.temperature)}°C`;
-            } catch {
-                document.getElementById('temp').innerText = "☀️ +18°C";
-            }
-        }
-        getBardaWeather();
-
-        // EmailJS Init
         emailjs.init("tatcA8fFwhzTeu39T");
 
-        // Form İşlənməsi
         document.getElementById('muraciet-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
             btn.innerText = "GÖNDƏRİLİR...";
             btn.disabled = true;
 
-            const fin = document.getElementById('fin').value.toUpperCase();
+            const fin = document.getElementById('fin_code').value.toUpperCase();
             const orderID = fin + Math.floor(100000 + Math.random() * 900000);
 
             const params = {
-                name: document.getElementById('name').value,
-                surname: document.getElementById('surname').value,
-                fin: fin,
+                full_name: document.getElementById('full_name').value,
                 phone: document.getElementById('phone').value,
-                type: document.getElementById('type').value,
-                area: document.getElementById('area').value,
                 address: document.getElementById('address').value,
+                email: document.getElementById('email').value,
+                id_card: document.getElementById('id_card').value,
+                fin_code: fin,
+                app_type: document.getElementById('app_type').value,
+                subject: document.getElementById('subject').value,
                 message: document.getElementById('message').value,
                 order_id: orderID
             };
@@ -336,13 +208,12 @@
                     document.getElementById('form-container').style.display = 'none';
                     document.getElementById('success-area').style.display = 'block';
                     document.getElementById('id-display').innerText = orderID;
-                    
                     const wpMsg = `Salam, Müraciət ID: ${orderID} üzrə sənədləri göndərirəm.`;
                     document.getElementById('final-wp').href = `https://wa.me/994709720209?text=${encodeURIComponent(wpMsg)}`;
                 }, (err) => {
-                    alert("Xəta baş verdi, yenidən yoxlayın.");
+                    alert("Xəta baş verdi.");
                     btn.disabled = false;
-                    btn.innerText = "MÜRACİƏTİ GÖNDƏR";
+                    btn.innerText = "GÖNDƏR";
                 });
         });
     </script>
