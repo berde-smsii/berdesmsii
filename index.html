@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bərdə SMSİİ | Rəsmi Portal</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
         /* 1. ÜMUMİ DİZAYN */
@@ -92,9 +94,26 @@
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; overflow: hidden; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        .social-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 30px; }
-        .social-btn { display: flex; align-items: center; justify-content: center; padding: 10px; background: #fff; text-decoration: none; color: #0056b3; font-weight: bold; border-radius: 8px; border: 1px solid #0056b3; font-size: 0.9rem; transition: .3s; }
-        .social-btn:hover { background: #0056b3; color: #fff; }
+        /* YENİLƏNMİŞ SOSİAL İKON STİLLƏRİ */
+        .social-section { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-bottom: 30px; 
+            flex-wrap: wrap; 
+        }
+        .social-icon { 
+            font-size: 32px; 
+            text-decoration: none; 
+            transition: 0.3s; 
+        }
+        .social-icon:hover { transform: scale(1.2); }
+        
+        .fa-facebook { color: #1877F2; }
+        .fa-instagram { color: #E4405F; }
+        .fa-linkedin { color: #0A66C2; }
+        .fa-tiktok { color: #000000; }
+        .fa-youtube { color: #FF0000; }
 
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .card { background: #fff; padding: 15px; border-radius: 10px; border-left: 4px solid #0056b3; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
@@ -150,7 +169,6 @@
             .hero { height: 260px; }
             .hero h2 { font-size: 1.1rem; }
             .weather-box { font-size: 0.85rem; padding: 6px 15px; }
-            .social-section { grid-template-columns: repeat(2, 1fr); gap: 8px; }
             
             .useful-links-grid { 
                 grid-template-columns: repeat(3, 1fr); 
@@ -209,48 +227,23 @@
             </div>
         </div>
 
-        
-        <style>
-    /* Köhnə .social-section və .social-btn stillərini silib bunları yapışdır */
-    .social-section {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 30px;
-    }
-    .social-icon {
-        font-size: 28px; /* İkonun ölçüsü */
-        transition: transform 0.3s ease;
-        text-decoration: none;
-    }
-    .social-icon:hover {
-        transform: scale(1.2); /* Üzərinə gələndə böyüsün */
-    }
-    /* İkonların öz rəngləri */
-    .fa-facebook { color: #1877F2; }
-    .fa-instagram { color: #E4405F; }
-    .fa-linkedin { color: #0A66C2; }
-    .fa-tiktok { color: #000000; }
-    .fa-youtube { color: #FF0000; }
-</style>
-
-<div class="social-section">
-    <a href="https://www.facebook.com/p/B%C9%99rd%C9%99-Su-Meliorasiya-Sisteml%C9%99rinin-%C4%B0stismar%C4%B0-61565938869736/" class="social-icon" target="_blank">
-        <i class="fab fa-facebook"></i>
-    </a>
-    <a href="https://www.instagram.com/berde_smsii/" class="social-icon" target="_blank">
-        <i class="fab fa-instagram"></i>
-    </a>
-    <a href="https://az.linkedin.com/in/b%C9%99rd%C9%99-su-meliorasiya-sisteml%C9%99rinin-istismar%C4%B1-idar%C9%99si-b5a068339" class="social-icon" target="_blank">
-        <i class="fab fa-linkedin"></i>
-    </a>
-    <a href="https://www.tiktok.com/@berde_smsii_" class="social-icon" target="_blank">
-        <i class="fab fa-tiktok"></i>
-    </a>
-    <a href="https://www.youtube.com/@Berde_smsii" class="social-icon" target="_blank">
-        <i class="fab fa-youtube"></i>
-    </a>
-</div>
+        <div class="social-section">
+            <a href="https://www.facebook.com/p/B%C9%99rd%C9%99-Su-Meliorasiya-Sisteml%C9%99rinin-%C4%B0stismar%C4%B0-61565938869736/" class="social-icon" target="_blank">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://www.instagram.com/berde_smsii/" class="social-icon" target="_blank">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://az.linkedin.com/in/b%C9%99rd%C9%99-su-meliorasiya-sisteml%C9%99rinin-istismar%C4%B1-idar%C9%99si-b5a068339" class="social-icon" target="_blank">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://www.tiktok.com/@berde_smsii_" class="social-icon" target="_blank">
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="https://www.youtube.com/@Berde_smsii" class="social-icon" target="_blank">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
         
         <div class="info-grid">
             <div class="card">
