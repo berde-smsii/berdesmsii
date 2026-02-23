@@ -98,7 +98,7 @@
             display: flex; 
             justify-content: center; 
             gap: 20px; 
-            margin-bottom: 30px; 
+            margin-bottom: 15px; 
             flex-wrap: wrap; 
         }
         .social-icon { 
@@ -107,7 +107,6 @@
             transition: 0.3s; 
         }
         .social-icon:hover { transform: scale(1.2); }
-        
         .fa-facebook { color: #1877F2; }
         .fa-instagram { color: #E4405F; }
         .fa-linkedin { color: #0A66C2; }
@@ -119,13 +118,23 @@
         .card h3 { font-size: 1rem; color: #0056b3; margin-bottom: 8px; }
         .card p, .card a { font-size: 0.9rem; color: #333; text-decoration: none; }
 
-        /* YENİLƏNMİŞ BÖLMƏ - 4 SÜTUN VƏ SOL İKON */
+        /* KEÇİDLƏR ÜÇÜN ÜMUMİ SƏBƏT */
         .useful-links-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 SÜTUN */
             gap: 12px;
             margin: 20px 0;
         }
+        
+        /* 4 SÜTUNLUQ ELEKTRON XİDMƏTLƏR */
+        .grid-4-cols {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* 3 SÜTUNLUQ DÖVLƏT QURUMLARI */
+        .grid-3-cols {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
         .useful-item {
             background: #fff;
             padding: 10px;
@@ -133,7 +142,7 @@
             text-decoration: none;
             transition: 0.3s;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            display: flex; /* İKON SOLDA */
+            display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: flex-start;
@@ -161,7 +170,8 @@
 
         /* MOBİL AYARLAR */
         @media (max-width: 992px) {
-            .useful-links-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-4-cols { grid-template-columns: repeat(2, 1fr); }
+            .grid-3-cols { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 768px) {
@@ -172,6 +182,7 @@
             .hero { height: 260px; }
             .hero h2 { font-size: 1.1rem; }
             .weather-box { font-size: 0.85rem; padding: 6px 15px; }
+            .grid-4-cols, .grid-3-cols { grid-template-columns: 1fr; }
             .map-section iframe { height: 200px; }
         }
     </style>
@@ -235,27 +246,9 @@
                 <i class="fab fa-youtube"></i>
             </a>
         </div>
-        
-        <div class="info-grid">
-            <div class="card">
-                <h3>📞 Əlaqə Məlumatları</h3>
-                <p>Telefon: <a href="tel:+994202082560">+994 20 208 25 60</a></p>
-                <p>WhatsApp: <a href="https://wa.me/994709720209">+994 70 972 02 09</a></p>
-            </div>
-            <div class="card">
-                <h3>📧 Elektron Poçt Ünvanı</h3>
-                <p><a href="mailto:Bardasmsii@rsmx.gov.az">Bardasmsii@rsmx.gov.az</a></p>
-            </div>
-            <div class="card">
-                <h3>⏰ İş Rejimi</h3>
-                <p>Bazar ertəsi – Cümə</p>
-                <p>Saat: 09:00 – 18:00</p>
-            </div>
-        </div>
 
-        <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Dövlət Qurumları</h3>
-        <div class="useful-links-grid">
-            <a href="https://www.heydaraliyevcenter.az/" target="_blank" class="useful-item">
+        <div class="divider"></div> <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Dövlət Qurumları</h3>
+        <div class="useful-links-grid grid-3-cols"> <a href="https://www.heydaraliyevcenter.az/" target="_blank" class="useful-item">
                 <img class="gov-img" src="https://rsmx.gov.az/storage/169/01K40WDW9ZFXDHXFRMF54D8880.png">
                 <p>Ulu Öndər <br> Heydər Əliyev</p>
             </a>
@@ -281,9 +274,9 @@
             </a>
         </div>
 
-        <div class="divider"></div> <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Elektron Xidmətlər və Portallar</h3>
-        <div class="useful-links-grid">
-            <a href="https://asan.gov.az/" target="_blank" class="useful-item">
+        <div class="divider"></div> 
+        <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Elektron Xidmətlər və Portallar</h3>
+        <div class="useful-links-grid grid-4-cols"> <a href="https://asan.gov.az/" target="_blank" class="useful-item">
                 <img class="gov-img" src="https://rsmx.gov.az/storage/20/asan.jpg">
                 <p>ASAN xidmət</p>
             </a>
@@ -315,6 +308,23 @@
                 <img class="gov-img" src="https://adsea.gov.az/storage/49/01JM3A61NQ9XSA6F0Y823SD12X.png">
                 <p>Elektron Su Portalı</p>
             </a>
+        </div>
+
+        <div class="info-grid">
+            <div class="card">
+                <h3>📞 Əlaqə Məlumatları</h3>
+                <p>Telefon: <a href="tel:+994202082560">+994 20 208 25 60</a></p>
+                <p>WhatsApp: <a href="https://wa.me/994709720209">+994 70 972 02 09</a></p>
+            </div>
+            <div class="card">
+                <h3>📧 Elektron Poçt Ünvanı</h3>
+                <p><a href="mailto:Bardasmsii@rsmx.gov.az">Bardasmsii@rsmx.gov.az</a></p>
+            </div>
+            <div class="card">
+                <h3>⏰ İş Rejimi</h3>
+                <p>Bazar ertəsi – Cümə</p>
+                <p>Saat: 09:00 – 18:00</p>
+            </div>
         </div>
 
         <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">📍 İdarənin Ünvanı<br>(Bərdə şəhər, S.Zöhrabbəyov küç. 10)</h3>
