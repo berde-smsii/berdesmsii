@@ -7,20 +7,20 @@
     "bashliq": "Su kanallarının təmizlənməsi",
     "metn": "Bərdə rayonu ərazisində əkin sahələrinin su təminatını yaxşılaşdırmaq məqsədilə magistral kanallarda təmizlik işləri aparılır.",
     "tarix": "15.03.2026",
-    "esas_sekil": "xeber3.jpg"
+    "esas_sekil": ["xeber3_1.jpg", "xeber3_2.jpg", "xeber3_3.jpg"]
   },
   {
     "id": 2,
     "bashliq": "Su kanallarının təmizlənməsi davam edir",
     "metn": "Bərdə rayonu ərazisində əkin sahələrinin su təminatını yaxşılaşdırmaq məqsədilə magistral kanallarda təmizlik işləri aparılır.",
     "tarix": "24.02.2026",
-    "esas_sekil": "xeber2.jpg"
+    "esas_sekil": ["xeber2_1.jpg", "xeber2_2.jpg", "xeber2_3.jpg"]
   },
   {
     "id": 1,
     "bashliq": "İdarənin yeni rəsmi veb-portalı istifadəyə verildi",
     "metn": "Vətəndaşların müraciətlərini daha rahat çatdırması və görülən işlərlə tanış olması üçün yeni saytımız fəaliyyətə başladı.",
     "tarix": "20.02.2026",
-    "esas_sekil": "xeber1.jpg"
+    "esas_sekil": ["xeber1_1.jpg", "xeber1_2.jpg", "xeber1_3.jpg"]
   }
 ]
