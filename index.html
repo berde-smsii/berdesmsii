@@ -91,14 +91,18 @@
         .news-container { display: flex; gap: 20px; width: max-content; animation: scrollNews 40s linear infinite; padding: 0 20px; }
         .news-container:hover { animation-play-state: paused; }
         @keyframes scrollNews { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .news-card { width: 300px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); flex-shrink: 0; border: 1px solid #eee; }
+        .news-card { width: 300px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); flex-shrink: 0; border: 1px solid #eee; height: fit-content; }
         .news-img-box { position: relative; width: 100%; height: 160px; }
         .news-img-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .news-img-box img.active { opacity: 1; }
         .news-content { padding: 12px; }
         .news-content h4 { font-size: 0.9rem; color: #0056b3; margin-bottom: 6px; }
-        .news-text { font-size: 0.8rem; color: #555; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
-        .read-more { font-size: 0.75rem; color: #fff; background: #0056b3; padding: 5px 12px; border-radius: 4px; text-decoration: none; display: inline-block; }
+        
+        /* Dinamik mətn üçün klaslar */
+        .news-text { font-size: 0.8rem; color: #555; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; transition: 0.3s; }
+        .news-text.expanded { -webkit-line-clamp: unset; display: block; overflow: visible; }
+        
+        .read-more { font-size: 0.75rem; color: #fff; background: #0056b3; padding: 5px 12px; border-radius: 4px; text-decoration: none; display: inline-block; cursor: pointer; border: none; }
 
         /* 5. KONTEYNER VƏ DİGƏR BÖLMƏLƏR */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
@@ -193,7 +197,7 @@
             .useful-item p { font-size: 0.65rem; }
             
             /* MOBİL ÜÇÜN XƏRİTƏ ÖLÇÜSÜ */
-            .map-section iframe { height: 200px !important; }
+            .map-section iframe { height: 250px !important; }
         }
     </style>
 </head>
@@ -298,7 +302,7 @@
 
         <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">📍 İdarənin Ünvanı<br>(Bərdə şəhər, S.Zöhrabbəyov küç. 10)</h3>
         <div class="map-section">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1525.96109919539!2d47.118947690623344!3d40.37731737409279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40391d0f509d3b5b%3A0xc3f9543881479860!2zQsSscmTEmSBTTVNJSQ!5e0!3m2!1saz!2saz!4v1715870000000" allowfullscreen loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1525.990494435645!2d47.118947088710815!3d40.37599021677353!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4038a39d885f81f1%3A0xc479678c2e680cc0!2zQsOocmTEmSBTTVNJSQ!5e0!3m2!1saz!2saz!4v1710000000000!5m2!1saz!2saz" allowfullscreen loading="lazy"></iframe>
         </div>
     </div>
 
@@ -320,6 +324,18 @@
         }
         getBardaWeather();
 
+        // Mətni açmaq/bağlamaq üçün funksiya
+        function toggleText(btn) {
+            const textElement = btn.previousElementSibling;
+            if (textElement.classList.contains('expanded')) {
+                textElement.classList.remove('expanded');
+                btn.innerText = "Davamını oxu";
+            } else {
+                textElement.classList.add('expanded');
+                btn.innerText = "Qısalt";
+            }
+        }
+
         // XEBERLERİ YUKLE
         async function loadNews() {
             try {
@@ -336,7 +352,7 @@
                             <div class="news-content">
                                 <h4>${item.bashliq}</h4>
                                 <p class="news-text">${item.metn}</p>
-                                <a href="xeber-detal.html?id=${item.id}" class="read-more">Davamını oxu</a>
+                                <button class="read-more" onclick="toggleText(this)">Davamını oxu</button>
                             </div>
                         </div>
                     `;
