@@ -14,111 +14,222 @@
 
         /* 2. HEADER */
         header {
-            background: #f5f7fa; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,.08); position: sticky; top: 0; z-index: 1000;
+            background: #f5f7fa;
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         .logo-box { display: flex; align-items: center; gap: 10px; }
-        .logo-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #0056b3; object-fit: cover; background: white; }
+        .logo-img {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid #0056b3;
+            object-fit: cover;
+            background: white;
+        }
         .logo-text h1 { font-size: 1.1rem; color: #0056b3; margin: 0; }
         .header-right { display: flex; align-items: center; gap: 15px; }
 
-        .wp-btn { background: #25D366; color: #fff; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .wp-btn {
+            background: #25D366;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
         .menu-toggle { font-size: 30px; cursor: pointer; color: #0056b3; }
 
         /* 3. SIDEBAR */
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 2000; top: 0; right: 0; background-color: #003366; overflow-x: hidden; transition: 0.5s; padding-top: 60px; }
-        .sidebar a { padding: 15px 30px; text-decoration: none; font-size: 1.1rem; color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar {
+            height: 100%; width: 0; position: fixed; z-index: 2000;
+            top: 0; right: 0; background-color: #003366;
+            overflow-x: hidden; transition: 0.5s; padding-top: 60px;
+        }
+        .sidebar a {
+            padding: 15px 30px; text-decoration: none; font-size: 1.1rem;
+            color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
         .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
         .sidebar .dev-info { position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem; }
 
         /* 4. HERO */
-        .hero { height: 320px; background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; padding: 20px; }
+        .hero {
+            height: 320px;
+            background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
         .hero h2 { font-size: 1.8rem; line-height: 1.3; margin-bottom: 15px; }
-        .weather-box { background: rgba(255, 255, 255, 0.2); padding: 10px 25px; border-radius: 50px; backdrop-filter: blur(8px); font-size: 1.1rem; border: 1px solid rgba(255, 255, 255, 0.4); display: flex; align-items: center; gap: 12px; }
 
-        /* YENİ XƏBƏR LENTİ VƏ OX İŞARƏLƏRİ */
-        .news-section-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
-        .news-wrapper { width: 100%; overflow-x: auto; background: #f0f7ff; padding: 20px 0; border-top: 1px solid #d0e7ff; border-bottom: 1px solid #d0e7ff; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
-        .news-wrapper::-webkit-scrollbar { display: none; }
-        .news-container { display: flex; gap: 20px; width: max-content; padding: 0 50px; }
-        
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: rgba(0, 86, 179, 0.8); color: white; border: none; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .nav-arrow:hover { background: #003366; }
-        .arrow-left { left: 10px; }
-        .arrow-right { right: 10px; }
+        .weather-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-        .news-card { width: 300px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); flex-shrink: 0; border: 1px solid #eee; }
+        /* YENİ XƏBƏR LENTİ STİLLƏRİ */
+        .news-wrapper { width: 100%; overflow: hidden; background: #f0f7ff; padding: 20px 0; margin: 10px 0; border-top: 1px solid #d0e7ff; border-bottom: 1px solid #d0e7ff; }
+        .news-container { display: flex; gap: 20px; width: max-content; animation: scrollNews 40s linear infinite; padding: 0 20px; }
+        .news-container:hover { animation-play-state: paused; }
+        @keyframes scrollNews { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .news-card { width: 300px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); flex-shrink: 0; border: 1px solid #eee; height: fit-content; }
         .news-img-box { position: relative; width: 100%; height: 160px; }
-        .news-img-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s; }
+        .news-img-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .news-img-box img.active { opacity: 1; }
         .news-content { padding: 12px; }
         .news-content h4 { font-size: 0.9rem; color: #0056b3; margin-bottom: 10px; }
-        .read-more { font-size: 0.75rem; color: #fff; background: #0056b3; padding: 6px 15px; border-radius: 4px; cursor: pointer; border: none; font-weight: bold; }
-
-        /* MODAL VƏ SLAYDER STİLLƏRİ */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 15px; }
-        .modal-content { background: #fff; width: 100%; max-width: 650px; max-height: 90vh; border-radius: 15px; position: relative; overflow-y: auto; }
-        .modal-close { position: absolute; top: 15px; right: 15px; font-size: 25px; cursor: pointer; color: #333; background: rgba(255,255,255,0.8); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         
-        /* Modal daxili slayder */
-        .modal-slider-container { position: relative; width: 100%; height: 350px; background: #000; overflow: hidden; }
-        .modal-slider-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .modal-slider-container img.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0.5; } to { opacity: 1; } }
+        /* Xəbər mətnini ana səhifədə gizlətdik */
+        .news-text { display: none; }
         
-        .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 15px 10px; cursor: pointer; font-size: 20px; z-index: 10; }
-        .slider-left { left: 0; border-radius: 0 5px 5px 0; }
-        .slider-right { right: 0; border-radius: 5px 0 0 5px; }
+        .read-more { font-size: 0.75rem; color: #fff; background: #0056b3; padding: 6px 15px; border-radius: 4px; text-decoration: none; display: inline-block; cursor: pointer; border: none; font-weight: bold; }
 
-        .modal-body { padding: 25px; }
-        .modal-body h2 { color: #0056b3; font-size: 1.3rem; margin-bottom: 10px; }
-        .modal-date { font-size: 0.85rem; color: #888; margin-bottom: 15px; display: block; }
-        .modal-desc { font-size: 1rem; line-height: 1.7; color: #444; text-align: justify; }
+        /* MODAL (XƏBƏR DETALI) STİLLƏRİ */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); display: none; justify-content: center;
+            align-items: center; z-index: 3000; padding: 15px;
+        }
+        .modal-content {
+            background: #fff; width: 100%; max-width: 600px; max-height: 90vh;
+            border-radius: 15px; position: relative; overflow-y: auto;
+            animation: modalFade 0.3s ease-out;
+        }
+        @keyframes modalFade { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-close {
+            position: absolute; top: 15px; right: 15px; font-size: 25px;
+            cursor: pointer; color: #333; background: #eee; width: 35px; height: 35px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 10;
+        }
+        .modal-body { padding: 20px; }
+        .modal-body img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+        .modal-body h2 { color: #0056b3; font-size: 1.2rem; margin-bottom: 10px; }
+        .modal-date { font-size: 0.8rem; color: #888; margin-bottom: 15px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .modal-desc { font-size: 0.95rem; line-height: 1.6; color: #444; }
 
-        /* DİGƏR BÖLMƏLƏR */
+        /* 5. KONTEYNER VƏ DİGƏR BÖLMƏLƏR */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+
         .main-video { background: #fff; padding: 6px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.05); margin-bottom: 25px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; overflow: hidden; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .social-section { display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
-        .social-icon { font-size: 32px; text-decoration: none; transition: 0.3s; }
+
+        .social-section { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-bottom: 15px; 
+            flex-wrap: wrap; 
+        }
+        .social-icon { 
+            font-size: 32px; 
+            text-decoration: none; 
+            transition: 0.3s; 
+        }
         .social-icon:hover { transform: scale(1.2); }
-        .fa-facebook { color: #1877F2; } .fa-instagram { color: #E4405F; } .fa-linkedin { color: #0A66C2; } .fa-tiktok { color: #000000; } .fa-youtube { color: #FF0000; }
+        .fa-facebook { color: #1877F2; }
+        .fa-instagram { color: #E4405F; }
+        .fa-linkedin { color: #0A66C2; }
+        .fa-tiktok { color: #000000; }
+        .fa-youtube { color: #FF0000; }
+
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .card { background: #fff; padding: 15px; border-radius: 10px; border-left: 4px solid #0056b3; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
         .card h3 { font-size: 1rem; color: #0056b3; margin-bottom: 8px; }
         .card p, .card a { font-size: 0.9rem; color: #333; text-decoration: none; }
+
         .useful-links-grid { display: grid; gap: 12px; margin: 20px 0; }
         .grid-4-cols { grid-template-columns: repeat(4, 1fr); }
         .grid-3-cols { grid-template-columns: repeat(3, 1fr); }
-        .useful-item { background: #fff; padding: 10px; border-radius: 10px; text-decoration: none; transition: 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; border: 1px solid #eee; min-height: 80px; }
+
+        .useful-item {
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            border: 1px solid #eee;
+            min-height: 80px;
+        }
+        .useful-item:hover { transform: translateY(-3px); border-color: #0056b3; }
         .gov-img { width: 50px; height: 50px; object-fit: contain; flex-shrink: 0; }
-        .useful-item p { font-size: 0.75rem; color: #003366; font-weight: bold; line-height: 1.2; }
-        .divider { height: 2px; background: linear-gradient(to right, transparent, #0056b3, transparent); margin: 30px 0; opacity: 0.3; }
+        .useful-item p { font-size: 0.75rem; color: #003366; font-weight: bold; line-height: 1.2; text-align: left; }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #0056b3, transparent);
+            margin: 30px 0;
+            opacity: 0.3;
+        }
+
+        /* 6. XƏRİTƏ */
         .map-section { background: #fff; padding: 4px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.08); overflow: hidden; }
         .map-section iframe { width: 100%; height: 350px; border: none; }
+
         footer { background: #003366; color: #fff; padding: 30px 20px; text-align: center; margin-top: 40px; }
 
+        /* MOBİL AYARLAR */
         @media (max-width: 768px) {
+            header { padding: 8px 3%; }
+            .logo-img { width: 45px; height: 45px; }
+            .logo-text h1 { font-size: 0.9rem; }
+            .wp-btn { padding: 6px 10px; font-size: 0.75rem; }
+            .hero { height: 260px; }
             .hero h2 { font-size: 1.1rem; }
-            .grid-4-cols, .grid-3-cols { grid-template-columns: repeat(2, 1fr); }
-            .modal-slider-container { height: 220px; }
+            .weather-box { font-size: 0.85rem; padding: 6px 15px; }
+            
+            .news-card { width: 260px; }
+            .news-img-box { height: 140px; }
+
+            .grid-4-cols, .grid-3-cols { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 8px;
+            }
+            .useful-item {
+                min-height: 65px;
+                padding: 8px;
+                gap: 6px;
+            }
+            .gov-img { width: 30px; height: 30px; }
+            .useful-item p { font-size: 0.65rem; }
+            
             .map-section iframe { height: 200px !important; }
+            .modal-content { width: 95%; }
         }
     </style>
 </head>
 <body>
 
-    <div id="newsModal" class="modal-overlay" onclick="closeModal()">
+    <div id="newsModal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close" onclick="closeModal()">×</span>
-            <div class="modal-slider-container" id="modalSlider">
-                </div>
+            <span class="modal-close" onclick="closeModal(event)">&times;</span>
             <div id="modalBody" class="modal-body">
-                <span id="modalDate" class="modal-date"></span>
-                <h2 id="modalTitle"></h2>
-                <div id="modalDesc" class="modal-desc"></div>
-            </div>
+                </div>
         </div>
     </div>
 
@@ -135,7 +246,9 @@
     <header>
         <div class="logo-box">
             <img src="logo.png" class="logo-img" alt="Bərdə SMSİİ Logo">
-            <div class="logo-text"><h1>BƏRDƏ SMSİİ</h1></div>
+            <div class="logo-text">
+                <h1>BƏRDƏ SMSİİ</h1>
+            </div>
         </div>
         <div class="header-right">
             <a href="https://wa.me/994709720209" class="wp-btn">WHATSAPP</a>
@@ -145,24 +258,28 @@
 
     <section class="hero">
         <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 15px;">
-            <img src="H.Eliyev_su_ag.png" alt="Heydər Əliyev Su" style="width: 330px; height: auto; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.4));">
+            <img src="H.Eliyev_su_ag.png" alt="Heydər Əliyev Su" style="width: 330px; height: auto; display: block; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.4));">
         </div>
         <h2>Bərdə Su Meliorasiya Sistemlərinin<br>İstismarı İdarəsi</h2>
-        <div class="weather-box">Bərdə Rayonu: <strong id="temp">Yüklənir...</strong></div>
+        <div class="weather-box">
+            <span>Bərdə Rayonu:</span>
+            <strong id="temp">Yüklənir...</strong>
+        </div>
     </section>
 
     <h3 style="color:#0056b3; margin: 20px 0 10px; text-align:center; font-size: 1.1rem;">Fəaliyyət Xəbərləri</h3>
-    <div class="news-section-wrapper">
-        <button class="nav-arrow arrow-left" onclick="scrollNews(-320)">❮</button>
-        <div class="news-wrapper" id="newsWrapper">
-            <div class="news-container" id="news-track"></div>
-        </div>
-        <button class="nav-arrow arrow-right" onclick="scrollNews(320)">❯</button>
+    <div class="news-wrapper">
+        <div class="news-container" id="news-track">
+            </div>
     </div>
 
     <div class="container">
         <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">Fəaliyyət Videoları</h3>
-        <div class="main-video"><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/G47IFyq0dZo" allowfullscreen></iframe></div></div>
+        <div class="main-video">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/G47IFyq0dZo" allowfullscreen></iframe>
+            </div>
+        </div>
 
         <div class="social-section">
             <a href="https://www.facebook.com/p/B%C9%99rd%C9%99-Su-Meliorasiya-Sisteml%C9%99rinin-%C4%B0stismar%C4%B0-61565938869736/" class="social-icon" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -172,34 +289,61 @@
             <a href="https://www.youtube.com/@Berde_smsii" class="social-icon" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
 
-        <div class="divider"></div>
+        <div class="divider"></div> 
         <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Dövlət Qurumları</h3>
-        <div class="useful-links-grid grid-3-cols">
+        <div class="useful-links-grid grid-3-cols"> 
             <a href="https://www.heydaraliyevcenter.az/" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/169/01K40WDW9ZFXDHXFRMF54D8880.png"><p>Ulu Öndər Heydər Əliyev</p></a>
             <a href="https://president.az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/430/01KB3F2AZ6RM6B082VT74EA6SH.png"><p>Azərbaycan Respublikasının Prezidenti</p></a>
-            <a href="http://mehriban-aliyeva.az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/429/01KB3F29P4DS6XBRN9HE0E85EB.png"><p>Azərbaycan Respublikasının I vitse-prezidenti</p></a>
+            <a href="http://mehriban-aliyeva.az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/429/01KB3F29P4DS6XBRN9HE0E85EB.png"><p>Azərbaycan Respublikasının <br> I vitse-prezidenti</p></a>
             <a href="https://heydar-aliyev-foundation.org" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/111/01K1B245Z758XX7QW2E8KHZEQZ.png"><p>Heydər Əliyev Fondu</p></a>
             <a href="https://nk.gov.az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/16/cabmin.png"><p>Azərbaycan Respublikası Nazirlər Kabineti</p></a>
             <a href="http://millimajlis.gov.az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/17/millimajlis.png"><p>Azərbaycan Respublikasının Milli Məclisi</p></a>
         </div>
 
-        <div class="divider"></div>
-        <div class="info-grid">
-            <div class="card"><h3>📞 Əlaqə</h3><p><a href="tel:+994202082560">+994 20 208 25 60</a></p></div>
-            <div class="card"><h3>📧 E-Poçt</h3><p><a href="mailto:Bardasmsii@rsmx.gov.az">Bardasmsii@rsmx.gov.az</a></p></div>
-            <div class="card"><h3>⏰ İş Rejimi</h3><p>Bazar ertəsi – Cümə (09:00 – 18:00)</p></div>
+        <div class="divider"></div> 
+        <h3 style="color:#0056b3; margin-bottom:15px; text-align:center; font-size: 1rem;">Elektron Xidmətlər və Portallar</h3>
+        <div class="useful-links-grid grid-4-cols"> 
+            <a href="https://asan.gov.az/" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/20/asan.jpg"><p>ASAN xidmət</p></a>
+            <a href="https://e-gov.az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/88/01JTRBF4FPFPMDATXBYX9R9GJ3.jpg"><p>Elektron Hökumət Portalı</p></a>
+            <a href="https://my.gov.az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/72/01JS2TG04D8PJ5WTDXMA4SR5P1.jpg"><p>MyGov Portalı</p></a>
+            <a href="https://dxr.az/?lang=az" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/25/gerb.svg"><p>Dövlət Xidmətləri Portalı</p></a>
+            <a href="https://opendata.az/" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/19/open-data.jpg"><p>Açıq Məlumatlar Portalı</p></a>
+            <a href="https://birdamci.az/" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/23/birdamci.jpg"><p>Bir damcı dəstək portalı</p></a>
+            <a href="https://azranking.az/" target="_blank" class="useful-item"><img class="gov-img" src="https://rsmx.gov.az/storage/22/gerb.svg"><p>Biznes mühiti və Beynəlxalq reytinqlər üzrə Komissiya</p></a>
+            <a href="http://e-su.az" target="_blank" class="useful-item"><img class="gov-img" src="https://adsea.gov.az/storage/49/01JM3A61NQ9XSA6F0Y823SD12X.png"><p>Elektron Su Portalı</p></a>
         </div>
 
-        <div class="map-section"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.8156105036797!2d47.13441516890717!3d40.361561050367975!2m3!1f0!2f0!2f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIxJzQxLjYiTiA0N8KwMDgnMDMuOSJF!5e0!3m2!1saz!2saz!4v1708170000000!5m2!1saz!2saz" allowfullscreen loading="lazy"></iframe></div>
+        <div class="divider"></div> 
+        <div class="info-grid">
+            <div class="card">
+                <h3>📞 Əlaqə Məlumatları</h3>
+                <p>Telefon: <a href="tel:+994202082560">+994 20 208 25 60</a></p>
+                <p>WhatsApp: <a href="https://wa.me/994709720209">+994 70 972 02 09</a></p>
+            </div>
+            <div class="card">
+                <h3>📧 Elektron Poçt Ünvanı</h3>
+                <p><a href="mailto:Bardasmsii@rsmx.gov.az">Bardasmsii@rsmx.gov.az</a></p>
+            </div>
+            <div class="card">
+                <h3>⏰ İş Rejimi</h3>
+                <p>Bazar ertəsi – Cümə (09:00 – 18:00)</p>
+            </div>
+        </div>
+
+        <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">📍 İdarənin Ünvanı<br>(Bərdə şəhər, S.Zöhrabbəyov küç. 10)</h3>
+        <div class="map-section">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.8156105036797!2d47.13441516890717!3d40.361561050367975!2m3!1f0!2f0!2f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDIxJzQxLjYiTiA0N8KwMDgnMDMuOSJF!5e0!3m2!1saz!2saz!4v1708170000000!5m2!1saz!2saz" allowfullscreen loading="lazy"></iframe>
+        </div>
     </div>
 
-    <footer><h3>BƏRDƏ SMSİİ</h3><p style="font-size:0.7rem; margin-top:10px; opacity:.5;">© 2026 Bütün Hüquqlar Qorunur.</p></footer>
+    <footer>
+        <h3>BƏRDƏ SMSİİ</h3>
+        <p style="font-size:0.7rem; margin-top:10px; opacity:.5;">© 2026 Bütün Hüquqlar Qorunur.</p>
+    </footer>
 
     <script>
         function openNav() { document.getElementById("sideNav").style.width = "280px"; }
         function closeNav() { document.getElementById("sideNav").style.width = "0"; }
-
-        function scrollNews(val) { document.getElementById('newsWrapper').scrollBy({ left: val, behavior: 'smooth' }); }
 
         async function getBardaWeather() {
             try {
@@ -210,34 +354,20 @@
         }
         getBardaWeather();
 
-        // MODAL SLAYDER FUNKSİYALARI
-        let currentSlide = 0;
-        let slideImages = [];
-
-        function openModal(imgArray, title, text, date) {
-            slideImages = imgArray;
-            currentSlide = 0;
-            const slider = document.getElementById('modalSlider');
+        // MODAL FUNKSİYALARI
+        function openModal(img, title, text, date) {
+            const modal = document.getElementById('newsModal');
+            const body = document.getElementById('modalBody');
             
-            let sliderHTML = slideImages.map((src, i) => `<img src="${src}" class="${i === 0 ? 'active' : ''}">`).join('');
-            if(slideImages.length > 1) {
-                sliderHTML += `<button class="slider-arrow slider-left" onclick="changeSlide(-1)">❮</button>`;
-                sliderHTML += `<button class="slider-arrow slider-right" onclick="changeSlide(1)">❯</button>`;
-            }
+            body.innerHTML = `
+                <img src="${img}" alt="Xəbər şəkli">
+                <span class="modal-date"><i class="far fa-calendar-alt"></i> ${date || '25 Fevral 2026'}</span>
+                <h2>${title}</h2>
+                <div class="modal-desc">${text}</div>
+            `;
             
-            slider.innerHTML = sliderHTML;
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalDesc').innerText = text;
-            document.getElementById('modalDate').innerText = date || '';
-            document.getElementById('newsModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function changeSlide(dir) {
-            const imgs = document.querySelectorAll('#modalSlider img');
-            imgs[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + dir + imgs.length) % imgs.length;
-            imgs[currentSlide].classList.add('active');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Arxa fonu dondur
         }
 
         function closeModal() {
@@ -245,15 +375,19 @@
             document.body.style.overflow = 'auto';
         }
 
+        // XEBERLERİ YUKLE
         async function loadNews() {
             try {
                 const response = await fetch('xeberler.json');
                 const newsData = await response.json();
                 const track = document.getElementById('news-track');
+                const doubledData = [...newsData, ...newsData];
 
-                track.innerHTML = newsData.map((item) => {
+                track.innerHTML = doubledData.map((item) => {
                     const imgs = item.esas_sekil.map((img, i) => `<img src="${img}" class="${i === 0 ? 'active' : ''}">`).join('');
-                    const imgListStr = JSON.stringify(item.esas_sekil);
+                    const firstImg = item.esas_sekil[0];
+                    
+                    // JSON-dan gələn mətnlərdəki dırnaq işarələrini JS xətası verməməsi üçün təmizləyirik
                     const cleanText = item.metn.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     const cleanTitle = item.bashliq.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
@@ -262,13 +396,13 @@
                             <div class="news-img-box">${imgs}</div>
                             <div class="news-content">
                                 <h4>${item.bashliq}</h4>
-                                <button class="read-more" onclick='openModal(${imgListStr}, "${cleanTitle}", "${cleanText}", "${item.tarix || ""}")'>(Ətraflı)</button>
+                                <button class="read-more" onclick="openModal('${firstImg}', '${cleanTitle}', '${cleanText}', '${item.tarix || ''}')">(Ətraflı)</button>
                             </div>
                         </div>
                     `;
                 }).join('');
 
-                // Ana səhifədəki avtomatik foto animasiyası
+                // FOTOLARI DONURDUR
                 document.querySelectorAll('.news-img-box').forEach(box => {
                     const imgs = box.querySelectorAll('img');
                     if (imgs.length > 1) {
