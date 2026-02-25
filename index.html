@@ -96,13 +96,35 @@
         .news-img-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .news-img-box img.active { opacity: 1; }
         .news-content { padding: 12px; }
-        .news-content h4 { font-size: 0.9rem; color: #0056b3; margin-bottom: 6px; }
+        .news-content h4 { font-size: 0.9rem; color: #0056b3; margin-bottom: 10px; }
         
-        /* Dinamik mətn üçün klaslar */
-        .news-text { font-size: 0.8rem; color: #555; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; transition: 0.3s; }
-        .news-text.expanded { -webkit-line-clamp: unset; display: block; overflow: visible; }
+        /* Xəbər mətnini ana səhifədə gizlətdik */
+        .news-text { display: none; }
         
-        .read-more { font-size: 0.75rem; color: #fff; background: #0056b3; padding: 5px 12px; border-radius: 4px; text-decoration: none; display: inline-block; cursor: pointer; border: none; }
+        .read-more { font-size: 0.75rem; color: #fff; background: #0056b3; padding: 6px 15px; border-radius: 4px; text-decoration: none; display: inline-block; cursor: pointer; border: none; font-weight: bold; }
+
+        /* MODAL (XƏBƏR DETALI) STİLLƏRİ */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); display: none; justify-content: center;
+            align-items: center; z-index: 3000; padding: 15px;
+        }
+        .modal-content {
+            background: #fff; width: 100%; max-width: 600px; max-height: 90vh;
+            border-radius: 15px; position: relative; overflow-y: auto;
+            animation: modalFade 0.3s ease-out;
+        }
+        @keyframes modalFade { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-close {
+            position: absolute; top: 15px; right: 15px; font-size: 25px;
+            cursor: pointer; color: #333; background: #eee; width: 35px; height: 35px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 10;
+        }
+        .modal-body { padding: 20px; }
+        .modal-body img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+        .modal-body h2 { color: #0056b3; font-size: 1.2rem; margin-bottom: 10px; }
+        .modal-date { font-size: 0.8rem; color: #888; margin-bottom: 15px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .modal-desc { font-size: 0.95rem; line-height: 1.6; color: #444; }
 
         /* 5. KONTEYNER VƏ DİGƏR BÖLMƏLƏR */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
@@ -196,12 +218,20 @@
             .gov-img { width: 30px; height: 30px; }
             .useful-item p { font-size: 0.65rem; }
             
-            /* MOBİL ÜÇÜN XƏRİTƏ ÖLÇÜSÜ */
             .map-section iframe { height: 200px !important; }
+            .modal-content { width: 95%; }
         }
     </style>
 </head>
 <body>
+
+    <div id="newsModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal(event)">&times;</span>
+            <div id="modalBody" class="modal-body">
+                </div>
+        </div>
+    </div>
 
     <div id="sideNav" class="sidebar">
         <span class="close-btn" onclick="closeNav()">×</span>
@@ -324,16 +354,25 @@
         }
         getBardaWeather();
 
-        // Mətni açmaq/bağlamaq üçün funksiya
-        function toggleText(btn) {
-            const textElement = btn.previousElementSibling;
-            if (textElement.classList.contains('expanded')) {
-                textElement.classList.remove('expanded');
-                btn.innerText = "Davamını oxu";
-            } else {
-                textElement.classList.add('expanded');
-                btn.innerText = "Qısalt";
-            }
+        // MODAL FUNKSİYALARI
+        function openModal(img, title, text, date) {
+            const modal = document.getElementById('newsModal');
+            const body = document.getElementById('modalBody');
+            
+            body.innerHTML = `
+                <img src="${img}" alt="Xəbər şəkli">
+                <span class="modal-date"><i class="far fa-calendar-alt"></i> ${date || '25 Fevral 2026'}</span>
+                <h2>${title}</h2>
+                <div class="modal-desc">${text}</div>
+            `;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Arxa fonu dondur
+        }
+
+        function closeModal() {
+            document.getElementById('newsModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         // XEBERLERİ YUKLE
@@ -344,15 +383,20 @@
                 const track = document.getElementById('news-track');
                 const doubledData = [...newsData, ...newsData];
 
-                track.innerHTML = doubledData.map((item, idx) => {
+                track.innerHTML = doubledData.map((item) => {
                     const imgs = item.esas_sekil.map((img, i) => `<img src="${img}" class="${i === 0 ? 'active' : ''}">`).join('');
+                    const firstImg = item.esas_sekil[0];
+                    
+                    // JSON-dan gələn mətnlərdəki dırnaq işarələrini JS xətası verməməsi üçün təmizləyirik
+                    const cleanText = item.metn.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const cleanTitle = item.bashliq.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
                     return `
                         <div class="news-card">
                             <div class="news-img-box">${imgs}</div>
                             <div class="news-content">
                                 <h4>${item.bashliq}</h4>
-                                <p class="news-text">${item.metn}</p>
-                                <button class="read-more" onclick="toggleText(this)">Davamını oxu</button>
+                                <button class="read-more" onclick="openModal('${firstImg}', '${cleanTitle}', '${cleanText}', '${item.tarix || ''}')">(Ətraflı)</button>
                             </div>
                         </div>
                     `;
