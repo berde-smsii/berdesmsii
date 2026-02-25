@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İstifadə Şərtləri | Bərdə SMSİİ</title>
+
+    <style>
+        /* 1. ÜMUMİ DİZAYN */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background: #e6f4ff; color: #333; overflow-x: hidden; }
+
+        /* 2. HEADER - Ana səhifə standartı */
+        header { 
+            background: #f5f7fa;
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .logo-img {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid #0056b3;
+            object-fit: cover;
+            background: white;
+        }
+        .logo-text h1 { font-size: 1.1rem; color: #0056b3; margin: 0; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+
+        .wp-btn {
+            background: #25D366;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .menu-toggle { font-size: 30px; cursor: pointer; color: #0056b3; }
+
+        /* 3. SIDEBAR */
+        .sidebar {
+            height: 100%; width: 0; position: fixed; z-index: 2000;
+            top: 0; right: 0; background-color: #003366;
+            overflow-x: hidden; transition: 0.5s; padding-top: 60px;
+        }
+        .sidebar a {
+            padding: 15px 30px; text-decoration: none; font-size: 1.1rem;
+            color: #d1d1d1; display: block; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar .close-btn { position: absolute; top: 10px; left: 20px; font-size: 30px; color: white; cursor: pointer; }
+        .sidebar .dev-info { position: absolute; bottom: 20px; left: 30px; color: #25D366; font-size: 0.8rem; }
+
+        /* 4. HERO */
+        .hero {
+            height: 320px;
+            background: linear-gradient(rgba(0,86,179,.6),rgba(0,86,179,.6)), url('fon.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+        }
+        .hero h2 { font-size: 1.8rem; line-height: 1.3; margin-bottom: 15px; }
+
+        .weather-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 5. MƏZMUN (STİLLƏR QORUNUR) */
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        .info-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.05);
+            margin-bottom: 25px;
+            border-left: 4px solid #0056b3;
+        }
+        .info-card h3 { font-size: 1.1rem; color: #0056b3; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .info-card p { font-size: 0.95rem; color: #333; line-height: 1.6; text-align: justify; }
+        .info-card ul { margin-left: 20px; margin-top: 10px; }
+        .info-card li { margin-bottom: 8px; font-size: 0.95rem; color: #444; line-height: 1.5; }
+
+        /* 6. MOBİL OPTİMİZASİYA */
+        @media (max-width: 768px) {
+            header { padding: 8px 3%; }
+            .logo-img { width: 45px; height: 45px; }
+            .logo-text h1 { font-size: 0.9rem; }
+            .wp-btn { padding: 6px 10px; font-size: 0.75rem; }
+            .hero { height: 260px; }
+            .hero h2 { font-size: 1.1rem; }
+            .weather-box { font-size: 0.85rem; padding: 6px 15px; }
+            .info-card h3 { font-size: 1rem; }
+            .info-card p, .info-card li { font-size: 0.85rem; }
+        }
+
+        footer {
+            background: #003366;
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sideNav" class="sidebar">
+        <span class="close-btn" onclick="closeNav()">×</span>
+        <a href="index.html">Ana Səhifə</a>
+        <a href="haqqimizda.html">Haqqımızda</a>
+        <a href="struktur.html">Struktur</a>
+        <a href="rehberlik.html">Rəhbərlik</a>
+        <a href="elektron-muraciet.html">Elektron Müraciət</a>
+        <a href="istifade-sertleri.html" style="color:white; background:#0056b3;">İstifadə Şərtləri</a>
+        <div class="dev-info">Full-stack Developer:<br><span style="color:white">Qərib Səfərli</span></div>
+    </div>
+
+    <header>
+        <div class="logo-box">
+            <img src="logo.png" class="logo-img" alt="Logo">
+            <div class="logo-text"><h1>BƏRDƏ SMSİİ</h1></div>
+        </div>
+        <div class="header-right">
+            <a href="https://wa.me/994709720209" class="wp-btn">WHATSAPP</a>
+            <div class="menu-toggle" onclick="openNav()">☰</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 15px;">
+            <img src="H.Eliyev_su_ag.png" 
+                 alt="Heydər Əliyev Su" 
+                 style="width: 330px; height: auto; display: block; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.4));">
+        </div>
+        
+        <h2>Portalın İstifadə Şərtləri və<br>Məxfilik Siyasəti</h2>
+        <div class="weather-box">
+            <span>Bərdə Rayonu:</span>
+            <strong id="temp">Yüklənir...</strong>
+        </div>
+    </section>
+
+    <div class="container">
+        
+        <div class="info-card">
+            <h3>Ümumi müddəalar</h3>
+            <p>
+                Bərdə Su Meliorasiya Sistemlərinin İstismarı İdarəsinin (Bərdə SMSİİ) rəsmi internet portalına daxil olmaqla, siz aşağıda qeyd olunan istifadə şərtlərini qəbul etmiş hesab olunursunuz. Bu şərtlər portalda təqdim olunan məlumatların, elektron xidmətlərin və resursların istifadə qaydalarını tənzimləyir.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3>Müəllif hüquqlarının qorunması</h3>
+            <p>
+                Portalda yerləşdirilmiş bütün mətnlər, fotoşəkillər, videolar və dizayn elementləri "Bərdə SMSİİ"-yə məxsusdur və qanunvericiliklə qorunur. Məlumatlardan istifadə zamanı aşağıdakılara əməl olunmalıdır:
+            </p>
+            <ul>
+                <li>Məlumatdan istifadə edərkən portala (link vasitəsilə) istinad mütləqdir.</li>
+                <li>Rəsmi loqo və sənədlərin kommersiya məqsədilə icazəsiz kopyalanması qadağandır.</li>
+                <li>Xəbərlərin məzmunu təhrif edilmədən paylaşılmalıdır.</li>
+            </ul>
+        </div>
+
+        <div class="info-card">
+            <h3>Elektron müraciət qaydaları</h3>
+            <p>
+                Elektron müraciət bölməsindən istifadə edən vətəndaşlar təqdim etdikləri məlumatların dürüstlüğünə görə məsuliyyət daşıyırlar. "Vətəndaşların müraciətləri haqqında" Azərbaycan Respublikasının Qanununa uyğun olaraq:
+            </p>
+            <ul>
+                <li>Etikadan kənar ifadələr işlədilən müraciətlərə baxılmır.</li>
+                <li>Məlumatları eksik və ya saxta olan müraciətlər icraata götürülmür.</li>
+                <li>Təqdim olunan şəxsi məlumatlar yalnız müraciətin cavablandırılması məqsədilə istifadə olunur.</li>
+            </ul>
+        </div>
+
+        <div class="info-card">
+            <h3>Məsuliyyətdən imtina</h3>
+            <p>
+                İdarə portalda yerləşdirilən məlumatların aktuallığını qorumağa çalışsa da, texniki nasazlıqlar və ya kənar müdaxilələr səbəbindən yaranan fasilələrə görə məsuliyyət daşımır. Həmçinin, portalda yer alan xarici keçidlərin (faydalı linklər bölməsi) məzmununa görə məsuliyyət müvafiq qurumların üzərinə düşür.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h3>Şərtlərin yenilənməsi</h3>
+            <p>
+                Bərdə SMSİİ istənilən vaxt istifadə şərtlərinə dəyişiklik etmək hüququnu özündə saxlayır. İstifadəçilərə mütəmadi olaraq bu bölməni nəzərdən keçirmələri tövsiyə olunur.
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <h3>BƏRDƏ SMSİİ</h3>
+        <p style="font-size:0.7rem; margin-top:10px; opacity:.5;">© 2026 Bütün Hüquqlar Qorunur.</p>
+    </footer>
+
+    <script>
+        function openNav() { document.getElementById("sideNav").style.width = "280px"; }
+        function closeNav() { document.getElementById("sideNav").style.width = "0"; }
+
+        async function getBardaWeather() {
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
+                const data = await res.json();
+                const temp = Math.round(data.current_weather.temperature);
+                document.getElementById('temp').innerText = `☀️ ${temp}°C`;
+            } catch (error) {
+                document.getElementById('temp').innerText = "☀️ +18°C";
+            }
+        }
+        getBardaWeather();
+    </script>
+</body>
+</html>
