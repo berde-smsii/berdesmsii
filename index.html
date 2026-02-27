@@ -469,28 +469,38 @@
         let naraData = null;
 
 async function initNara() {
-    const res = await fetch('Nara_Bot_Database.json');
-    naraData = await res.json();
-    
-    // Sayt açılanda vaxta görə qarşılama
-    setTimeout(() => {
-        document.getElementById('nara-chat').style.display = 'flex';
-        const hour = new Date().getHours();
-        const msg = hour < 12 ? naraData.bot_info.welcome_messages.morning : 
-                   (hour < 18 ? naraData.bot_info.welcome_messages.afternoon : naraData.bot_info.welcome_messages.evening);
-        addNaraMsg("bot", msg);
-    }, 2000);
+    try {
+        const res = await fetch('Nara_Bot_Database.json');
+        naraData = await res.json();
+        
+        setTimeout(() => {
+            const chatBox = document.getElementById('nara-chat');
+            if(chatBox) chatBox.style.display = 'flex';
+            
+            const hour = new Date().getHours();
+            let welcome = naraData.bot_info.welcome_messages.default;
+            if (hour < 12) welcome = naraData.bot_info.welcome_messages.morning;
+            else if (hour < 18) welcome = naraData.bot_info.welcome_messages.afternoon;
+            else welcome = naraData.bot_info.welcome_messages.evening;
+            
+            addNaraMsg("bot", welcome);
+        }, 2000);
+    } catch(e) { console.error("Baza yüklənmədi."); }
 }
 
 function addNaraMsg(sender, text) {
     const area = document.getElementById('nara-msgs');
     const m = document.createElement('div');
-    m.style.padding = "12px 16px"; m.style.borderRadius = "15px"; m.style.fontSize = "14px"; m.style.maxWidth = "85%";
+    m.style.cssText = "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px;";
     
     if(sender === "bot") {
-        m.style.background = "#f1f1f1"; m.style.alignSelf = "flex-start";
+        m.style.background = "#f1f3f5";
+        m.style.alignSelf = "flex-start";
+        m.style.color = "#333";
     } else {
-        m.style.background = "#004a99"; m.style.color = "white"; m.style.alignSelf = "flex-end";
+        m.style.background = "#004a99";
+        m.style.color = "white";
+        m.style.alignSelf = "flex-end";
     }
     m.innerHTML = text.replace(/\n/g, "<br>");
     area.appendChild(m);
@@ -503,27 +513,40 @@ function sendToNara() {
     if(!val) return;
 
     addNaraMsg("user", val);
-    const query = val.toLowerCase();
+    const query = val.toLowerCase().replace(/[-]/g, ""); // "QD-1" və "QD1" fərqini aradan qaldırır
     inp.value = "";
 
-    let response = naraData.bot_info.personality.human_phrases.not_found;
-    
-    // İnsani məntiq
-    if(query.includes("salam")) response = "Salam! 😊 Sizə necə kömək edə bilərəm?";
-    else if(query.includes("əlaqə") || query.includes("vatsap")) {
-        response = `📞 Tel: ${naraData.bot_info.contacts.phone}<br>🟢 WhatsApp: <a href="https://wa.me/994709720209" style="color:#004a99">${naraData.bot_info.contacts.whatsapp}</a><br>📍 Ünvan: ${naraData.bot_info.contacts.address}`;
+    let response = "";
+
+    // 1. İnsani söhbət məntiqi
+    if (query.includes("salam")) {
+        response = "Salam! Sizə kömək etməyə hazıram. 😊 Bərdə SMSİİ-nin suvarma sistemləri, quyular və ya digər texniki məlumatlar barədə nə öyrənmək istərdiniz?";
+    } 
+    else if (query.includes("əlaqə") || query.includes("vatsap") || query.includes("nömrə")) {
+        response = `Bizimlə əlaqə saxlamaq çox asandır: \n\n📞 Telefon: ${naraData.bot_info.contacts.phone} \n🟢 WhatsApp: ${naraData.bot_info.contacts.whatsapp} \n📍 Ünvan: ${naraData.bot_info.contacts.address} \n\nSizə başqa necə kömək edə bilərəm?`;
     }
-    else if(query.includes("şikayət") || query.includes("problem")) {
-        response = naraData.bot_info.auto_responses.complaint;
+    else if (query.includes("şikayət") || query.includes("problem") || query.includes("işləmir")) {
+        response = "Məsələdən xəbərdar etdiyiniz üçün sağ olun. ⚠️ " + naraData.bot_info.auto_responses.complaint;
     }
-    else if(query.includes("sağ ol") || query.includes("təşəkkür")) {
-        response = naraData.bot_info.personality.human_phrases.thanks;
+    else if (query.includes("sağ ol") || query.includes("təşəkkür")) {
+        response = "Buyurun, borcumuzdur! 😊 Bərdə sakinlərinə xidmət etməkdən məmnunluq duyuruq. Hələlik!";
     }
-    // Texniki Baza Axtarışı
+    // 2. Ağıllı Baza Axtarışı
     else {
         const d = naraData.data;
-        const quyu = d.SubartezianQuyuTexGosterici?.records.find(r => query.includes(r["Yerləşdiyi ərazi (kənd,qəsəbə)"].toLowerCase()) || r["Reper nömrəsi"].toLowerCase() === query);
-        if(quyu) response = `<b>Kənd:</b> ${quyu["Yerləşdiyi ərazi (kənd,qəsəbə)"]}<br><b>Reper:</b> ${quyu["Reper nömrəsi"]}<br><b>Nasos:</b> ${quyu["Nasosun markası"]}<br><b>Vəziyyət:</b> ${quyu["Fəaliyyətdə olub-olmaması"]}`;
+        // İnsani axtarış: İstifadəçinin yazdığı söz bazadakı Reper və ya Kənd adının İÇİNDƏ varsa tapır
+        const quyu = d.SubartezianQuyuTexGosterici?.records.find(r => 
+            query.length > 2 && (
+                r["Yerləşdiyi ərazi (kənd,qəsəbə)"].toLowerCase().includes(query) || 
+                r["Reper nömrəsi"].toLowerCase().replace(/[-]/g, "").includes(query)
+            )
+        );
+
+        if(quyu) {
+            response = `Sizin üçün <b>${quyu["Yerləşdiyi ərazi (kənd,qəsəbə)"]}</b> kəndi üzrə məlumatları yoxladım. 📂 \n\n${quyu["Reper nömrəsi"]} nömrəli subartezian quyusunun göstəriciləri belədir: \n\n⚙️ Nasos markası: ${quyu["Nasosun markası"] || "Məlumat daxil edilməyib"} \n💧 Quyunun dərinliyi: ${quyu["Quyunun dərinliyi, metr"]} metr \n✅ Vəziyyəti: Hazırda <b>${quyu["Fəaliyyətdə olub-olmaması"]}</b> vəziyyətindədir. \n\nBaşqa bir kənd və ya quyu haqqında məlumat istəyirsiniz?`;
+        } else {
+            response = "Yazdığınız söz üzrə məlumatı tam dəqiqləşdirə bilmədim. 🤔 Zəhmət olmasa, kənd adını və ya reper nömrəsini (məsələn: 'QD-1') bir daha yoxlayın. Və ya birbaşa 'əlaqə' yazıb nömrələrimizi ala bilərsiniz.";
+        }
     }
 
     setTimeout(() => addNaraMsg("bot", response), 600);
@@ -534,37 +557,57 @@ function toggleNara() {
     chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
 }
 
-window.onload = initNara;
+window.addEventListener('load', initNara);
         
     </script>
 
 
     // NARA HTML ÜÇÜN HTML KODLARI
+    <style>
+    /* Mobil cihazlar üçün botun ölçüsünü tənzimləyirik */
+    @media screen and (max-width: 480px) {
+        #nara-chat {
+            width: 320px !important; /* Telefonlarda ekranı bütöv tutmasın */
+            height: 480px !important;
+            bottom: 80px !important;
+            right: 10px !important;
+        }
+        #nara-widget img {
+            width: 60px !important; /* İkon mobil üçün bir az kiçilsin */
+            height: 60px !important;
+        }
+    }
+</style>
 
-    <div id="nara-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Segoe UI', Tahoma, sans-serif;">
+<div id="nara-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Segoe UI', sans-serif;">
     <div onclick="toggleNara()" style="cursor: pointer; position: relative; transition: 0.3s;">
-        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" alt="Nara" style="width: 70px; height: 70px; border-radius: 50%; border: 3px solid #004a99; box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: white;">
+        <img src="https://cdn-icons-png.flaticon.com/512/6998/6998118.png" alt="Nara" style="width: 70px; height: 70px; border-radius: 50%; border: 3px solid #004a99; box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: white;">
         <span style="position: absolute; bottom: 5px; right: 5px; width: 15px; height: 15px; background: #2ecc71; border: 2px solid white; border-radius: 50%;"></span>
     </div>
 
     <div id="nara-chat" style="display: none; width: 380px; height: 550px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; position: absolute; bottom: 85px; right: 0; overflow: hidden; border: 1px solid #eee;">
-        <div style="background: linear-gradient(135deg, #004a99, #0066cc); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="background: linear-gradient(135deg, #004a99, #0066cc); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
             <div style="display:flex; align-items:center; gap:10px;">
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" style="width:35px; height:35px; border-radius:50%; background:white;">
+                <img src="https://cdn-icons-png.flaticon.com/512/6998/6998118.png" style="width:35px; height:35px; border-radius:50%; background:white;">
                 <div>
-                    <strong style="display:block;">Nara</strong>
-                    <small style="font-size:12px; opacity:0.8;">Bərdə SMSİİ Operatoru</small>
+                    <strong style="display:block; font-size:15px;">Nara</strong>
+                    <small style="font-size:11px; opacity:0.8;">Bərdə SMSİİ Operatoru</small>
                 </div>
             </div>
             <span onclick="toggleNara()" style="cursor: pointer; font-size: 25px;">&times;</span>
         </div>
-        <div id="nara-msgs" style="flex: 1; padding: 20px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 12px;"></div>
-        <div style="padding: 15px; border-top: 1px solid #eee; display: flex; background: white;">
-            <input type="text" id="nara-input" placeholder="Yazın..." style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-size: 14px;">
-            <button onclick="sendToNara()" style="margin-left: 10px; background: #004a99; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer;">Ok</button>
+        <div id="nara-msgs" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 12px;"></div>
+        <div style="padding: 12px; border-top: 1px solid #eee; display: flex; background: white;">
+            <input type="text" id="nara-input" placeholder="Sualınızı yazın..." 
+                   onkeypress="if(event.key === 'Enter') sendToNara()"
+                   style="flex: 1; padding: 12px 18px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-size: 14px;">
+            <button onclick="sendToNara()" style="margin-left: 10px; background: #004a99; color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </button>
         </div>
     </div>
 </div>
+    
     
     
 </body>
