@@ -494,16 +494,18 @@ async function initNara() {
 function addNaraMsg(sender, text) {
     const area = document.getElementById('nara-msgs');
     const m = document.createElement('div');
-    m.style.cssText = "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px;";
+    m.style.cssText = "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px; word-wrap: break-word;";
     
     if(sender === "bot") {
         m.style.background = "#f1f3f5";
         m.style.alignSelf = "flex-start";
         m.style.color = "#333";
+        m.style.borderBottomLeftRadius = "2px";
     } else {
         m.style.background = "#004a99";
         m.style.color = "white";
         m.style.alignSelf = "flex-end";
+        m.style.borderBottomRightRadius = "2px";
     }
     m.innerHTML = text.replace(/\n/g, "<br>");
     area.appendChild(m);
@@ -516,43 +518,52 @@ function sendToNara() {
     if(!val) return;
 
     addNaraMsg("user", val);
-    const query = val.toLowerCase().replace(/[-]/g, ""); // "QD-1" və "QD1" fərqini aradan qaldırır
+    
+    // Vətəndaşın yazdığı mətni təmizləyirik (kiçik hərf və tirelərin silinməsi)
+    const fullText = val.toLowerCase();
+    const cleanQuery = fullText.replace(/[-]/g, "");
     inp.value = "";
 
     let response = "";
 
-    // 1. İnsani söhbət məntiqi
-    if (query.includes("salam")) {
-        response = "Salam! Sizə kömək etməyə hazıram. 😊 Bərdə SMSİİ-nin suvarma sistemləri, quyular və ya digər texniki məlumatlar barədə nə öyrənmək istərdiniz?";
+    // 1. İnsani söhbət və Açar söz duyarlılığı
+    if (fullText.includes("salam")) {
+        response = "Salam! 😊 Sizi dinləyirəm. Bərdə SMSİİ rəqəmsal masasına xoş gəlmisiniz. Sizə necə kömək edə bilərəm?";
     } 
-    else if (query.includes("əlaqə") || query.includes("vatsap") || query.includes("nömrə")) {
-        response = `Bizimlə əlaqə saxlamaq çox asandır: \n\n📞 Telefon: ${naraData.bot_info.contacts.phone} \n🟢 WhatsApp: ${naraData.bot_info.contacts.whatsapp} \n📍 Ünvan: ${naraData.bot_info.contacts.address} \n\nSizə başqa necə kömək edə bilərəm?`;
+    else if (fullText.includes("əlaqə") || fullText.includes("vatsap") || fullText.includes("nömrə") || fullText.includes("telefon")) {
+        response = `Bizimlə əlaqə saxlamaq üçün məlumatlar: \n\n📞 Telefon: ${naraData.bot_info.contacts.phone} \n🟢 WhatsApp: ${naraData.bot_info.contacts.whatsapp} \n📍 Ünvan: ${naraData.bot_info.contacts.address} \n\nBaşqa bir sualınız varmı?`;
     }
-    else if (query.includes("şikayət") || query.includes("problem") || query.includes("işləmir")) {
-        response = "Məsələdən xəbərdar etdiyiniz üçün sağ olun. ⚠️ " + naraData.bot_info.auto_responses.complaint;
+    else if (fullText.includes("şikayət") || fullText.includes("problem") || fullText.includes("işləmir") || fullText.includes("su gəlmir") || fullText.includes("qəza")) {
+        response = "Məsələni diqqətimizə çatdırdığınız üçün təşəkkürlər. ⚠️ " + naraData.bot_info.auto_responses.complaint;
     }
-    else if (query.includes("sağ ol") || query.includes("təşəkkür")) {
-        response = "Buyurun, borcumuzdur! 😊 Bərdə sakinlərinə xidmət etməkdən məmnunluq duyuruq. Hələlik!";
+    else if (fullText.includes("sağ ol") || fullText.includes("təşəkkür") || fullText.includes("minnətdar")) {
+        response = "Buyurun, xoşdur! 😊 Bərdə sakinlərinə xidmət etmək Nara üçün bir zövqdür. Özünüzə yaxşı baxın!";
     }
-    // 2. Ağıllı Baza Axtarışı
+    // 2. Ağıllı Baza Analizi (Cümlənin içindən filtrasiya)
     else {
         const d = naraData.data;
-        // İnsani axtarış: İstifadəçinin yazdığı söz bazadakı Reper və ya Kənd adının İÇİNDƏ varsa tapır
-        const quyu = d.SubartezianQuyuTexGosterici?.records.find(r => 
-            query.length > 2 && (
-                r["Yerləşdiyi ərazi (kənd,qəsəbə)"].toLowerCase().includes(query) || 
-                r["Reper nömrəsi"].toLowerCase().replace(/[-]/g, "").includes(query)
-            )
-        );
+        let foundData = null;
 
-        if(quyu) {
-            response = `Sizin üçün <b>${quyu["Yerləşdiyi ərazi (kənd,qəsəbə)"]}</b> kəndi üzrə məlumatları yoxladım. 📂 \n\n${quyu["Reper nömrəsi"]} nömrəli subartezian quyusunun göstəriciləri belədir: \n\n⚙️ Nasos markası: ${quyu["Nasosun markası"] || "Məlumat daxil edilməyib"} \n💧 Quyunun dərinliyi: ${quyu["Quyunun dərinliyi, metr"]} metr \n✅ Vəziyyəti: Hazırda <b>${quyu["Fəaliyyətdə olub-olmaması"]}</b> vəziyyətindədir. \n\nBaşqa bir kənd və ya quyu haqqında məlumat istəyirsiniz?`;
+        // Baza içində gəzirik və cümlənin içində kənd adı və ya Reper axtarırıq
+        if (d.SubartezianQuyuTexGosterici && d.SubartezianQuyuTexGosterici.records) {
+            foundData = d.SubartezianQuyuTexGosterici.records.find(r => {
+                const kendName = r["Yerləşdiyi ərazi (kənd,qəsəbə)"].toLowerCase();
+                const reperNo = r["Reper nömrəsi"].toLowerCase().replace(/[-]/g, "");
+                
+                // Cümlədə kənd adı və ya təmizlənmiş reper nömrəsi (məs: QD1) keçirsə tap
+                return fullText.includes(kendName) || cleanQuery.includes(reperNo);
+            });
+        }
+
+        if(foundData) {
+            response = `Sizin yazdığınız cümləni analiz etdim və mərkəzi bazadan bu məlumatları tapdım: 📂 \n\n📍 <b>${foundData["Yerləşdiyi ərazi (kənd,qəsəbə)"]}</b> kəndi üzrə <b>${foundData["Reper nömrəsi"]}</b> nömrəli subartezian quyusu: \n\n⚙️ Nasos markası: ${foundData["Nasosun markası"] || "Məlumat daxil edilməyib"} \n💧 Quyunun dərinliyi: ${foundData["Quyunun dərinliyi, metr"]} metr \n✅ Vəziyyəti: Hazırda <b>${foundData["Fəaliyyətdə olub-olmaması"]}</b> vəziyyətindədir. \n\nSizə daha ətraflı kömək lazımdır?`;
         } else {
-            response = "Yazdığınız söz üzrə məlumatı tam dəqiqləşdirə bilmədim. 🤔 Zəhmət olmasa, kənd adını və ya reper nömrəsini bir daha yoxlayın. Və ya birbaşa 'əlaqə' yazıb nömrələrimizi ala bilərsiniz.";
+            response = "Yazdığınız cümlədən dəqiq kənd adı və ya reper nömrəsi süzə bilmədim. 🤔 Zəhmət olmasa, daha qısa şəkildə kəndin adını və ya quyu nömrəsini (məsələn: QD-1) qeyd edin.";
         }
     }
 
-    setTimeout(() => addNaraMsg("bot", response), 600);
+    // Naranın "düşünmə" effekti üçün kiçik gecikmə
+    setTimeout(() => addNaraMsg("bot", response), 650);
 }
 
 function toggleNara() {
@@ -560,14 +571,23 @@ function toggleNara() {
     chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
 }
 
-window.addEventListener('load', initNara);
+// Həm mobil, həm kompüter klaviaturası üçün 'Enter' dəstəyi
+window.addEventListener('load', () => {
+    initNara();
+    const inputField = document.getElementById('nara-input');
+    if(inputField) {
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendToNara();
+        });
+    }
+});
+
 
         
     </script>
 
 
     
-    /* NARA HTML ÜÇÜN HTML KODLARI */
     <style>
     /* Mobil cihazlar üçün botun ölçüsünü tənzimləyirik */
     @media screen and (max-width: 480px) {
