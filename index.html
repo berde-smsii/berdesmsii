@@ -462,6 +462,110 @@
             } catch (e) { console.error("Xəbərlər yüklənmədi."); }
         }
         loadNews();
+
+
+        
+        // NARA JSON ÜÇÜN SCRİPT KODLARI
+        let naraData = null;
+
+async function initNara() {
+    const res = await fetch('Nara_Bot_Database.json');
+    naraData = await res.json();
+    
+    // Sayt açılanda vaxta görə qarşılama
+    setTimeout(() => {
+        document.getElementById('nara-chat').style.display = 'flex';
+        const hour = new Date().getHours();
+        const msg = hour < 12 ? naraData.bot_info.welcome_messages.morning : 
+                   (hour < 18 ? naraData.bot_info.welcome_messages.afternoon : naraData.bot_info.welcome_messages.evening);
+        addNaraMsg("bot", msg);
+    }, 2000);
+}
+
+function addNaraMsg(sender, text) {
+    const area = document.getElementById('nara-msgs');
+    const m = document.createElement('div');
+    m.style.padding = "12px 16px"; m.style.borderRadius = "15px"; m.style.fontSize = "14px"; m.style.maxWidth = "85%";
+    
+    if(sender === "bot") {
+        m.style.background = "#f1f1f1"; m.style.alignSelf = "flex-start";
+    } else {
+        m.style.background = "#004a99"; m.style.color = "white"; m.style.alignSelf = "flex-end";
+    }
+    m.innerHTML = text.replace(/\n/g, "<br>");
+    area.appendChild(m);
+    area.scrollTop = area.scrollHeight;
+}
+
+function sendToNara() {
+    const inp = document.getElementById('nara-input');
+    const val = inp.value.trim();
+    if(!val) return;
+
+    addNaraMsg("user", val);
+    const query = val.toLowerCase();
+    inp.value = "";
+
+    let response = naraData.bot_info.personality.human_phrases.not_found;
+    
+    // İnsani məntiq
+    if(query.includes("salam")) response = "Salam! 😊 Sizə necə kömək edə bilərəm?";
+    else if(query.includes("əlaqə") || query.includes("vatsap")) {
+        response = `📞 Tel: ${naraData.bot_info.contacts.phone}<br>🟢 WhatsApp: <a href="https://wa.me/994709720209" style="color:#004a99">${naraData.bot_info.contacts.whatsapp}</a><br>📍 Ünvan: ${naraData.bot_info.contacts.address}`;
+    }
+    else if(query.includes("şikayət") || query.includes("problem")) {
+        response = naraData.bot_info.auto_responses.complaint;
+    }
+    else if(query.includes("sağ ol") || query.includes("təşəkkür")) {
+        response = naraData.bot_info.personality.human_phrases.thanks;
+    }
+    // Texniki Baza Axtarışı
+    else {
+        const d = naraData.data;
+        const quyu = d.SubartezianQuyuTexGosterici?.records.find(r => query.includes(r["Yerləşdiyi ərazi (kənd,qəsəbə)"].toLowerCase()) || r["Reper nömrəsi"].toLowerCase() === query);
+        if(quyu) response = `<b>Kənd:</b> ${quyu["Yerləşdiyi ərazi (kənd,qəsəbə)"]}<br><b>Reper:</b> ${quyu["Reper nömrəsi"]}<br><b>Nasos:</b> ${quyu["Nasosun markası"]}<br><b>Vəziyyət:</b> ${quyu["Fəaliyyətdə olub-olmaması"]}`;
+    }
+
+    setTimeout(() => addNaraMsg("bot", response), 600);
+}
+
+function toggleNara() {
+    const chat = document.getElementById('nara-chat');
+    chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
+}
+
+window.onload = initNara;
+        
     </script>
+
+
+    // NARA HTML ÜÇÜN HTML KODLARI
+
+    <div id="nara-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Segoe UI', Tahoma, sans-serif;">
+    <div onclick="toggleNara()" style="cursor: pointer; position: relative; transition: 0.3s;">
+        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" alt="Nara" style="width: 70px; height: 70px; border-radius: 50%; border: 3px solid #004a99; box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: white;">
+        <span style="position: absolute; bottom: 5px; right: 5px; width: 15px; height: 15px; background: #2ecc71; border: 2px solid white; border-radius: 50%;"></span>
+    </div>
+
+    <div id="nara-chat" style="display: none; width: 380px; height: 550px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; position: absolute; bottom: 85px; right: 0; overflow: hidden; border: 1px solid #eee;">
+        <div style="background: linear-gradient(135deg, #004a99, #0066cc); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" style="width:35px; height:35px; border-radius:50%; background:white;">
+                <div>
+                    <strong style="display:block;">Nara</strong>
+                    <small style="font-size:10px; opacity:0.8;">Bərdə SMSİİ Baş Operatoru</small>
+                </div>
+            </div>
+            <span onclick="toggleNara()" style="cursor: pointer; font-size: 25px;">&times;</span>
+        </div>
+        <div id="nara-msgs" style="flex: 1; padding: 20px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 12px;"></div>
+        <div style="padding: 15px; border-top: 1px solid #eee; display: flex; background: white;">
+            <input type="text" id="nara-input" placeholder="Nara ilə danışın..." style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-size: 14px;">
+            <button onclick="sendToNara()" style="margin-left: 10px; background: #004a99; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer;">Ok</button>
+        </div>
+    </div>
+</div>
+    
+    
 </body>
 </html>
