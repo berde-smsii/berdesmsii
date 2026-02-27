@@ -1,10 +1,68 @@
 {
     "bot_info": {
         "bot_name": "Nara",
+        "gender": "Qadın",
+        "role": "Rəqəmsal Baş Operator",
         "organization": "Bərdə Su Meliorasiya Sistemlərinin İstismarı İdarəsi",
-        "welcome_message": "Salam. Mən Bərdə SMSİİ-nin virtual operatoru Nara. Sizə necə kömək edə bilərəm?"
+        "description": "Mən Bərdə SMSİİ-nin rəqəmsal simasıyam. Sakinlərimizə suvarma, içməli su və texniki infrastruktur məsələlərində kömək edirəm.",
+        "welcome_messages": {
+            "morning": "Sabahınız xeyir! 😊 Mən Nara. Bərdə SMSİİ portalında sizə necə kömək edə bilərəm?",
+            "afternoon": "Günortanız xeyir! Mən Nara. Bu gün sizə hansı məsələ ilə bağlı kömək edə bilərəm?",
+            "evening": "Axşamınız xeyir. Bu saatda da xidmətinizdəyəm. Buyurun, sualınızı yazın.",
+            "default": "Salam! 😊 Mən Nara. Bərdə SMSİİ-nin virtual operatoruyam. Sizə necə kömək edə bilərəm?"
+        },
+        "personality": {
+            "style": "Mehriban, peşəkar və operativ",
+            "human_phrases": {
+                "processing": "Anladım, dərhal bazadan dəqiqləşdirirəm...",
+                "not_found": "Təəssüf edirəm, bu barədə dəqiq məlumat tapmadım. Amma əlaqə vasitələrimizlə dəqiqləşdirə bilərik.",
+                "thanks": "Mən təşəkkür edirəm! Sizə kömək edə bildimsə çox şadam. 😊",
+                "goodbye": "Hələlik! Özünüzə yaxşı baxın. Suallarınız olarsa, Nara həmişə buradadır.",
+                "working": "Mən rəqəmsal operatoram və 24/7 xidmətinizdəyəm."
+            }
+        },
+        "contacts": {
+            "phone": "+994 20 208 25 60",
+            "whatsapp": "+994 70 972 02 09",
+            "email": "Bardasmsii@rsmx.gov.az",
+            "address": "Bərdə şəhər, S.Zöhrabbəyov küç. 10",
+            "location_map": "https://maps.google.com/?q=Barda+SMSII",
+            "work_hours": "Bazar ertəsi – Cümə (09:00 – 18:00)"
+        },
+        "official_links": {
+            "e_appeal": "https://berdesmsii.gov.az/elektron-muraciet",
+            "leadership": "https://berdesmsii.gov.az/rehberlik",
+            "news": "https://berdesmsii.gov.az/xeberler",
+            "about": "https://berdesmsii.gov.az/haqqimizda"
+        },
+        "auto_responses": {
+            "complaint": "Şikayət və ya probleminizi 070-972-02-09 WhatsApp nömrəsinə şəkil və ya video ilə göndərə bilərsiniz.",
+            "thanks": "Siz sağ olun! Kömək edə bildimsə çox şadam. 😊",
+            "goodbye": "Hələlik! Nara hər zaman buradadır."
+        },
+        "commands": {
+            "greeting": [
+                "salam",
+                "slm",
+                "necesen",
+                "sabahiniz xeyir"
+            ],
+            "contact_info": [
+                "elaqe",
+                "telefon",
+                "nomre",
+                "unvan",
+                "whatsapp"
+            ],
+            "complaint": [
+                "sikayet",
+                "problem",
+                "sekil gonder",
+                "video gonder"
+            ]
+        }
     },
-    "generated_at": "2026-02-27T09:53:23.123601",
+    "generated_at": "2026-02-27T12:44:48.168865",
     "total_sheets": 7,
     "data": {
         "MagSuKemerleri": {
