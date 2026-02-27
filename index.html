@@ -464,6 +464,9 @@
         loadNews();
 
 
+
+
+        
         
         // NARA JSON ÜÇÜN SCRİPT KODLARI
         let naraData = null;
@@ -545,7 +548,7 @@ function sendToNara() {
         if(quyu) {
             response = `Sizin üçün <b>${quyu["Yerləşdiyi ərazi (kənd,qəsəbə)"]}</b> kəndi üzrə məlumatları yoxladım. 📂 \n\n${quyu["Reper nömrəsi"]} nömrəli subartezian quyusunun göstəriciləri belədir: \n\n⚙️ Nasos markası: ${quyu["Nasosun markası"] || "Məlumat daxil edilməyib"} \n💧 Quyunun dərinliyi: ${quyu["Quyunun dərinliyi, metr"]} metr \n✅ Vəziyyəti: Hazırda <b>${quyu["Fəaliyyətdə olub-olmaması"]}</b> vəziyyətindədir. \n\nBaşqa bir kənd və ya quyu haqqında məlumat istəyirsiniz?`;
         } else {
-            response = "Yazdığınız söz üzrə məlumatı tam dəqiqləşdirə bilmədim. 🤔 Zəhmət olmasa, kənd adını və ya reper nömrəsini (məsələn: 'QD-1') bir daha yoxlayın. Və ya birbaşa 'əlaqə' yazıb nömrələrimizi ala bilərsiniz.";
+            response = "Yazdığınız söz üzrə məlumatı tam dəqiqləşdirə bilmədim. 🤔 Zəhmət olmasa, kənd adını və ya reper nömrəsini bir daha yoxlayın. Və ya birbaşa 'əlaqə' yazıb nömrələrimizi ala bilərsiniz.";
         }
     }
 
@@ -558,11 +561,13 @@ function toggleNara() {
 }
 
 window.addEventListener('load', initNara);
+
         
     </script>
 
 
-    /*NARA HTML ÜÇÜN HTML KODLARI */
+    
+    /* NARA HTML ÜÇÜN HTML KODLARI */
     <style>
     /* Mobil cihazlar üçün botun ölçüsünü tənzimləyirik */
     @media screen and (max-width: 480px) {
@@ -598,7 +603,7 @@ window.addEventListener('load', initNara);
         </div>
         <div id="nara-msgs" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 12px;"></div>
         <div style="padding: 12px; border-top: 1px solid #eee; display: flex; background: white;">
-            <input type="text" id="nara-input" placeholder="Sualınızı yazın..." 
+            <input type="text" id="nara-input" placeholder="Yazın..." 
                    onkeypress="if(event.key === 'Enter') sendToNara()"
                    style="flex: 1; padding: 12px 18px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-size: 14px;">
             <button onclick="sendToNara()" style="margin-left: 10px; background: #004a99; color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
