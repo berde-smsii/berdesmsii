@@ -469,117 +469,121 @@
         
         
         // NARA JSON ÜÇÜN SCRİPT KODLARI
-        let naraData = null;
-
-async function initNara() {
-    try {
-        const res = await fetch('Nara_Bot_Database.json');
-        naraData = await res.json();
         
-        setTimeout(() => {
-            const chatBox = document.getElementById('nara-chat');
-            if(chatBox) chatBox.style.display = 'flex';
-            
-            const hour = new Date().getHours();
-            let welcome = naraData.bot_info.welcome_messages.default;
-            if (hour < 12) welcome = naraData.bot_info.welcome_messages.morning;
-            else if (hour < 18) welcome = naraData.bot_info.welcome_messages.afternoon;
-            else welcome = naraData.bot_info.welcome_messages.evening;
-            
-            addNaraMsg("bot", welcome);
-        }, 2000);
-    } catch(e) { console.error("Baza yüklənmədi."); }
+        // ==== CONFIG ====
+        // Lokal test üçün: backend localhost
+        // Canlı üçün: Render/Vercel URL-ni buraya yazacağıq
+        
+const PROD_API_URL = ""; // məsələn: "https://nara-api.onrender.com/ask"
+
+function getApiUrl() {
+  // Lokal fayldan / localhost-dan test edirsənsə localhost istifadə et
+  const isLocal =
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1" ||
+    location.protocol === "file:";
+
+  if (isLocal) return "http://localhost:3000/ask";
+
+  // GitHub Pages üçün mütləq prod URL lazımdır (localhost olmaz)
+  if (PROD_API_URL && PROD_API_URL.startsWith("http")) return PROD_API_URL;
+
+  // Prod URL yazılmayıbsa xəbərdarlıq cavabı verək
+  return null;
+}
+
+async function askNara(question) {
+  const apiUrl = getApiUrl();
+  if (!apiUrl) {
+    return "Bot serveri hələ internetə yerləşdirilməyib. Lokal test üçün saytı localhost-da açın və ya PROD_API_URL əlavə edin.";
+  }
+
+  const res = await fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question })
+  });
+
+  const data = await res.json();
+  return data.answer || "Cavab alınmadı.";
 }
 
 function addNaraMsg(sender, text) {
-    const area = document.getElementById('nara-msgs');
-    const m = document.createElement('div');
-    m.style.cssText = "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px; word-wrap: break-word;";
-    
-    if(sender === "bot") {
-        m.style.background = "#f1f3f5";
-        m.style.alignSelf = "flex-start";
-        m.style.color = "#333";
-        m.style.borderBottomLeftRadius = "2px";
-    } else {
-        m.style.background = "#004a99";
-        m.style.color = "white";
-        m.style.alignSelf = "flex-end";
-        m.style.borderBottomRightRadius = "2px";
-    }
-    m.innerHTML = text.replace(/\n/g, "<br>");
-    area.appendChild(m);
-    area.scrollTop = area.scrollHeight;
-}
+  const area = document.getElementById('nara-msgs');
+  const m = document.createElement('div');
+  m.style.cssText =
+    "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px; word-wrap: break-word;";
 
-function sendToNara() {
-    const inp = document.getElementById('nara-input');
-    const val = inp.value.trim();
-    if(!val) return;
+  if (sender === "bot") {
+    m.style.background = "#f1f3f5";
+    m.style.alignSelf = "flex-start";
+    m.style.color = "#333";
+    m.style.borderBottomLeftRadius = "2px";
+  } else {
+    m.style.background = "#004a99";
+    m.style.color = "white";
+    m.style.alignSelf = "flex-end";
+    m.style.borderBottomRightRadius = "2px";
+  }
 
-    addNaraMsg("user", val);
-    
-    // Vətəndaşın yazdığı mətni təmizləyirik (kiçik hərf və tirelərin silinməsi)
-    const fullText = val.toLowerCase();
-    const cleanQuery = fullText.replace(/[-]/g, "");
-    inp.value = "";
+  m.innerHTML = (text || "").toString().replace(/\n/g, "<br>");
+  area.appendChild(m);
+  area.scrollTop = area.scrollHeight;
 
-    let response = "";
-
-    // 1. İnsani söhbət və Açar söz duyarlılığı
-    if (fullText.includes("salam")) {
-        response = "Salam! 😊 Sizi dinləyirəm. Bərdə SMSİİ rəqəmsal masasına xoş gəlmisiniz. Sizə necə kömək edə bilərəm?";
-    } 
-    else if (fullText.includes("əlaqə") || fullText.includes("vatsap") || fullText.includes("nömrə") || fullText.includes("telefon")) {
-        response = `Bizimlə əlaqə saxlamaq üçün məlumatlar: \n\n📞 Telefon: ${naraData.bot_info.contacts.phone} \n🟢 WhatsApp: ${naraData.bot_info.contacts.whatsapp} \n📍 Ünvan: ${naraData.bot_info.contacts.address} \n\nBaşqa bir sualınız varmı?`;
-    }
-    else if (fullText.includes("şikayət") || fullText.includes("problem") || fullText.includes("işləmir") || fullText.includes("su gəlmir") || fullText.includes("qəza")) {
-        response = "Məsələni diqqətimizə çatdırdığınız üçün təşəkkürlər. ⚠️ " + naraData.bot_info.auto_responses.complaint;
-    }
-    else if (fullText.includes("sağ ol") || fullText.includes("təşəkkür") || fullText.includes("minnətdar")) {
-        response = "Buyurun, xoşdur! 😊 Bərdə sakinlərinə xidmət etmək Nara üçün bir zövqdür. Özünüzə yaxşı baxın!";
-    }
-    // 2. Ağıllı Baza Analizi (Cümlənin içindən filtrasiya)
-    else {
-        const d = naraData.data;
-        let foundData = null;
-
-        // Baza içində gəzirik və cümlənin içində kənd adı və ya Reper axtarırıq
-        if (d.SubartezianQuyuTexGosterici && d.SubartezianQuyuTexGosterici.records) {
-            foundData = d.SubartezianQuyuTexGosterici.records.find(r => {
-                const kendName = r["Yerləşdiyi ərazi (kənd,qəsəbə)"].toLowerCase();
-                const reperNo = r["Reper nömrəsi"].toLowerCase().replace(/[-]/g, "");
-                
-                // Cümlədə kənd adı və ya təmizlənmiş reper nömrəsi (məs: QD1) keçirsə tap
-                return fullText.includes(kendName) || cleanQuery.includes(reperNo);
-            });
-        }
-
-        if(foundData) {
-            response = `Sizin yazdığınız cümləni analiz etdim və mərkəzi bazadan bu məlumatları tapdım: 📂 \n\n📍 <b>${foundData["Yerləşdiyi ərazi (kənd,qəsəbə)"]}</b> kəndi üzrə <b>${foundData["Reper nömrəsi"]}</b> nömrəli subartezian quyusu: \n\n⚙️ Nasos markası: ${foundData["Nasosun markası"] || "Məlumat daxil edilməyib"} \n💧 Quyunun dərinliyi: ${foundData["Quyunun dərinliyi, metr"]} metr \n✅ Vəziyyəti: Hazırda <b>${foundData["Fəaliyyətdə olub-olmaması"]}</b> vəziyyətindədir. \n\nSizə daha ətraflı kömək lazımdır?`;
-        } else {
-            response = "Yazdığınız cümlədən dəqiq kənd adı və ya reper nömrəsi süzə bilmədim. 🤔 Zəhmət olmasa, daha qısa şəkildə kəndin adını və ya quyu nömrəsini (məsələn: QD-1) qeyd edin.";
-        }
-    }
-
-    // Naranın "düşünmə" effekti üçün kiçik gecikmə
-    setTimeout(() => addNaraMsg("bot", response), 650);
+  return m;
 }
 
 function toggleNara() {
-    const chat = document.getElementById('nara-chat');
-    chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
+  const chat = document.getElementById('nara-chat');
+  chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
 }
 
-// Həm mobil, həm kompüter klaviaturası üçün 'Enter' dəstəyi
+// Qarşılama mesajı artıq backend-dəki bot_info ilə AI kimi edilə bilər,
+// amma indi sadə saxlayırıq (UI hissəsi)
+async function initNara() {
+  setTimeout(() => {
+    const chatBox = document.getElementById('nara-chat');
+    if (chatBox) chatBox.style.display = 'flex';
+
+    const hour = new Date().getHours();
+    let welcome = "Salam! 😊 Mən Nara. Bərdə SMSİİ-nin virtual operatoruyam. Sizə necə kömək edə bilərəm?";
+    if (hour < 12) welcome = "Sabahınız xeyir! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
+    else if (hour < 18) welcome = "Günortanız xeyir! Mən Nara. Sizə necə kömək edə bilərəm?";
+    else welcome = "Axşamınız xeyir. Bu saatda da xidmətinizdəyəm. Buyurun, sualınızı yazın.";
+
+    addNaraMsg("bot", welcome);
+  }, 800);
+}
+
+async function sendToNara() {
+  const inp = document.getElementById('nara-input');
+  const val = inp.value.trim();
+  if (!val) return;
+
+  addNaraMsg("user", val);
+  inp.value = "";
+
+  // “Düşünür” mesajı
+  const thinking = addNaraMsg("bot", "Anladım, yoxlayıram...");
+
+  try {
+    const answer = await askNara(val);
+    // thinking mesajını cavabla əvəz edək
+    thinking.innerHTML = answer.replace(/\n/g, "<br>");
+  } catch (e) {
+    thinking.innerHTML = "Bağlantı xətası oldu. Lokal test edirsinizsə server işləyirmi? (npm start)".replace(/\n/g, "<br>");
+  }
+}
+
+// Enter dəstəyi
 window.addEventListener('load', () => {
-    initNara();
-    const inputField = document.getElementById('nara-input');
-    if(inputField) {
-        inputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendToNara();
-        });
-    }
+  initNara();
+  const inputField = document.getElementById('nara-input');
+  if (inputField) {
+    inputField.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendToNara();
+    });
+  }
 });
 
 
