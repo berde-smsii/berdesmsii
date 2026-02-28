@@ -473,11 +473,18 @@
         // ==== CONFIG ====
         // Lokal test üçün: backend localhost
         // Canlı üçün: Render/Vercel URL-ni buraya yazacağıq
-        
 const PROD_API_URL = ""; // məsələn: "https://nara-api.onrender.com/ask"
 
+// Session ID: bot konteksti yadda saxlasın (şikayət axını, ünvan, problem və s.)
+const NARA_SESSION_ID =
+  localStorage.getItem("nara_session_id") ||
+  (() => {
+    const id = (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+    localStorage.setItem("nara_session_id", id);
+    return id;
+  })();
+
 function getApiUrl() {
-  // Lokal fayldan / localhost-dan test edirsənsə localhost istifadə et
   const isLocal =
     location.hostname === "localhost" ||
     location.hostname === "127.0.0.1" ||
@@ -485,10 +492,8 @@ function getApiUrl() {
 
   if (isLocal) return "http://localhost:3000/ask";
 
-  // GitHub Pages üçün mütləq prod URL lazımdır (localhost olmaz)
   if (PROD_API_URL && PROD_API_URL.startsWith("http")) return PROD_API_URL;
 
-  // Prod URL yazılmayıbsa xəbərdarlıq cavabı verək
   return null;
 }
 
@@ -498,19 +503,35 @@ async function askNara(question) {
     return "Bot serveri hələ internetə yerləşdirilməyib. Lokal test üçün saytı localhost-da açın və ya PROD_API_URL əlavə edin.";
   }
 
-  const res = await fetch(apiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question })
-  });
+  let res;
+  try {
+    res = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // session_id göndəririk ki server konteksti yadda saxlasın
+      body: JSON.stringify({ question, session_id: NARA_SESSION_ID })
+    });
+  } catch (e) {
+    return "Bağlantı xətası oldu. Lokal test edirsinizsə server işləyirmi? (npm start)";
+  }
 
-  const data = await res.json();
-  return data.answer || "Cavab alınmadı.";
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (e) {
+    return "Server cavabını oxumaqda problem oldu. Zəhmət olmasa yenidən cəhd edin.";
+  }
+
+  if (!res.ok || data?.ok === false) {
+    return data?.error || "Server xətası baş verdi.";
+  }
+
+  return data?.answer || "Cavab tapılmadı.";
 }
 
 function addNaraMsg(sender, text) {
-  const area = document.getElementById('nara-msgs');
-  const m = document.createElement('div');
+  const area = document.getElementById("nara-msgs");
+  const m = document.createElement("div");
   m.style.cssText =
     "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px; word-wrap: break-word;";
 
@@ -534,54 +555,45 @@ function addNaraMsg(sender, text) {
 }
 
 function toggleNara() {
-  const chat = document.getElementById('nara-chat');
-  chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
+  const chat = document.getElementById("nara-chat");
+  chat.style.display = chat.style.display === "none" ? "flex" : "none";
 }
 
-// Qarşılama mesajı artıq backend-dəki bot_info ilə AI kimi edilə bilər,
-// amma indi sadə saxlayırıq (UI hissəsi)
 async function initNara() {
   setTimeout(() => {
-    const chatBox = document.getElementById('nara-chat');
-    if (chatBox) chatBox.style.display = 'flex';
+    const chatBox = document.getElementById("nara-chat");
+    if (chatBox) chatBox.style.display = "flex";
 
     const hour = new Date().getHours();
-    let welcome = "Salam! 😊 Mən Nara. Bərdə SMSİİ-nin virtual operatoruyam. Sizə necə kömək edə bilərəm?";
+    let welcome = "Salam! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
     if (hour < 12) welcome = "Sabahınız xeyir! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
-    else if (hour < 18) welcome = "Günortanız xeyir! Mən Nara. Sizə necə kömək edə bilərəm?";
-    else welcome = "Axşamınız xeyir. Bu saatda da xidmətinizdəyəm. Buyurun, sualınızı yazın.";
+    else if (hour < 18) welcome = "Günortanız xeyir! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
+    else welcome = "Axşamınız xeyir! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
 
     addNaraMsg("bot", welcome);
   }, 800);
 }
 
 async function sendToNara() {
-  const inp = document.getElementById('nara-input');
+  const inp = document.getElementById("nara-input");
   const val = inp.value.trim();
   if (!val) return;
 
   addNaraMsg("user", val);
   inp.value = "";
 
-  // “Düşünür” mesajı
-  const thinking = addNaraMsg("bot", "Anladım, yoxlayıram...");
+  const thinking = addNaraMsg("bot", "Bir dəqiqə… baxıram 👀");
 
-  try {
-    const answer = await askNara(val);
-    // thinking mesajını cavabla əvəz edək
-    thinking.innerHTML = answer.replace(/\n/g, "<br>");
-  } catch (e) {
-    thinking.innerHTML = "Bağlantı xətası oldu. Lokal test edirsinizsə server işləyirmi? (npm start)".replace(/\n/g, "<br>");
-  }
+  const answer = await askNara(val);
+  thinking.innerHTML = answer.replace(/\n/g, "<br>");
 }
 
-// Enter dəstəyi
-window.addEventListener('load', () => {
+window.addEventListener("load", () => {
   initNara();
-  const inputField = document.getElementById('nara-input');
+  const inputField = document.getElementById("nara-input");
   if (inputField) {
-    inputField.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendToNara();
+    inputField.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendToNara();
     });
   }
 });
