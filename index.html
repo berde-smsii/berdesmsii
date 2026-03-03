@@ -894,10 +894,11 @@ function sendToNara() {
   }
 
   // 4) DATABASE SEARCH (uydurma YOX: yalnız bazadakı cümlələr)
-  const best = findBestAnswer(val);
-  if (best) {
-    return setTimeout(() => addNaraMsg("bot", best.item.sentence), 450);
-  }
+const best = findBestAnswer(val);
+if (best) {
+  clearCase(); // ✅ əvvəlki şikayət (xanərəb) yaddaşını sil
+  return setTimeout(() => addNaraMsg("bot", best.item.sentence), 450);
+}
 
   // 5) Not found → clarify (soft)
   return setTimeout(() => addNaraMsg("bot", outOfScopeOrClarify(val)), 450);
