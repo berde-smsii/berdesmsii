@@ -526,6 +526,68 @@ function extractNumbers(q){
   return m;
 }
 
+// ====== NEW: loose normalize for better typo tolerance ======
+function looseNormalize(s="") {
+  return norm(s)
+    .replaceAll("ə", "e")
+    .replaceAll("ı", "i")
+    .replaceAll("ö", "o")
+    .replaceAll("ü", "u")
+    .replaceAll("ş", "s")
+    .replaceAll("ç", "c")
+    .replaceAll("ğ", "g")
+    .replaceAll("’", "'")
+    .replaceAll("`", "'")
+    .replace(/[^\p{L}\p{N}\s-]/gu, " ");
+}
+
+// ====== NEW: Levenshtein distance ======
+function levenshtein(a, b) {
+  a = a || ""; b = b || "";
+  const m = a.length, n = b.length;
+  if (!m) return n;
+  if (!n) return m;
+
+  const dp = Array.from({ length: n + 1 }, (_, i) => Array(m + 1).fill(0));
+  for (let i = 0; i <= n; i++) dp[i][0] = i;
+  for (let j = 0; j <= m; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      dp[i][j] = (b[i - 1] === a[j - 1])
+        ? dp[i - 1][j - 1]
+        : Math.min(dp[i - 1][j - 1] + 1, dp[i][j - 1] + 1, dp[i - 1][j] + 1);
+    }
+  }
+  return dp[n][m];
+}
+
+// ====== NEW: token fuzzy scoring ======
+function tokenFuzzyScore(qTok, tTok) {
+  if (!qTok || !tTok) return 0;
+
+  // tam uyğunluq
+  if (tTok.includes(qTok)) return 8;
+
+  // çox qısa tokenləri fuzzy etmə
+  if (qTok.length < 4) return 0;
+
+  const dist = levenshtein(qTok, tTok);
+  if (qTok.length <= 6 && dist <= 1) return 5;  // 1 hərf səhv
+  if (qTok.length > 6 && dist <= 2) return 4;   // 2 hərf səhv
+
+  // “hərf düşməsi” kimi hallara tolerant subsequence check
+  let i = 0, j = 0;
+  while (i < qTok.length && j < tTok.length) {
+    if (qTok[i] === tTok[j]) i++;
+    j++;
+  }
+  if (i >= qTok.length - 1) return 3;
+
+  return 0;
+}
+
+// ====== UI helpers ======
 function addNaraMsg(sender, text) {
   const area = document.getElementById('nara-msgs');
   const m = document.createElement('div');
@@ -614,45 +676,63 @@ function tryExtractIssue(text){
   return null;
 }
 
-// ====== Search best matching sentence across all sheets ======
+// ====== Search best matching sentence across all sheets (strong fuzzy + numbers priority) ======
 function findBestAnswer(query) {
   if (!NARA_DB?.data) return null;
 
-  const q = norm(query);
-  const qTokens = tokenize(q);
-  const qNums = extractNumbers(q);
+  const qRaw = query || "";
+  const qLoose = looseNormalize(qRaw);
+  const qTokens = tokenize(qLoose);
+  const qNums = extractNumbers(qRaw);
 
-  // score function: token hits + number hits bonus
   let best = null;
 
   for (const sheetName of NARA_DB.sheets || []) {
     const items = NARA_DB?.data?.[sheetName]?.items || [];
+
     for (const it of items) {
-      const text = it.search_text || "";
+      const rawText = it.search_text || "";
+      const text = looseNormalize(rawText);
+      const textTokens = tokenize(text);
+
       let score = 0;
 
-      // token matches
+      // 1) Full phrase match (strong)
+      if (qLoose.length >= 4 && text.includes(qLoose)) score += 40;
+
+      // 2) Number / year / reper match (very strong)
+      for (const n of qNums) {
+        if (!n) continue;
+        if (rawText.includes(n)) score += 30;
+      }
+
+      // 3) Token exact match
       for (const tk of qTokens) {
         if (tk.length < 3) continue;
-        if (text.includes(tk)) score += 2;
+        if (text.includes(tk)) score += 6;
       }
 
-      // number matches
-      for (const n of qNums) {
-        if (text.includes(n)) score += 5;
+      // 4) Token fuzzy match (typo tolerance)
+      for (const tk of qTokens) {
+        if (tk.length < 3) continue;
+
+        let bestTok = 0;
+        for (const tt of textTokens) {
+          const s = tokenFuzzyScore(tk, tt);
+          if (s > bestTok) bestTok = s;
+          if (bestTok >= 8) break;
+        }
+        score += bestTok;
       }
 
-      // phrase boost for village-like words
-      if (q.includes("kənd") || q.includes("kend")) score += 1;
+      // 5) Village/Address boost
+      if (qLoose.includes("kend") || qLoose.includes("kənd") || qLoose.includes("kuc") || qLoose.includes("küç")) score += 2;
 
-      if (!best || score > best.score) {
-        best = { score, item: it, sheet: sheetName };
-      }
+      if (!best || score > best.score) best = { score, item: it, sheet: sheetName };
     }
   }
 
-  // threshold: if too low, consider not found
-  if (!best || best.score < 4) return null;
+  if (!best || best.score < 12) return null;
   return best;
 }
 
