@@ -470,72 +470,67 @@
         
         // NARA JSON ÜÇÜN SCRİPT KODLARI
         
-        // ==== CONFIG ====
-        // Lokal test üçün: backend localhost
-        // Canlı üçün: Render/Vercel URL-ni buraya yazacağıq
-const PROD_API_URL = ""; // məsələn: "https://nara-api.onrender.com/ask"
+        let NARA_DB = null;
 
-// Session ID: bot konteksti yadda saxlasın (şikayət axını, ünvan, problem və s.)
-const NARA_SESSION_ID =
-  localStorage.getItem("nara_session_id") ||
-  (() => {
-    const id = (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
-    localStorage.setItem("nara_session_id", id);
-    return id;
-  })();
+// ====== INTENT WORD LIST (geniş) ======
+const INTENTS = {
+  greeting: [
+    "salam","slm","salamlar","sabahınız xeyir","sabahiniz xeyir","sabahın xeyir",
+    "günortanız xeyir","gunortaniz xeyir","axşamınız xeyir","axsaminiz xeyir",
+    "salam nara","nara salam","hər vaxtınız xeyir","xeyirli günlər"
+  ],
+  wellbeing: [
+    "necəsən","necesen","necəsiniz","necesiniz","nə var","ne var","nə xəbər","ne xeber",
+    "ne var ne yox","nə var nə yox","necə gedir","nece gedir","hər şey necədir","her sey necedir"
+  ],
+  thanks: [
+    "təşəkkür","tesekkur","çox sağ ol","cox sag ol","sağ ol","sag ol","sağ olun","sag olun",
+    "minnətdar","minnetdar","allah razı olsun","çox təşəkkür","cox tesekkur"
+  ],
+  goodbye: [
+    "hələlik","helelik","görüşərik","goruserik","görüşənədək","salamat qal","xudahafiz","xuda hafiz","bye","bay"
+  ],
+  contact: [
+    "əlaqə","elaqe","telefon","nömrə","nomre","nömrəniz","nomreniz",
+    "whatsapp","vatsap","email","poçt","poct",
+    "ünvan","unvan","adres","address",
+    "iş rejimi","is rejimi","iş saat","is saat","qəbul saatı",
+    "haradasınız","hardasiniz","burdasınız","buradasınız"
+  ],
+  complaint: [
+    "şikayət","sikayet","problem","qəza","qeza","su gəlmir","su gelmir","su kəsilib","su kesilib",
+    "işləmir","islemir","sızma","sizma","nasazlıq","nasazliq","su yoxdur","su yoxdu","təcili","tecili"
+  ],
+  when_fix: [
+    "nə vaxt düzələcək","ne vaxt duzelecek","nə vaxt düzəldərsiniz","ne vaxt duzeldersiniz",
+    "nə vaxt gələcəksiniz","ne vaxt geleceksiniz","nə vaxt təmir","ne vaxt temir","nə vaxt həll","ne vaxt hell"
+  ]
+};
 
-function getApiUrl() {
-  const isLocal =
-    location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1" ||
-    location.protocol === "file:";
-
-  if (isLocal) return "http://localhost:3000/ask";
-
-  if (PROD_API_URL && PROD_API_URL.startsWith("http")) return PROD_API_URL;
-
-  return null;
+// ====== tiny helpers ======
+function norm(t="") {
+  return (t||"").toString().toLowerCase().trim();
 }
-
-async function askNara(question) {
-  const apiUrl = getApiUrl();
-  if (!apiUrl) {
-    return "Bot serveri hələ internetə yerləşdirilməyib. Lokal test üçün saytı localhost-da açın və ya PROD_API_URL əlavə edin.";
-  }
-
-  let res;
-  try {
-    res = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // session_id göndəririk ki server konteksti yadda saxlasın
-      body: JSON.stringify({ question, session_id: NARA_SESSION_ID })
-    });
-  } catch (e) {
-    return "Bağlantı xətası oldu. Lokal test edirsinizsə server işləyirmi? (npm start)";
-  }
-
-  let data = null;
-  try {
-    data = await res.json();
-  } catch (e) {
-    return "Server cavabını oxumaqda problem oldu. Zəhmət olmasa yenidən cəhd edin.";
-  }
-
-  if (!res.ok || data?.ok === false) {
-    return data?.error || "Server xətası baş verdi.";
-  }
-
-  return data?.answer || "Cavab tapılmadı.";
+function anyIncludes(q, arr) {
+  q = norm(q);
+  return arr.some(k => q.includes(k));
+}
+function tokenize(q) {
+  return norm(q)
+    .replace(/[^\p{L}\p{N}\s-]/gu, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+}
+function extractNumbers(q){
+  const m = (q.match(/\d{2,}/g) || []);
+  return m;
 }
 
 function addNaraMsg(sender, text) {
-  const area = document.getElementById("nara-msgs");
-  const m = document.createElement("div");
-  m.style.cssText =
-    "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px; word-wrap: break-word;";
-
-  if (sender === "bot") {
+  const area = document.getElementById('nara-msgs');
+  const m = document.createElement('div');
+  m.style.cssText = "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px; word-wrap: break-word;";
+  if(sender === "bot") {
     m.style.background = "#f1f3f5";
     m.style.alignSelf = "flex-start";
     m.style.color = "#333";
@@ -546,54 +541,216 @@ function addNaraMsg(sender, text) {
     m.style.alignSelf = "flex-end";
     m.style.borderBottomRightRadius = "2px";
   }
-
   m.innerHTML = (text || "").toString().replace(/\n/g, "<br>");
   area.appendChild(m);
   area.scrollTop = area.scrollHeight;
-
   return m;
 }
 
 function toggleNara() {
-  const chat = document.getElementById("nara-chat");
-  chat.style.display = chat.style.display === "none" ? "flex" : "none";
+  const chat = document.getElementById('nara-chat');
+  chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
 }
 
+// ====== Load JSON database ======
 async function initNara() {
-  setTimeout(() => {
-    const chatBox = document.getElementById("nara-chat");
-    if (chatBox) chatBox.style.display = "flex";
+  try {
+    const res = await fetch('Nara_Bot_Database.json', { cache: "no-store" });
+    NARA_DB = await res.json();
 
-    const hour = new Date().getHours();
-    let welcome = "Salam! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
-    if (hour < 12) welcome = "Sabahınız xeyir! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
-    else if (hour < 18) welcome = "Günortanız xeyir! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
-    else welcome = "Axşamınız xeyir! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
+    setTimeout(() => {
+      const chatBox = document.getElementById('nara-chat');
+      if(chatBox) chatBox.style.display = 'flex';
 
-    addNaraMsg("bot", welcome);
-  }, 800);
+      const hour = new Date().getHours();
+      let welcome = NARA_DB?.bot_info?.welcome_messages?.default
+        || "Salam! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
+      if (hour < 12) welcome = NARA_DB?.bot_info?.welcome_messages?.morning || welcome;
+      else if (hour < 18) welcome = NARA_DB?.bot_info?.welcome_messages?.afternoon || welcome;
+      else welcome = NARA_DB?.bot_info?.welcome_messages?.evening || welcome;
+
+      addNaraMsg("bot", welcome);
+    }, 700);
+
+  } catch(e) {
+    console.error(e);
+    addNaraMsg("bot", "Baza yüklənmədi. Zəhmət olmasa səhifəni yeniləyin.");
+  }
 }
 
-async function sendToNara() {
-  const inp = document.getElementById("nara-input");
+// ====== Build contact answer from JSON (no uydurma) ======
+function contactAnswer() {
+  const c = NARA_DB?.bot_info?.contacts || {};
+  return `Əlaqə məlumatları:
+• Telefon: ${c.phone || "-"}
+• WhatsApp: ${c.whatsapp || "-"}
+• E-mail: ${c.email || "-"}
+• Ünvan: ${c.address || "-"}
+• İş rejimi: ${c.work_hours || "-"}`;
+}
+
+// ====== Complaint flow memory (browser-side) ======
+function getCase() {
+  try { return JSON.parse(localStorage.getItem("nara_case") || "null"); } catch { return null; }
+}
+function setCase(obj) {
+  localStorage.setItem("nara_case", JSON.stringify(obj));
+}
+function clearCase() {
+  localStorage.removeItem("nara_case");
+}
+function tryExtractLocation(text){
+  const t = norm(text);
+  const m = t.match(/(.+?)\s(kəndində|kendinde|kəndi|kendi|küçəsində|kucəsində|qəsəbəsində|qesebesinde)/i);
+  if (!m) return null;
+  return m[1].trim();
+}
+function tryExtractIssue(text){
+  const t = norm(text);
+  if (t.includes("sızma") || t.includes("sizma")) return "sızma";
+  if (t.includes("su gəlmir") || t.includes("su gelmir") || t.includes("su yoxdu") || t.includes("su yoxdur")) return "su gəlmir";
+  if (t.includes("qəza") || t.includes("qeza")) return "qəza";
+  if (t.includes("nasaz") || t.includes("işləmir") || t.includes("islemir")) return "nasazlıq";
+  return null;
+}
+
+// ====== Search best matching sentence across all sheets ======
+function findBestAnswer(query) {
+  if (!NARA_DB?.data) return null;
+
+  const q = norm(query);
+  const qTokens = tokenize(q);
+  const qNums = extractNumbers(q);
+
+  // score function: token hits + number hits bonus
+  let best = null;
+
+  for (const sheetName of NARA_DB.sheets || []) {
+    const items = NARA_DB?.data?.[sheetName]?.items || [];
+    for (const it of items) {
+      const text = it.search_text || "";
+      let score = 0;
+
+      // token matches
+      for (const tk of qTokens) {
+        if (tk.length < 3) continue;
+        if (text.includes(tk)) score += 2;
+      }
+
+      // number matches
+      for (const n of qNums) {
+        if (text.includes(n)) score += 5;
+      }
+
+      // phrase boost for village-like words
+      if (q.includes("kənd") || q.includes("kend")) score += 1;
+
+      if (!best || score > best.score) {
+        best = { score, item: it, sheet: sheetName };
+      }
+    }
+  }
+
+  // threshold: if too low, consider not found
+  if (!best || best.score < 4) return null;
+  return best;
+}
+
+function outOfScopeOrClarify(query) {
+  return NARA_DB?.bot_info?.auto_responses?.out_of_scope
+    || "Bu sual üzrə bazada uyğun məlumat tapmadım. Zəhmət olmasa kənd/ünvan və mövzunu (subartezian, kanal/kollektor, şikayət və s.) bir az dəqiqləşdirin.";
+}
+
+// ====== Main send ======
+function sendToNara() {
+  const inp = document.getElementById('nara-input');
   const val = inp.value.trim();
-  if (!val) return;
+  if(!val) return;
 
   addNaraMsg("user", val);
   inp.value = "";
 
-  const thinking = addNaraMsg("bot", "Bir dəqiqə… baxıram 👀");
+  const q = norm(val);
 
-  const answer = await askNara(val);
-  thinking.innerHTML = answer.replace(/\n/g, "<br>");
+  // 1) pure human intents (NO uydurma, hazır cavablar)
+  if (anyIncludes(q, INTENTS.greeting)) {
+    return setTimeout(() => addNaraMsg("bot", "Salam 😊 Buyurun, nə ilə kömək edim?"), 300);
+  }
+  if (anyIncludes(q, INTENTS.wellbeing)) {
+    return setTimeout(() => addNaraMsg("bot", "Çox sağ olun, yaxşıyam 😊 Siz necəsiniz? Buyurun, nə lazımdırsa yazın."), 300);
+  }
+  if (anyIncludes(q, INTENTS.thanks)) {
+    return setTimeout(() => addNaraMsg("bot", NARA_DB?.bot_info?.auto_responses?.thanks || "Siz sağ olun! 😊"), 300);
+  }
+  if (anyIncludes(q, INTENTS.goodbye)) {
+    return setTimeout(() => addNaraMsg("bot", NARA_DB?.bot_info?.auto_responses?.goodbye || "Hələlik! 😊"), 300);
+  }
+
+  // 2) contact intent
+  if (anyIncludes(q, INTENTS.contact)) {
+    return setTimeout(() => addNaraMsg("bot", contactAnswer()), 350);
+  }
+
+  // 3) complaint intent + complaint memory
+  const existing = getCase();
+  const loc = tryExtractLocation(val);
+  const issue = tryExtractIssue(val);
+
+  if (anyIncludes(q, INTENTS.complaint)) {
+    const c = NARA_DB?.bot_info?.auto_responses?.complaint
+      || "Şikayət və ya probleminizi WhatsApp nömrəmizə şəkil/video ilə göndərə bilərsiniz.";
+
+    const newCase = {
+      location: loc || existing?.location || null,
+      issue: issue || existing?.issue || null,
+      started_at: existing?.started_at || new Date().toISOString()
+    };
+    setCase(newCase);
+
+    if (!newCase.location || !newCase.issue) {
+      return setTimeout(() => addNaraMsg("bot",
+        `Başa düşdüm ⚠️\n${c}\n\nBir dəqiqləşdirim: problem haradadır (kənd/ünvan) və nə problemidir? (məs: sızma, su gəlmir, nasazlıq)`), 450);
+    }
+    return setTimeout(() => addNaraMsg("bot",
+      `Qeyd etdim: ${newCase.location} — ${newCase.issue} ⚠️\n${c}\n\nİmkan varsa 1 şəkil/video göndərin — daha tez yönləndirilir.`), 450);
+  }
+
+  // “Sızma var” kimi complaint davamı (şikayət sözünü yazmasa da)
+  if (issue && !anyIncludes(q, INTENTS.contact)) {
+    const c = NARA_DB?.bot_info?.auto_responses?.complaint || "";
+    const newCase = { location: loc || existing?.location || null, issue, started_at: existing?.started_at || new Date().toISOString() };
+    setCase(newCase);
+
+    if (!newCase.location) {
+      return setTimeout(() => addNaraMsg("bot", `Başa düşdüm ⚠️ Sızma ilə bağlıdır. Zəhmət olmasa dəqiq ünvan/kənd yazın.\n\n${c}`), 450);
+    }
+    return setTimeout(() => addNaraMsg("bot", `Qeyd etdim: ${newCase.location} — ${newCase.issue} ⚠️\n\n${c}`), 450);
+  }
+
+  // “Nə vaxt düzələcək?” — əgər case varsa, yönləndir
+  if (anyIncludes(q, INTENTS.when_fix) && existing?.location) {
+    const ct = contactAnswer();
+    return setTimeout(() => addNaraMsg("bot",
+      `Başa düşdüm. Dəqiq vaxtı buradan söz vermək çətindir — briqadanın çıxışı yerində baxışdan asılı olur.\n\nAmma prosesi sürətləndirmək üçün WhatsApp-a 1 şəkil/video + qısa ünvan göndərin.\n\n${ct}`), 450);
+  }
+
+  // 4) DATABASE SEARCH (uydurma YOX: yalnız bazadakı cümlələr)
+  const best = findBestAnswer(val);
+  if (best) {
+    return setTimeout(() => addNaraMsg("bot", best.item.sentence), 450);
+  }
+
+  // 5) Not found → clarify (soft)
+  return setTimeout(() => addNaraMsg("bot", outOfScopeOrClarify(val)), 450);
 }
 
-window.addEventListener("load", () => {
+// Enter dəstəyi
+window.addEventListener('load', () => {
   initNara();
-  const inputField = document.getElementById("nara-input");
-  if (inputField) {
-    inputField.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") sendToNara();
+  const inputField = document.getElementById('nara-input');
+  if(inputField) {
+    inputField.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendToNara();
     });
   }
 });
