@@ -246,7 +246,7 @@ async function initNara() {
 
   } catch(e) {
     console.error(e);
-    addNaraMsg("bot", "Baza yüklənmədi. Zəhmət olmasa səhifəni yeniləyin.");
+    addNaraMsg("bot", "Zəhmət olmasa səhifəni yeniləyin.");
   }
 }
 
@@ -348,7 +348,7 @@ function findBestAnswer(query) {
 
 function outOfScopeOrClarify(query) {
   return NARA_DB?.bot_info?.auto_responses?.out_of_scope
-    || "Bu sual üzrə bazada uyğun məlumat tapmadım. Zəhmət olmasa kənd/ünvan və mövzunu (subartezian, kanal/kollektor, şikayət və s.) bir az dəqiqləşdirin.";
+    || "Zəhmət olmasa kənd/ünvan və mövzunu (subartezian, kanal/kollektor, şikayət və s.) bir az dəqiqləşdirin.";
 }
 
 // ====== Main send ======
