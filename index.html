@@ -138,6 +138,32 @@
         .modal-date { font-size: 0.8rem; color: #888; margin-bottom: 15px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .modal-desc { font-size: 0.95rem; line-height: 1.6; color: #444; }
 
+
+
+        
+/* === VIDEOLAR: 2 SƏTİR YAN-YANA + MOBİL UYĞUN === */
+.video-grid{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+.video-grid .main-video{
+    flex:1 1 48%;
+    margin-bottom: 0; /* yan-yana olanda boşluq çox olmasın */
+}
+
+/* Telefon üçün: alt-alta düşsün */
+@media (max-width: 768px){
+    .video-grid .main-video{
+        flex:1 1 100%;
+    }
+}
+
+
+
+
+        
         /* 5. KONTEYNER VƏ DİGƏR BÖLMƏLƏR */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
 
@@ -286,12 +312,23 @@
     </div>
 
     <div class="container">
-        <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">Fəaliyyət Videoları</h3>
+    <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">Fəaliyyət Videoları</h3>
+
+    <div class="video-grid">
+        <!-- Subartezian Quyuları (playlist) -->
         <div class="main-video">
             <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/G47IFyq0dZo" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/videoseries?list=PLvmDIHDVqK7eU9I5kkdsxxk09RdZ4htcZ" allowfullscreen></iframe>
             </div>
         </div>
+
+        <!-- İçməli Su Layihələri (playlist) -->
+        <div class="main-video">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/videoseries?list=PLvmDIHDVqK7dbzHg8je4H5gnGTvHOteya" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
         <div class="social-section">
             <a href="https://www.facebook.com/p/B%C9%99rd%C9%99-Su-Meliorasiya-Sisteml%C9%99rinin-%C4%B0stismar%C4%B0-61565938869736/" class="social-icon" target="_blank"><i class="fab fa-facebook"></i></a>
