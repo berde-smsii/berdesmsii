@@ -236,7 +236,7 @@ async function initNara() {
 
       const hour = new Date().getHours();
       let welcome = NARA_DB?.bot_info?.welcome_messages?.default
-        || "Salam! 😊 Mən Nara. Sizə necə kömək edə bilərəm?";
+        || "Salam! 😊 Sizə necə kömək edə bilərəm?";
       if (hour < 12) welcome = NARA_DB?.bot_info?.welcome_messages?.morning || welcome;
       else if (hour < 18) welcome = NARA_DB?.bot_info?.welcome_messages?.afternoon || welcome;
       else welcome = NARA_DB?.bot_info?.welcome_messages?.evening || welcome;
