@@ -108,6 +108,9 @@
             background: rgba(0, 0, 0, 0.7); display: none; justify-content: center;
             align-items: center; z-index: 3000; padding: 15px;
         }
+        #allNewsModal { z-index: 3200; }
+        #newsModal { z-index: 4000; }
+
         .modal-content {
             background: #fff; width: 100%; max-width: 600px; max-height: 90vh;
             border-radius: 15px; position: relative; overflow-y: auto;
@@ -140,31 +143,35 @@
 
         /* BÜTÜN XƏBƏRLƏR MODALI */
         .all-news-modal-content {
-            max-width: 900px;
+            width: min(96vw, 1250px);
+            max-width: 1250px;
+            max-height: 92vh;
         }
         .all-news-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
         }
         .all-news-item {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             background: #f8fbff;
             border: 1px solid #d9e9ff;
             border-radius: 12px;
             padding: 12px;
             align-items: flex-start;
+            min-height: 130px;
         }
         .all-news-thumb {
-            width: 180px;
-            height: 110px;
+            width: 140px;
+            height: 90px;
             border-radius: 10px;
             object-fit: cover;
             flex-shrink: 0;
         }
         .all-news-info {
             flex: 1;
+            min-width: 0;
         }
         .all-news-info h4 {
             color: #0056b3;
@@ -195,21 +202,46 @@
             border: none;
             font-weight: bold;
         }
+
+        .news-header-bar {
+            max-width: 1000px;
+            margin: 20px auto 10px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .news-header-bar h3 {
+            color: #0056b3;
+            text-align: left;
+            font-size: 1.1rem;
+            margin: 0;
+        }
         .all-news-trigger-wrap {
-            text-align: center;
-            margin: 12px 0 0;
+            text-align: right;
+            margin: 0;
         }
         .all-news-trigger-btn {
-            font-size: 0.85rem;
-            color: #fff;
-            background: #0056b3;
-            padding: 10px 18px;
-            border-radius: 6px;
+            font-size: 0.82rem;
+            color: #0056b3;
+            background: #ffffff;
+            padding: 9px 14px;
+            border-radius: 999px;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
-            border: none;
-            font-weight: bold;
+            border: 1px solid #bcd7f5;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: 0.25s;
+        }
+        .all-news-trigger-btn:hover {
+            background: #0056b3;
+            color: #fff;
+            border-color: #0056b3;
         }
         
         /* 5. KONTEYNER VƏ DİGƏR BÖLMƏLƏR */
@@ -326,12 +358,49 @@
             .map-section iframe { height: 200px !important; }
             .modal-content { width: 95%; }
 
-            .all-news-item {
+            .news-header-bar {
                 flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                margin: 18px auto 10px;
+            }
+            .news-header-bar h3 {
+                text-align: center;
+            }
+            .all-news-trigger-wrap {
+                text-align: center;
+            }
+            .all-news-modal-content {
+                width: 96%;
+                max-width: 96%;
+                max-height: 90vh;
+            }
+            .all-news-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .all-news-item {
+                flex-direction: row;
+                gap: 10px;
+                padding: 10px;
+                min-height: auto;
             }
             .all-news-thumb {
-                width: 100%;
-                height: 180px;
+                width: 95px;
+                height: 70px;
+                border-radius: 8px;
+            }
+            .all-news-info h4 {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+            .all-news-date {
+                font-size: 0.75rem;
+                margin-bottom: 8px;
+            }
+            .all-news-open-btn {
+                font-size: 0.75rem;
+                padding: 7px 12px;
             }
         }
     </style>
@@ -390,14 +459,18 @@
         </div>
     </section>
 
-    <h3 style="color:#0056b3; margin: 20px 0 10px; text-align:center; font-size: 1.1rem;">Fəaliyyət Xəbərləri</h3>
+    <div class="news-header-bar">
+        <h3>Fəaliyyət Xəbərləri</h3>
+        <div class="all-news-trigger-wrap">
+            <button class="all-news-trigger-btn" onclick="openAllNewsModal()">
+                <i class="fas fa-newspaper"></i> Bütün xəbərlər
+            </button>
+        </div>
+    </div>
+
     <div class="news-wrapper">
         <div class="news-container" id="news-track">
             </div>
-    </div>
-
-    <div class="all-news-trigger-wrap">
-        <button class="all-news-trigger-btn" onclick="openAllNewsModal()">Bütün xəbərlər</button>
     </div>
 
     <div class="container">
@@ -512,6 +585,11 @@
         }
 
         function openModal(imgArray, title, text, date) {
+            const allNewsModal = document.getElementById('allNewsModal');
+            if (allNewsModal && allNewsModal.style.display === 'flex') {
+                allNewsModal.style.display = 'none';
+            }
+
             const modal = document.getElementById('newsModal');
             const body = document.getElementById('modalBody');
             currentImages = imgArray;
