@@ -137,6 +137,80 @@
         .modal-body h2 { color: #0056b3; font-size: 1.2rem; margin-bottom: 10px; }
         .modal-date { font-size: 0.8rem; color: #888; margin-bottom: 15px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .modal-desc { font-size: 0.95rem; line-height: 1.6; color: #444; }
+
+        /* BÜTÜN XƏBƏRLƏR MODALI */
+        .all-news-modal-content {
+            max-width: 900px;
+        }
+        .all-news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .all-news-item {
+            display: flex;
+            gap: 15px;
+            background: #f8fbff;
+            border: 1px solid #d9e9ff;
+            border-radius: 12px;
+            padding: 12px;
+            align-items: flex-start;
+        }
+        .all-news-thumb {
+            width: 180px;
+            height: 110px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .all-news-info {
+            flex: 1;
+        }
+        .all-news-info h4 {
+            color: #0056b3;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .all-news-date {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .all-news-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .all-news-open-btn {
+            font-size: 0.8rem;
+            color: #fff;
+            background: #0056b3;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        .all-news-trigger-wrap {
+            text-align: center;
+            margin: 12px 0 0;
+        }
+        .all-news-trigger-btn {
+            font-size: 0.85rem;
+            color: #fff;
+            background: #0056b3;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
         
         /* 5. KONTEYNER VƏ DİGƏR BÖLMƏLƏR */
         .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
@@ -251,6 +325,14 @@
             
             .map-section iframe { height: 200px !important; }
             .modal-content { width: 95%; }
+
+            .all-news-item {
+                flex-direction: column;
+            }
+            .all-news-thumb {
+                width: 100%;
+                height: 180px;
+            }
         }
     </style>
 </head>
@@ -261,6 +343,16 @@
             <span class="modal-close" onclick="closeModal(event)">×</span>
             <div id="modalBody" class="modal-body">
                 </div>
+        </div>
+    </div>
+
+    <div id="allNewsModal" class="modal-overlay" onclick="closeAllNewsModal(event)">
+        <div class="modal-content all-news-modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeAllNewsModal(event)">×</span>
+            <div class="modal-body">
+                <h2 style="color:#0056b3; margin-bottom: 15px;">Bütün Xəbərlər</h2>
+                <div id="all-news-list" class="all-news-list"></div>
+            </div>
         </div>
     </div>
 
@@ -304,17 +396,9 @@
             </div>
     </div>
 
-    <!-- ✅ YENİ: “Bütün xəbərlər” düyməsi + panel (yalnız xəbərlər hissəsinə əlavə) -->
-    <div style="text-align:center; margin: 10px 0 0;">
-        <button id="allNewsBtn" class="read-more" style="padding:10px 18px; font-size:0.85rem;">
-            Bütün xəbərlər
-        </button>
+    <div class="all-news-trigger-wrap">
+        <button class="all-news-trigger-btn" onclick="openAllNewsModal()">Bütün xəbərlər</button>
     </div>
-
-    <div id="allNewsPanel" style="display:none; margin: 15px auto 0; max-width: 1000px; padding: 0 15px;">
-        <div id="all-news-list" class="info-grid"></div>
-    </div>
-    <!-- ✅ /YENİ -->
 
     <div class="container">
     <h3 style="color:#0056b3; margin-bottom:12px; text-align:center; font-size: 1.1rem;">Fəaliyyət Videoları</h3>
@@ -463,18 +547,24 @@
             document.body.style.overflow = 'auto';
         }
 
+        function openAllNewsModal() {
+            document.getElementById('allNewsModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAllNewsModal() {
+            document.getElementById('allNewsModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
         // XEBERLERİ YUKLE
         async function loadNews() {
             try {
                 const response = await fetch('xeberler.json');
                 const newsData = await response.json();
-
                 const track = document.getElementById('news-track');
-                const allList = document.getElementById('all-news-list');
-                const allPanel = document.getElementById('allNewsPanel');
-                const allBtn = document.getElementById('allNewsBtn');
+                const allNewsList = document.getElementById('all-news-list');
 
-                // ✅ dd.mm.yyyy tarixini parse edirik. uyğun gəlmirsə 0 qaytarır (köhnə sayılır)
                 function parseDateScore(t) {
                     if (!t) return 0;
                     const m = t.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
@@ -483,22 +573,20 @@
                     const mm = parseInt(m[2], 10);
                     const yy = parseInt(m[3], 10);
                     if (!yy || mm < 1 || mm > 12 || dd < 1 || dd > 31) return 0;
-                    return yy * 10000 + mm * 100 + dd; // məsələn 20260123
+                    return yy * 10000 + mm * 100 + dd;
                 }
 
-                // ✅ Ən yeni -> köhnə (tarix düzgün deyilsə, id ilə dəstəkləyir)
-                const sorted = [...newsData].sort((a, b) => {
+                const sortedNews = [...newsData].sort((a, b) => {
                     const da = parseDateScore(a.tarix);
                     const db = parseDateScore(b.tarix);
                     if (db !== da) return db - da;
                     return (b.id || 0) - (a.id || 0);
                 });
 
-                // ✅ Son 5 xəbər lentdə
-                const latest5 = sorted.slice(0, 5);
-                const doubledData = [...latest5, ...latest5];
+                const latestFive = sortedNews.slice(0, 5);
+                const doubledData = [...latestFive, ...latestFive];
 
-                // 1) LENT (yalnız son 5)
+                // Ana səhifə lentində yalnız son 5 xəbər
                 track.innerHTML = doubledData.map((item) => {
                     const imgsHTML = item.esas_sekil.map((img, i) => `<img src="${img}" class="${i === 0 ? 'active' : ''}">`).join('');
                     
@@ -517,31 +605,28 @@
                     `;
                 }).join('');
 
-                // 2) BÜTÜN XƏBƏRLƏR PANELİ (hamısı)
-                allList.innerHTML = sorted.map((item) => {
+                // Bütün xəbərlər modalının içi
+                allNewsList.innerHTML = sortedNews.map((item) => {
+                    const firstImage = (item.esas_sekil && item.esas_sekil.length) ? item.esas_sekil[0] : "";
                     const imagesJSON = JSON.stringify(item.esas_sekil || []);
-                    const cleanText = (item.metn || "").replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                    const cleanTitle = (item.bashliq || "").replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const cleanText = item.metn.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const cleanTitle = item.bashliq.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                     return `
-                        <div class="card">
-                            <h3>${item.bashliq || ""}</h3>
-                            <p style="font-size:0.8rem; color:#888; margin-bottom:10px;">${item.tarix || ""}</p>
-                            <button class="read-more" onclick='openModal(${imagesJSON}, "${cleanTitle}", "${cleanText}", "${item.tarix || ''}")'>Ətraflı</button>
+                        <div class="all-news-item">
+                            <img src="${firstImage}" class="all-news-thumb" alt="${item.bashliq}">
+                            <div class="all-news-info">
+                                <h4>${item.bashliq}</h4>
+                                <span class="all-news-date"><i class="far fa-calendar-alt"></i> ${item.tarix || ''}</span>
+                                <div class="all-news-actions">
+                                    <button class="all-news-open-btn" onclick='openModal(${imagesJSON}, "${cleanTitle}", "${cleanText}", "${item.tarix || ''}")'>Ətraflı bax</button>
+                                </div>
+                            </div>
                         </div>
                     `;
                 }).join('');
 
-                // 3) DÜYMƏ: aç / bağla
-                if (allBtn) {
-                    allBtn.onclick = () => {
-                        const isOpen = allPanel.style.display === "block";
-                        allPanel.style.display = isOpen ? "none" : "block";
-                        allBtn.innerText = isOpen ? "Bütün xəbərlər" : "Bağla";
-                    };
-                }
-
-                // ANA SƏHİFƏDƏKİ KARTLARDA ŞƏKİLLƏRİN AVTOMATİK DÖNMƏSİ
+                // Ana səhifədəki slayt kartlarında şəkil dəyişməsi
                 document.querySelectorAll('.news-img-box').forEach(box => {
                     const imgs = box.querySelectorAll('img');
                     if (imgs.length > 1) {
@@ -553,6 +638,7 @@
                         }, 3000);
                     }
                 });
+
             } catch (e) { console.error("Xəbərlər yüklənmədi."); }
         }
         loadNews();
