@@ -739,8 +739,11 @@
     }
 </style>
 
+
+    <!-- SAYTIN BOTU HİSSƏSİ -->
 <div id="nara-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Segoe UI', sans-serif;">
     <div onclick="toggleNara()" style="cursor: pointer; position: relative; transition: 0.3s;">
+        <!-- Widget icon -->
         <img id="operatorSekilMain" src="fotolar/nara_operator_foto.jpeg" alt="Operator" style="width: 70px; height: 70px; border-radius: 50%; border: 3px solid #004a99; box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: white;">
         <span style="position: absolute; bottom: 5px; right: 5px; width: 15px; height: 15px; background: #2ecc71; border: 2px solid white; border-radius: 50%;"></span>
     </div>
@@ -748,8 +751,10 @@
     <div id="nara-chat" style="display: none; width: 380px; height: 550px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; position: absolute; bottom: 85px; right: 0; overflow: hidden; border: 1px solid #eee;">
         <div style="background: linear-gradient(135deg, #004a99, #0066cc); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
             <div style="display:flex; align-items:center; gap:10px;">
+                <!-- Chat başlıq şəkli -->
                 <img id="operatorSekil" src="fotolar/nara_operator_foto.jpeg" style="width:35px; height:35px; border-radius:50%; background:white;">
                 <div>
+                    <!-- Operator adı -->
                     <strong id="operatorAd" style="display:block; font-size:15px;">Nara</strong>
                     <small style="font-size:11px; opacity:0.8;">Bərdə SMSİİ Operatoru</small>
                 </div>
@@ -768,47 +773,45 @@
     </div>
 </div>
 
-
-
-    <script>
+    
+<!-- JS kodu -->
+<script>
 const operatorlar = [
  {ad:"Nara", sekil:"fotolar/nara_operator_foto.jpeg"},
- {ad:"Aysel", sekil:"fotolar/nara_operator_foto.jpeg"},
- {ad:"Ləman", sekil:"fotolar/nara_operator_foto.jpeg"},
+ {ad:"Aynur", sekil:"fotolar/nara_operator_foto.jpeg"},
+ {ad:"Leyla", sekil:"fotolar/nara_operator_foto.jpeg"},
  {ad:"Sevda", sekil:"fotolar/nara_operator_foto.jpeg"},
  {ad:"Nigar", sekil:"fotolar/nara_operator_foto.jpeg"}
 ];
 
 function operatorSec() {
-
     const saat = new Date().getHours();
     const blok = Math.floor(saat / 2); 
     const index = blok % operatorlar.length;
-
     const operator = operatorlar[index];
 
+    // Ad və şəkilləri dəyiş
     document.getElementById("operatorAd").innerText = operator.ad;
     document.getElementById("operatorSekil").src = operator.sekil;
+    document.getElementById("operatorSekilMain").src = operator.sekil;
 }
 
+// Sayt açıldıqda operator seç
 operatorSec();
 
+// "Operator yazır..." animasiyası
 function operatorYazir(){
-
     const yazir = document.createElement("div");
     yazir.id="typing";
     yazir.innerHTML="Operator yazır...";
     yazir.style.fontSize="12px";
     yazir.style.opacity="0.7";
     yazir.style.margin="5px 0";
-
     document.getElementById("nara-msgs").appendChild(yazir);
-
-    setTimeout(()=>{
-        yazir.remove();
-    },2000);
+    setTimeout(()=>{ yazir.remove(); },2000);
 }
 
+// Inputa fokuslandıqda animasiyanı göstər
 document.getElementById("nara-input").addEventListener("focus", operatorYazir);
 </script>
 
