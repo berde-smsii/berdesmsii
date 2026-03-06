@@ -799,18 +799,6 @@ function operatorSec() {
 // Sayt açıldıqda operator seç
 operatorSec();
 
-// "Operator yazır..." animasiyası
-function operatorYazir(){
-    const yazir = document.createElement("div");
-    yazir.id="typing";
-    yazir.innerHTML="Operator yazır...";
-    yazir.style.fontSize="12px";
-    yazir.style.opacity="0.7";
-    yazir.style.margin="5px 0";
-    document.getElementById("nara-msgs").appendChild(yazir);
-    setTimeout(()=>{ yazir.remove(); },2000);
-}
-
 // Inputa fokuslandıqda animasiyanı göstər
 document.getElementById("nara-input").addEventListener("focus", operatorYazir);
 </script>
