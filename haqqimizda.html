@@ -220,7 +220,7 @@
 
         // AÇIQ HAVA
         if (code === 0) {
-            icon = isDay ? "☀️" : "🌙";
+            icon = isDay ? "Günəşli ☀️" : "Aydın gecə 🌙";
         }
         // BULUDLU
         else if (code >= 1 && code <= 3) {
@@ -228,19 +228,19 @@
         }
         // DUMAN
         else if (code >= 45 && code <= 48) {
-            icon = "🌫️";
+            icon = "Duman 🌫️";
         }
         // YAĞIŞ
         else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
-            icon = "🌧️";
+            icon = "Yağış 🌧️";
         }
         // QAR
         else if (code >= 71 && code <= 77) {
-            icon = "❄️";
+            icon = "Qar ❄️";
         }
         // FIRTINA
         else if (code >= 95) {
-            icon = "⛈️";
+            icon = "Fırtına ⛈️";
         }
         document.getElementById('temp').innerText = `${icon} ${temp}°C`;
 
