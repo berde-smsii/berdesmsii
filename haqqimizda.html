@@ -263,118 +263,138 @@ getBardaWeather();
 
     
 
-<section class="odeme-section">
-  <h2 class="odeme-title">Online Ödəniş</h2>
+<section class="payment-section">
 
-  <p class="odeme-info">
-    <img src="fotolar/million.az.png" class="million-logo">
-    <span class="red-text">Milliön vasitəsiylə rahat, sürətli və təhlükəsiz ödəniş</span>
-  </p>
+<h2 class="payment-title">Onlayn Ödəniş</h2>
 
-  <div class="odeme-grid">
+<div class="payment-info">
+<img src="fotolar/million.az.png" class="million-logo">
+<span class="payment-text">Milliön vasitəsiylə rahat, sürətli və təhlükəsiz ödəniş</span>
+</div>
 
-    <a href="https://million.az/services/communal/Azersu" target="_blank" class="odeme-card">
-      <div class="icon">💧</div>
-      <h3>Azərsu</h3>
-      <p>İçməli su ödənişləri üçün</p>
-      <span class="btn">Ödəniş et</span>
-    </a>
+<div class="payment-cards">
 
-    <a href="https://million.az/services/communal/Meliorasiya" target="_blank" class="odeme-card">
-      <div class="icon">🌊</div>
-      <h3>Meliorasiya</h3>
-      <p>SİB.az su istifadəçiləri üçün</p>
-      <span class="btn">Ödəniş et</span>
-    </a>
+<a href="https://million.az/services/communal/Azersu" target="_blank" class="payment-card">
+<div class="payment-icon">💧</div>
+<div class="payment-content">
+<h3>Azərsu</h3>
+<p>İçməli su xidmətləri üzrə onlayn ödəniş</p>
+</div>
+<span class="payment-btn">Ödə</span>
+</a>
 
-  </div>
+<a href="https://million.az/services/communal/Meliorasiya" target="_blank" class="payment-card">
+<div class="payment-icon">🌊</div>
+<div class="payment-content">
+<h3>Meliorasiya</h3>
+<p>SİB.az su istifadəçiləri üçün ödəniş</p>
+</div>
+<span class="payment-btn">Ödə</span>
+</a>
+
+</div>
 </section>
+
 
 <style>
 
-.odeme-section{
-max-width:900px;
-margin:25px auto;
+.payment-section{
+max-width:950px;
+margin:35px auto;
+padding:20px;
+}
+
+.payment-title{
 text-align:center;
-}
-
-.odeme-title{
-font-size:26px;
+font-size:28px;
 color:#0b4f6c;
-margin-bottom:8px;
+margin-bottom:10px;
 }
 
-.odeme-info{
+.payment-info{
 display:flex;
 justify-content:center;
 align-items:center;
-gap:8px;
-margin-bottom:18px;
+gap:10px;
+margin-bottom:25px;
+flex-wrap:wrap;
 }
 
 .million-logo{
-height:22px;
+height:38px;
 }
 
-.red-text{
+.payment-text{
 color:#d90429;
+font-weight:600;
+font-size:15px;
+}
+
+.payment-cards{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+}
+
+.payment-card{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:linear-gradient(135deg,#e9f8ff,#f6fdff);
+border:1px solid #cde9f7;
+border-radius:14px;
+padding:18px;
+text-decoration:none;
+transition:0.25s;
+}
+
+.payment-card:hover{
+transform:translateY(-4px);
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.payment-icon{
+font-size:30px;
+margin-right:12px;
+}
+
+.payment-content{
+flex:1;
+}
+
+.payment-content h3{
+margin:0;
+font-size:20px;
+color:#0b4f6c;
+}
+
+.payment-content p{
+margin:3px 0 0 0;
+font-size:14px;
+color:#555;
+}
+
+.payment-btn{
+background:#1aa7ec;
+color:#fff;
+padding:8px 16px;
+border-radius:8px;
 font-size:14px;
 font-weight:600;
 }
 
-.odeme-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:14px;
-}
-
-.odeme-card{
-background:#f4fbff;
-border:1px solid #d6eef9;
-border-radius:12px;
-padding:16px;
-text-decoration:none;
-transition:.2s;
-}
-
-.odeme-card:hover{
-transform:translateY(-3px);
-box-shadow:0 6px 14px rgba(0,0,0,0.08);
-}
-
-.icon{
-font-size:26px;
-margin-bottom:6px;
-}
-
-.odeme-card h3{
-margin:4px 0;
-color:#0b4f6c;
-font-size:18px;
-}
-
-.odeme-card p{
-font-size:13px;
-color:#555;
-margin-bottom:10px;
-}
-
-.btn{
-background:#1aa7ec;
-color:#fff;
-padding:7px 14px;
-border-radius:7px;
-font-size:13px;
-}
-
 @media(max-width:700px){
 
-.odeme-grid{
+.payment-cards{
 grid-template-columns:1fr;
 }
 
-.odeme-card{
-padding:14px;
+.payment-card{
+padding:16px;
+}
+
+.payment-content h3{
+font-size:18px;
 }
 
 }
@@ -383,6 +403,8 @@ padding:14px;
 
 
 
+
+    
     
 </body>
 </html>
