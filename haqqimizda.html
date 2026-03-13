@@ -256,226 +256,129 @@ getBardaWeather();
 
 
 
-<section class="online-odeme-section">
-  <div class="online-odeme-header">
-    <h2>Online Ödəniş</h2>
-    <p class="online-odeme-note">
-      <span class="million-badge">
-        <span class="million-dot"></span>
-        Milliön
-      </span>
-      <span class="online-odeme-red">vasitəsilə rahat, sürətli və təhlükəsiz ödəniş</span>
-    </p>
-  </div>
 
-  <div class="online-odeme-grid">
-    <a href="https://million.az/services/communal/Azersu" target="_blank" rel="noopener noreferrer" class="odeme-card">
-      <div class="odeme-top">
-        <div class="odeme-icon">💧</div>
-        <div class="odeme-brand">
-          <span class="brand-mini">Milliön</span>
-        </div>
-      </div>
 
+
+
+
+    
+
+<section class="odeme-section">
+  <h2 class="odeme-title">Online Ödəniş</h2>
+
+  <p class="odeme-info">
+    <img src="berdesmsii/fotolar/million.az.png" class="million-logo">
+    <span class="red-text">Milliön vasitəsiylə rahat, sürətli və təhlükəsiz ödəniş</span>
+  </p>
+
+  <div class="odeme-grid">
+
+    <a href="https://million.az/services/communal/Azersu" target="_blank" class="odeme-card">
+      <div class="icon">💧</div>
       <h3>Azərsu</h3>
-      <p>
-        İçməli su ödənişləri üçün nəzərdə tutulub.
-      </p>
-
-      <span class="odeme-btn">Ödəniş et</span>
+      <p>İçməli su ödənişləri üçün</p>
+      <span class="btn">Ödəniş et</span>
     </a>
 
-    <a href="https://million.az/services/communal/Meliorasiya" target="_blank" rel="noopener noreferrer" class="odeme-card">
-      <div class="odeme-top">
-        <div class="odeme-icon">🌊</div>
-        <div class="odeme-brand">
-          <span class="brand-mini">Milliön</span>
-        </div>
-      </div>
-
+    <a href="https://million.az/services/communal/Meliorasiya" target="_blank" class="odeme-card">
+      <div class="icon">🌊</div>
       <h3>Meliorasiya</h3>
-      <p>
-        SİB.az sistemi üzrə su istifadəçiləri üçün nəzərdə tutulub.
-      </p>
-
-      <span class="odeme-btn">Ödəniş et</span>
+      <p>SİB.az su istifadəçiləri üçün</p>
+      <span class="btn">Ödəniş et</span>
     </a>
+
   </div>
 </section>
 
 <style>
-  .online-odeme-section {
-    width: min(1100px, 92%);
-    margin: 40px auto;
-    padding: 28px;
-    border-radius: 24px;
-    background: linear-gradient(180deg, #f4fbff 0%, #e7f7ff 100%);
-    box-shadow: 0 10px 30px rgba(0, 85, 120, 0.08);
-  }
 
-  .online-odeme-header {
-    text-align: center;
-    margin-bottom: 24px;
-  }
+.odeme-section{
+max-width:900px;
+margin:25px auto;
+text-align:center;
+}
 
-  .online-odeme-header h2 {
-    font-size: 32px;
-    color: #0b4f6c;
-    margin-bottom: 10px;
-    font-weight: 700;
-  }
+.odeme-title{
+font-size:26px;
+color:#0b4f6c;
+margin-bottom:8px;
+}
 
-  .online-odeme-note {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin: 0;
-  }
+.odeme-info{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:8px;
+margin-bottom:18px;
+}
 
-  .million-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: #ffffff;
-    color: #111;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 14px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  }
+.million-logo{
+height:22px;
+}
 
-  .million-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #d90429;
-    display: inline-block;
-  }
+.red-text{
+color:#d90429;
+font-size:14px;
+font-weight:600;
+}
 
-  .online-odeme-red {
-    color: #d90429;
-    font-size: 16px;
-    font-weight: 700;
-  }
+.odeme-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:14px;
+}
 
-  .online-odeme-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
-  }
+.odeme-card{
+background:#f4fbff;
+border:1px solid #d6eef9;
+border-radius:12px;
+padding:16px;
+text-decoration:none;
+transition:.2s;
+}
 
-  .odeme-card {
-    display: block;
-    text-decoration: none;
-    background: linear-gradient(180deg, #ffffff 0%, #f2fbff 100%);
-    border: 1px solid rgba(30, 136, 229, 0.12);
-    border-radius: 22px;
-    padding: 24px;
-    box-shadow: 0 8px 24px rgba(14, 86, 110, 0.09);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  }
+.odeme-card:hover{
+transform:translateY(-3px);
+box-shadow:0 6px 14px rgba(0,0,0,0.08);
+}
 
-  .odeme-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 30px rgba(14, 86, 110, 0.14);
-    border-color: rgba(30, 136, 229, 0.28);
-  }
+.icon{
+font-size:26px;
+margin-bottom:6px;
+}
 
-  .odeme-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-  }
+.odeme-card h3{
+margin:4px 0;
+color:#0b4f6c;
+font-size:18px;
+}
 
-  .odeme-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    background: linear-gradient(180deg, #d9f4ff 0%, #bfeeff 100%);
-    box-shadow: inset 0 0 0 1px rgba(0, 120, 170, 0.08);
-  }
+.odeme-card p{
+font-size:13px;
+color:#555;
+margin-bottom:10px;
+}
 
-  .brand-mini {
-    display: inline-block;
-    background: #fff1f1;
-    color: #c1121f;
-    padding: 7px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-    border: 1px solid rgba(193, 18, 31, 0.12);
-  }
+.btn{
+background:#1aa7ec;
+color:#fff;
+padding:7px 14px;
+border-radius:7px;
+font-size:13px;
+}
 
-  .odeme-card h3 {
-    margin: 0 0 10px;
-    font-size: 24px;
-    color: #0b4f6c;
-    font-weight: 700;
-  }
+@media(max-width:700px){
 
-  .odeme-card p {
-    margin: 0 0 22px;
-    color: #35586b;
-    font-size: 16px;
-    line-height: 1.6;
-    min-height: 52px;
-  }
+.odeme-grid{
+grid-template-columns:1fr;
+}
 
-  .odeme-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 20px;
-    border-radius: 12px;
-    background: linear-gradient(90deg, #1aa7ec 0%, #0077b6 100%);
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
-    box-shadow: 0 8px 18px rgba(0, 119, 182, 0.22);
-  }
+.odeme-card{
+padding:14px;
+}
 
-  @media (max-width: 768px) {
-    .online-odeme-section {
-      padding: 20px 16px;
-      margin: 28px auto;
-      border-radius: 18px;
-    }
+}
 
-    .online-odeme-header h2 {
-      font-size: 26px;
-    }
-
-    .online-odeme-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .odeme-card {
-      padding: 20px;
-      border-radius: 18px;
-    }
-
-    .odeme-card h3 {
-      font-size: 22px;
-    }
-
-    .odeme-card p {
-      min-height: auto;
-      font-size: 15px;
-    }
-
-    .online-odeme-red {
-      font-size: 15px;
-      text-align: center;
-    }
-  }
 </style>
 
 
