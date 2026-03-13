@@ -57,6 +57,18 @@ function sanitizeFileName(name) {
         .replace(/[^a-z0-9.\-_]/g, "");
 }
 
+function getStoragePathFromPublicUrl(publicUrl) {
+    try {
+        const marker = "/storage/v1/object/public/news-images/";
+        const idx = publicUrl.indexOf(marker);
+        if (idx === -1) return null;
+
+        return decodeURIComponent(publicUrl.substring(idx + marker.length));
+    } catch (e) {
+        return null;
+    }
+}
+
 function resetForm() {
     editingNewsId = null;
     selectedFiles = [];
@@ -201,6 +213,21 @@ async function uploadNewImages(files) {
     return uploadedUrls;
 }
 
+async function removeImagesFromStorage(imageUrls = []) {
+    const storagePaths = imageUrls
+        .map(getStoragePathFromPublicUrl)
+        .filter(Boolean);
+
+    if (!storagePaths.length) return;
+
+    const { error } = await supabaseClient
+        .storage
+        .from("news-images")
+        .remove(storagePaths);
+
+    if (error) throw error;
+}
+
 async function insertNewsImages(newsId, imageUrls) {
     if (!imageUrls.length) return;
 
@@ -271,6 +298,12 @@ async function saveNews() {
             await insertNewsImages(data.id, finalImageUrls);
             showStatus(formStatus, "Xəbər uğurla əlavə olundu.");
         } else {
+            const oldImageUrls = window.__imageMap?.[editingNewsId]
+                ? [...window.__imageMap[editingNewsId]]
+                : [];
+
+            const removedOldImages = oldImageUrls.filter(url => !existingImageUrls.includes(url));
+
             const { error: updateError } = await supabaseClient
                 .from("news")
                 .update({
@@ -285,6 +318,10 @@ async function saveNews() {
 
             await deleteNewsImagesRows(editingNewsId);
             await insertNewsImages(editingNewsId, finalImageUrls);
+
+            if (removedOldImages.length) {
+                await removeImagesFromStorage(removedOldImages);
+            }
 
             showStatus(formStatus, "Xəbər uğurla yeniləndi.");
         }
@@ -327,6 +364,8 @@ async function loadAdminNews() {
 
         if (!newsRows.length) {
             newsList.innerHTML = `<div class="empty-box">Hələ xəbər əlavə edilməyib.</div>`;
+            window.__newsRows = [];
+            window.__imageMap = {};
             return;
         }
 
@@ -370,7 +409,9 @@ window.editNews = async function (newsId) {
     newsContent.value = newsItem.content || "";
     newsDate.value = newsItem.news_date || "";
     selectedFiles = [];
-    existingImageUrls = window.__imageMap?.[newsId] ? [...window.__imageMap[newsId]] : (newsItem.image ? [newsItem.image] : []);
+    existingImageUrls = window.__imageMap?.[newsId]
+        ? [...window.__imageMap[newsId]]
+        : (newsItem.image ? [newsItem.image] : []);
 
     renderPreview();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -381,6 +422,15 @@ window.deleteNews = async function (newsId) {
     if (!ok) return;
 
     try {
+        const newsItem = (window.__newsRows || []).find(item => item.id === newsId);
+        const imageUrls = window.__imageMap?.[newsId]
+            ? [...window.__imageMap[newsId]]
+            : (newsItem?.image ? [newsItem.image] : []);
+
+        if (imageUrls.length) {
+            await removeImagesFromStorage(imageUrls);
+        }
+
         const { error } = await supabaseClient
             .from("news")
             .delete()
@@ -393,7 +443,7 @@ window.deleteNews = async function (newsId) {
         }
 
         await loadAdminNews();
-        showStatus(formStatus, "Xəbər silindi.");
+        showStatus(formStatus, "Xəbər və şəkilləri silindi.");
     } catch (error) {
         console.error(error);
         showStatus(formStatus, "Xəbər silinərkən xəta baş verdi.", "error");
