@@ -58,26 +58,30 @@ function sanitizeFileName(name) {
         .replace(/[^a-z0-9.\-_]/g, "");
 }
 
+function uniqueArray(arr = []) {
+    return [...new Set(arr.filter(Boolean))];
+}
+
 function getStoragePathFromPublicUrl(publicUrl) {
     try {
         if (!publicUrl || typeof publicUrl !== "string") return null;
 
         const url = new URL(publicUrl);
-        const marker = "/storage/v1/object/public/news-images/";
 
-        if (!url.pathname.includes(marker)) return null;
+        // pathname nümunəsi:
+        // /storage/v1/object/public/news-images/news/123-file.jpg
+        const parts = url.pathname.split("/storage/v1/object/public/news-images/");
 
-        const rawPath = url.pathname.split(marker)[1];
-        if (!rawPath) return null;
+        if (parts.length < 2) return null;
 
-        return decodeURIComponent(rawPath);
-    } catch (e) {
+        const objectPath = parts[1];
+        if (!objectPath) return null;
+
+        return decodeURIComponent(objectPath);
+    } catch (err) {
+        console.error("Path çıxarma xətası:", err, publicUrl);
         return null;
     }
-}
-
-function uniqueArray(arr = []) {
-    return [...new Set(arr.filter(Boolean))];
 }
 
 async function fetchNewsImageUrls(newsId) {
@@ -88,26 +92,31 @@ async function fetchNewsImageUrls(newsId) {
         .order("id", { ascending: true });
 
     if (error) throw error;
+
     return (data || []).map(item => item.image_url).filter(Boolean);
 }
 
 async function removeImagesFromStorage(imageUrls = []) {
     const storagePaths = uniqueArray(
-        imageUrls
-            .map(getStoragePathFromPublicUrl)
-            .filter(Boolean)
+        imageUrls.map(getStoragePathFromPublicUrl).filter(Boolean)
     );
 
-    if (!storagePaths.length) return;
+    console.log("Silinəcək image URL-lər:", imageUrls);
+    console.log("Silinəcək storage path-lər:", storagePaths);
+
+    if (!storagePaths.length) {
+        console.warn("Storage üçün silinəcək path tapılmadı.");
+        return;
+    }
 
     const { data, error } = await supabaseClient
         .storage
         .from("news-images")
         .remove(storagePaths);
 
-    if (error) throw error;
+    console.log("Storage remove cavabı:", data, error);
 
-    console.log("Storage removed:", storagePaths, data);
+    if (error) throw error;
 }
 
 function resetForm() {
@@ -327,6 +336,10 @@ async function saveNews() {
                 url => !finalImageUrls.includes(url)
             );
 
+            console.log("Orijinal şəkillər:", originalEditImageUrls);
+            console.log("Qalan şəkillər:", finalImageUrls);
+            console.log("Silinəcək köhnə şəkillər:", removedOldImages);
+
             const { error: updateError } = await supabaseClient
                 .from("news")
                 .update({
@@ -433,9 +446,11 @@ window.editNews = async function (newsId) {
     newsDate.value = newsItem.news_date || "";
     selectedFiles = [];
 
-    const currentDbImages = await fetchNewsImageUrls(newsId);
-    existingImageUrls = [...currentDbImages];
-    originalEditImageUrls = [...currentDbImages];
+    const dbImages = await fetchNewsImageUrls(newsId);
+    existingImageUrls = [...dbImages];
+    originalEditImageUrls = [...dbImages];
+
+    console.log("Redaktə üçün DB şəkilləri:", dbImages);
 
     renderPreview();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -447,6 +462,8 @@ window.deleteNews = async function (newsId) {
 
     try {
         const dbImageUrls = await fetchNewsImageUrls(newsId);
+
+        console.log("Silinəcək xəbər şəkilləri:", dbImageUrls);
 
         if (dbImageUrls.length) {
             await removeImagesFromStorage(dbImageUrls);
