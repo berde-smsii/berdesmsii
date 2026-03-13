@@ -22,6 +22,7 @@ const newsList = document.getElementById("newsList");
 let selectedFiles = [];
 let existingImageUrls = [];
 let editingNewsId = null;
+let originalEditImageUrls = [];
 
 function showStatus(el, message, type = "success") {
     el.className = `status ${type}`;
@@ -59,20 +60,61 @@ function sanitizeFileName(name) {
 
 function getStoragePathFromPublicUrl(publicUrl) {
     try {
-        const marker = "/storage/v1/object/public/news-images/";
-        const idx = publicUrl.indexOf(marker);
-        if (idx === -1) return null;
+        if (!publicUrl || typeof publicUrl !== "string") return null;
 
-        return decodeURIComponent(publicUrl.substring(idx + marker.length));
+        const url = new URL(publicUrl);
+        const marker = "/storage/v1/object/public/news-images/";
+
+        if (!url.pathname.includes(marker)) return null;
+
+        const rawPath = url.pathname.split(marker)[1];
+        if (!rawPath) return null;
+
+        return decodeURIComponent(rawPath);
     } catch (e) {
         return null;
     }
+}
+
+function uniqueArray(arr = []) {
+    return [...new Set(arr.filter(Boolean))];
+}
+
+async function fetchNewsImageUrls(newsId) {
+    const { data, error } = await supabaseClient
+        .from("news_images")
+        .select("image_url")
+        .eq("news_id", newsId)
+        .order("id", { ascending: true });
+
+    if (error) throw error;
+    return (data || []).map(item => item.image_url).filter(Boolean);
+}
+
+async function removeImagesFromStorage(imageUrls = []) {
+    const storagePaths = uniqueArray(
+        imageUrls
+            .map(getStoragePathFromPublicUrl)
+            .filter(Boolean)
+    );
+
+    if (!storagePaths.length) return;
+
+    const { data, error } = await supabaseClient
+        .storage
+        .from("news-images")
+        .remove(storagePaths);
+
+    if (error) throw error;
+
+    console.log("Storage removed:", storagePaths, data);
 }
 
 function resetForm() {
     editingNewsId = null;
     selectedFiles = [];
     existingImageUrls = [];
+    originalEditImageUrls = [];
     newsTitle.value = "";
     newsDate.value = "";
     newsContent.value = "";
@@ -198,9 +240,7 @@ async function uploadNewImages(files) {
             .from("news-images")
             .upload(filePath, file);
 
-        if (uploadError) {
-            throw uploadError;
-        }
+        if (uploadError) throw uploadError;
 
         const { data } = supabaseClient
             .storage
@@ -211,21 +251,6 @@ async function uploadNewImages(files) {
     }
 
     return uploadedUrls;
-}
-
-async function removeImagesFromStorage(imageUrls = []) {
-    const storagePaths = imageUrls
-        .map(getStoragePathFromPublicUrl)
-        .filter(Boolean);
-
-    if (!storagePaths.length) return;
-
-    const { error } = await supabaseClient
-        .storage
-        .from("news-images")
-        .remove(storagePaths);
-
-    if (error) throw error;
 }
 
 async function insertNewsImages(newsId, imageUrls) {
@@ -278,7 +303,7 @@ async function saveNews() {
             ? await uploadNewImages(selectedFiles)
             : [];
 
-        const finalImageUrls = [...existingImageUrls, ...newUploadedUrls];
+        const finalImageUrls = uniqueArray([...existingImageUrls, ...newUploadedUrls]);
         const mainImage = finalImageUrls[0] || null;
 
         if (!editingNewsId) {
@@ -298,11 +323,9 @@ async function saveNews() {
             await insertNewsImages(data.id, finalImageUrls);
             showStatus(formStatus, "Xəbər uğurla əlavə olundu.");
         } else {
-            const oldImageUrls = window.__imageMap?.[editingNewsId]
-                ? [...window.__imageMap[editingNewsId]]
-                : [];
-
-            const removedOldImages = oldImageUrls.filter(url => !existingImageUrls.includes(url));
+            const removedOldImages = originalEditImageUrls.filter(
+                url => !finalImageUrls.includes(url)
+            );
 
             const { error: updateError } = await supabaseClient
                 .from("news")
@@ -409,9 +432,10 @@ window.editNews = async function (newsId) {
     newsContent.value = newsItem.content || "";
     newsDate.value = newsItem.news_date || "";
     selectedFiles = [];
-    existingImageUrls = window.__imageMap?.[newsId]
-        ? [...window.__imageMap[newsId]]
-        : (newsItem.image ? [newsItem.image] : []);
+
+    const currentDbImages = await fetchNewsImageUrls(newsId);
+    existingImageUrls = [...currentDbImages];
+    originalEditImageUrls = [...currentDbImages];
 
     renderPreview();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -422,13 +446,10 @@ window.deleteNews = async function (newsId) {
     if (!ok) return;
 
     try {
-        const newsItem = (window.__newsRows || []).find(item => item.id === newsId);
-        const imageUrls = window.__imageMap?.[newsId]
-            ? [...window.__imageMap[newsId]]
-            : (newsItem?.image ? [newsItem.image] : []);
+        const dbImageUrls = await fetchNewsImageUrls(newsId);
 
-        if (imageUrls.length) {
-            await removeImagesFromStorage(imageUrls);
+        if (dbImageUrls.length) {
+            await removeImagesFromStorage(dbImageUrls);
         }
 
         const { error } = await supabaseClient
