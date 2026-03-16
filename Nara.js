@@ -1,6 +1,6 @@
 /* =========================================================
-   NARA.JS — STABİL PRO VERSİYA
-   index.html dəyişmədən işləməsi üçün hazırlanıb
+   NARA.JS — PRO FINAL NO-IMAGE VERSION
+   Şəkilsiz, stabil, EmailJS uyumlu
    ========================================================= */
 
 (function () {
@@ -12,16 +12,15 @@
   const NARA_EMAIL = {
     SERVICE_ID: "service_l4gqfcz",
     TEMPLATE_ID: "template_v1hu5h1",
-    PUBLIC_KEY: "tatcA8fFwhzTeu39T",
-    TO_EMAIL: "berde.smsii.09@gmail.com"
+    PUBLIC_KEY: "tatcA8fFwhzTeu39T"
   };
 
   // =========================
-  // LOCAL STORAGE AÇARLARI
+  // STORAGE
   // =========================
-  const NARA_KEYS = {
-    FORM: "nara_form_v4",
-    CHAT: "nara_chat_v4"
+  const STORAGE_KEYS = {
+    FORM: "nara_form_noimage_v1",
+    CHAT: "nara_chat_noimage_v1"
   };
 
   // =========================
@@ -54,9 +53,6 @@
     { value: "Təcili", icon: "🔴" }
   ];
 
-  // =========================
-  // INTENTLƏR
-  // =========================
   const INTENTS = {
     greeting: ["salam", "slm", "salamlar", "sabahınız xeyir", "sabahiniz xeyir", "gününüz xeyir", "hello", "hi", "hey", "sa", "s.a"],
     thanks: ["sağ ol", "sag ol", "çox sağ ol", "cox sag ol", "təşəkkür", "tesekkur", "var olun"],
@@ -65,9 +61,6 @@
     startForm: ["müraciət", "muraciet", "elektron müraciət", "şikayət", "sikayet", "problem", "yeni müraciət", "müraciət yarat"]
   };
 
-  // =========================
-  // ADDIMLAR
-  // =========================
   const STEP_ORDER = [
     "welcome",
     "full_name",
@@ -79,7 +72,6 @@
     "address",
     "priority",
     "message",
-    "images",
     "consent",
     "review",
     "complete"
@@ -178,25 +170,44 @@
   function getProgressPercent(step) {
     const map = {
       welcome: 5,
-      full_name: 12,
-      fin_code: 20,
-      id_card: 28,
-      phone: 36,
-      email: 44,
-      subject: 54,
-      address: 64,
-      priority: 74,
-      message: 84,
-      images: 92,
-      consent: 96,
+      full_name: 14,
+      fin_code: 24,
+      id_card: 34,
+      phone: 44,
+      email: 54,
+      subject: 66,
+      address: 76,
+      priority: 86,
+      message: 93,
+      consent: 97,
       review: 100,
       complete: 100
     };
     return map[step] || 5;
   }
 
+  function validFin(v) {
+    if (!v) return true;
+    return /^[A-Za-z0-9]{7}$/.test(v.trim());
+  }
+
+  function validIdCard(v) {
+    if (!v) return true;
+    return /^[A-Za-z0-9\-]{5,20}$/.test(v.trim());
+  }
+
+  function validPhone(v) {
+    const t = v.replace(/\s+/g, "");
+    return /^(\+994|0)?(10|20|50|51|55|60|70|77|99)[0-9]{7}$/.test(t);
+  }
+
+  function validEmail(v) {
+    if (!v) return true;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
   // =========================
-  // FORM MƏLUMATLARI
+  // FORM
   // =========================
   function defaultForm() {
     return {
@@ -215,9 +226,6 @@
         priority: "",
         message: "",
         consent: "",
-        image_1: "",
-        image_2: "",
-        image_note: "Şəkil əlavə edilməyib.",
         operator_name: "",
         submit_time: ""
       }
@@ -225,11 +233,11 @@
   }
 
   function getForm() {
-    return readLS(NARA_KEYS.FORM, defaultForm()) || defaultForm();
+    return readLS(STORAGE_KEYS.FORM, defaultForm()) || defaultForm();
   }
 
   function setForm(v) {
-    writeLS(NARA_KEYS.FORM, v);
+    writeLS(STORAGE_KEYS.FORM, v);
   }
 
   function updateForm(partial) {
@@ -256,55 +264,32 @@
   // CHAT HISTORY
   // =========================
   function getChatHistory() {
-    return readLS(NARA_KEYS.CHAT, []);
+    return readLS(STORAGE_KEYS.CHAT, []);
   }
 
   function saveChat(role, text, html) {
     const hist = getChatHistory();
     hist.push({
-      role: role,
+      role,
       text: text || "",
       html: html || null,
       at: new Date().toISOString()
     });
-    writeLS(NARA_KEYS.CHAT, hist.slice(-120));
+    writeLS(STORAGE_KEYS.CHAT, hist.slice(-120));
   }
 
   function clearChat() {
-    removeLS(NARA_KEYS.CHAT);
+    removeLS(STORAGE_KEYS.CHAT);
   }
 
   // =========================
-  // YOXLAMALAR
-  // =========================
-  function validFin(v) {
-    if (!v) return true;
-    return /^[A-Za-z0-9]{7}$/.test(v.trim());
-  }
-
-  function validIdCard(v) {
-    if (!v) return true;
-    return /^[A-Za-z0-9\-]{5,20}$/.test(v.trim());
-  }
-
-  function validPhone(v) {
-    const t = v.replace(/\s+/g, "");
-    return /^(\+994|0)?(10|20|50|51|55|60|70|77|99)[0-9]{7}$/.test(t);
-  }
-
-  function validEmail(v) {
-    if (!v) return true;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  }
-
-  // =========================
-  // STİLLƏR
+  // DİZAYN
   // =========================
   function injectStyles() {
-    if (document.getElementById("nara-fixed-styles")) return;
+    if (document.getElementById("nara-pro-noimage-style")) return;
 
     const style = document.createElement("style");
-    style.id = "nara-fixed-styles";
+    style.id = "nara-pro-noimage-style";
     style.textContent = `
       #nara-widget * { box-sizing: border-box; }
 
@@ -329,9 +314,7 @@
       .nara-row {
         display: flex;
         width: 100%;
-        gap: 8px;
         margin-bottom: 2px;
-        align-items: flex-end;
         animation: naraMsgIn .22s ease;
       }
 
@@ -343,25 +326,12 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
-      .nara-avatar {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        object-fit: cover;
-        object-position: center;
-        flex: 0 0 24px;
-        border: 1px solid rgba(0,74,153,.12);
-        background: #fff;
-        box-shadow: 0 3px 8px rgba(0,0,0,.07);
-        display: block;
-      }
-
       .nara-bubble {
-        max-width: 86%;
+        max-width: 88%;
         border-radius: 18px;
         padding: 12px 14px;
         font-size: 14px;
-        line-height: 1.55;
+        line-height: 1.6;
         box-shadow: 0 8px 20px rgba(0,0,0,.05);
         word-break: break-word;
       }
@@ -547,30 +517,6 @@
         transition: width .25s ease;
       }
 
-      .nara-upload-preview-wrap {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 10px;
-      }
-
-      .nara-upload-preview {
-        width: 88px;
-        height: 88px;
-        border-radius: 12px;
-        object-fit: cover;
-        border: 1px solid #d9e5f5;
-        box-shadow: 0 6px 14px rgba(0,0,0,.05);
-        background: #fff;
-      }
-
-      .nara-soft-note {
-        margin-top: 8px;
-        font-size: 12px;
-        color: #688099;
-        line-height: 1.45;
-      }
-
       @media (max-width: 640px) {
         #nara-widget {
           right: 10px !important;
@@ -584,13 +530,8 @@
         }
 
         .nara-bubble {
-          max-width: 90%;
+          max-width: 92%;
           font-size: 13.5px;
-        }
-
-        .nara-upload-preview {
-          width: 76px;
-          height: 76px;
         }
       }
     `;
@@ -598,7 +539,7 @@
   }
 
   // =========================
-  // OPERATOR ŞƏKİL / AD DƏYİŞMƏ
+  // BAŞLIQ OPERATORU
   // =========================
   function operatorSec() {
     const operator = currentOperator();
@@ -608,15 +549,17 @@
     const s2 = document.getElementById("operatorSekilMain");
 
     if (adEl) adEl.innerText = operator.ad;
+
     if (s1) {
       s1.src = operator.sekil;
       s1.style.objectFit = "cover";
       s1.style.objectPosition = "center";
       s1.style.borderRadius = "50%";
-      s1.style.width = "28px";
-      s1.style.height = "28px";
+      s1.style.width = "26px";
+      s1.style.height = "26px";
       s1.style.display = "block";
     }
+
     if (s2) {
       s2.src = operator.sekil;
       s2.style.objectFit = "cover";
@@ -676,7 +619,7 @@
   }
 
   // =========================
-  // EMAILJS YÜKLƏMƏ
+  // EMAILJS
   // =========================
   function loadEmailJS() {
     return new Promise((resolve, reject) => {
@@ -727,7 +670,7 @@
   }
 
   // =========================
-  // MESAJ GÖSTƏRMƏ
+  // MESAJLAR
   // =========================
   function addMsg(role, text, html, save) {
     const area = getMsgsBox();
@@ -735,14 +678,6 @@
 
     const row = document.createElement("div");
     row.className = "nara-row " + (role === "bot" ? "bot" : "user");
-
-    if (role === "bot") {
-      const avatar = document.createElement("img");
-      avatar.className = "nara-avatar";
-      avatar.src = currentOperator().sekil;
-      avatar.alt = currentOperator().ad;
-      row.appendChild(avatar);
-    }
 
     const bubble = document.createElement("div");
     bubble.className = "nara-bubble";
@@ -769,16 +704,10 @@
     row.className = "nara-row bot";
     row.id = "nara-typing-row";
 
-    const avatar = document.createElement("img");
-    avatar.className = "nara-avatar";
-    avatar.src = currentOperator().sekil;
-    avatar.alt = currentOperator().ad;
-
     const bubble = document.createElement("div");
     bubble.className = "nara-bubble";
     bubble.innerHTML = '<div class="nara-typing"><span></span><span></span><span></span></div>';
 
-    row.appendChild(avatar);
     row.appendChild(bubble);
     area.appendChild(row);
     area.scrollTop = area.scrollHeight;
@@ -838,12 +767,6 @@
   function reviewBox() {
     const d = getForm().data;
 
-    const imagesHtml = d.image_1 ? `
-      <div class="nara-upload-preview-wrap">
-        <img class="nara-upload-preview" src="${d.image_1}" alt="Şəkil 1">
-      </div>
-    ` : `<div class="nara-soft-note">Şəkil əlavə edilməyib.</div>`;
-
     const html = `
       <div class="nara-badge">Yekun yoxlama</div>
       <div class="nara-review">
@@ -858,7 +781,6 @@
         <b>Prioritet:</b> ${esc(d.priority || "-")}<br>
         <b>Müraciətin məzmunu:</b> ${esc(d.message || "-")}<br>
         <b>Razılıq:</b> ${esc(d.consent || "-")}
-        ${imagesHtml}
       </div>
     `;
     addMsg("bot", "", html, false);
@@ -881,18 +803,6 @@
         <button class="nara-mini-btn" onclick="window.naraGoBack()">⬅️ Geri</button>
         <button class="nara-mini-btn" onclick="window.naraResetForm()">🗑️ Sıfırla</button>
       </div>
-    `;
-    addMsg("bot", "", html, false);
-  }
-
-  function imageControls() {
-    const html = `
-      <div class="nara-mini-btns">
-        <button class="nara-mini-btn" onclick="window.naraOpenImagePicker()">🖼️ Şəkil əlavə et</button>
-        <button class="nara-mini-btn" onclick="window.naraSkipImages()">⏭️ Şəkilsiz davam et</button>
-        <button class="nara-mini-btn" onclick="window.naraGoBack()">⬅️ Geri</button>
-      </div>
-      <div class="nara-soft-note">Maksimum 1 şəkil əlavə edə bilərsiniz.</div>
     `;
     addMsg("bot", "", html, false);
   }
@@ -926,7 +836,7 @@
   }
 
   // =========================
-  // ƏLAQƏ CAVABI
+  // ƏLAQƏ
   // =========================
   function contactAnswer() {
     return `Əlaqə məlumatları:
@@ -938,103 +848,6 @@
   }
 
   // =========================
-  // ŞƏKİL YÜKLƏMƏ
-  // =========================
-  function ensureHiddenImageInput() {
-    let input = document.getElementById("nara-hidden-image-input");
-    if (input) return input;
-
-    input = document.createElement("input");
-    input.type = "file";
-    input.id = "nara-hidden-image-input";
-    input.accept = "image/*";
-    input.multiple = true;
-    input.style.display = "none";
-
-    input.addEventListener("change", async function (e) {
-      const files = Array.from(e.target.files || []).slice(0, 1);
-      if (!files.length) return;
-
-      const converted = [];
-      for (const file of files) {
-        const base64 = await compressImage(file, 700, 0.45);
-        converted.push(base64);
-      }
-
-      updateForm({
-        step: "consent",
-        data: {
-          image_1: converted[0] || "",
-          image_2: "",
-          image_note: converted.length ? "1 şəkil əlavə edilib." : "Şəkil əlavə edilməyib."
-        }
-      });
-
-      addMsg("user", files.map(f => "Şəkil əlavə edildi: " + f.name).join(", "));
-
-      const previewHtml = `
-        <div class="nara-badge">Əlavə edilən şəkil</div>
-        <div class="nara-upload-preview-wrap">
-          ${converted[0] ? `<img class="nara-upload-preview" src="${converted[0]}" alt="Şəkil 1">` : ""}
-        </div>
-      `;
-      await botSay("Şəkil qəbul edildi.", previewHtml, 300);
-
-      await askStepQuestion("consent");
-    });
-
-    document.body.appendChild(input);
-    return input;
-  }
-
-  function compressImage(file, maxSize, quality) {
-    return new Promise((resolve, reject) => {
-      const fr = new FileReader();
-
-      fr.onload = function () {
-        const img = new Image();
-
-        img.onload = function () {
-          let w = img.width;
-          let h = img.height;
-
-          const LIMIT = 700;
-          const QUALITY = 0.45;
-
-          if (w > h && w > LIMIT) {
-            h = Math.round((h * LIMIT) / w);
-            w = LIMIT;
-          } else if (h >= w && h > LIMIT) {
-            w = Math.round((w * LIMIT) / h);
-            h = LIMIT;
-          }
-
-          const canvas = document.createElement("canvas");
-          canvas.width = w;
-          canvas.height = h;
-
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, w, h);
-
-          let base64 = canvas.toDataURL("image/jpeg", QUALITY);
-
-          if (base64.length > 350000) {
-            base64 = canvas.toDataURL("image/jpeg", 0.30);
-          }
-
-          resolve(base64);
-        };
-
-        img.onerror = reject;
-        img.src = fr.result;
-      };
-
-      fr.onerror = reject;
-      fr.readAsDataURL(file);
-    });
-  }
-
-  // =========================
   // FORM AXINI
   // =========================
   async function greetFlow() {
@@ -1043,7 +856,7 @@
     await botSay(
       "Salam 👋 Mən " + currentOperator().ad + ".\nSizə elektron müraciətinizi burada addım-addım yaratmağa kömək edə bilərəm.",
       null,
-      450
+      420
     );
 
     quickActions([
@@ -1054,7 +867,7 @@
 
   async function startFormFlow() {
     updateForm({ mode: "form", step: "full_name" });
-    await botSay("Əla. Başlayaq. Məlumatları addım-addım qəbul edəcəyəm. 🌿", null, 300);
+    await botSay("Əla. Başlayaq. Məlumatları rahat şəkildə addım-addım qəbul edəcəyəm. 🌿", null, 260);
     await askStepQuestion("full_name");
   }
 
@@ -1062,72 +875,66 @@
     updateProgress();
 
     if (step === "full_name") {
-      await botSay("Zəhmət olmasa ad və soyadınızı yazın.", null, 260);
+      await botSay("Zəhmət olmasa ad və soyadınızı yazın.", null, 220);
       bottomControls();
       return;
     }
 
     if (step === "fin_code") {
-      await botSay("FİN kodunuzu yazın. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 260);
+      await botSay("FİN kodunuzu yazın. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 220);
       quickActions([{ label: "Keç", value: "keç" }]);
       bottomControls();
       return;
     }
 
     if (step === "id_card") {
-      await botSay("Şəxsiyyət vəsiqəsinin seriya / nömrəsini yazın. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 260);
+      await botSay("Şəxsiyyət vəsiqəsinin seriya / nömrəsini yazın. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 220);
       quickActions([{ label: "Keç", value: "keç" }]);
       bottomControls();
       return;
     }
 
     if (step === "phone") {
-      await botSay("Əlaqə nömrənizi yazın. Məsələn: 0501234567", null, 260);
+      await botSay("Əlaqə nömrənizi yazın. Məsələn: 0501234567", null, 220);
       bottomControls();
       return;
     }
 
     if (step === "email") {
-      await botSay("E-poçt ünvanınızı yazın. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 260);
+      await botSay("E-poçt ünvanınızı yazın. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 220);
       quickActions([{ label: "Keç", value: "keç" }]);
       bottomControls();
       return;
     }
 
     if (step === "subject") {
-      await botSay("Müraciətin mövzusunu seçin:", null, 260);
+      await botSay("Müraciətin mövzusunu seçin:", null, 220);
       subjectCards();
       bottomControls();
       return;
     }
 
     if (step === "address") {
-      await botSay("Zəhmət olmasa ünvanı yazın.", null, 260);
+      await botSay("Zəhmət olmasa ünvanı yazın.", null, 220);
       bottomControls();
       return;
     }
 
     if (step === "priority") {
-      await botSay("Prioriteti seçin.", null, 260);
+      await botSay("Prioriteti seçin.", null, 220);
       priorityCards();
       bottomControls();
       return;
     }
 
     if (step === "message") {
-      await botSay("Müraciətin məzmununu yazın.", null, 260);
+      await botSay("Müraciətin məzmununu yazın.", null, 220);
       bottomControls();
       return;
     }
 
-    if (step === "images") {
-      await botSay("İstəsəniz 1 şəkil əlavə edə bilərsiniz.", null, 260);
-      imageControls();
-      return;
-    }
-
     if (step === "consent") {
-      await botSay("Məlumatların müraciət məqsədilə emalına razısınız?", null, 260);
+      await botSay("Məlumatların müraciət məqsədilə emalına razısınız?", null, 220);
       quickActions([
         { label: "Bəli", value: "bəli" },
         { label: "Xeyr", value: "xeyr" }
@@ -1137,14 +944,14 @@
     }
 
     if (step === "review") {
-      await botSay("Məlumatları yoxlayın:", null, 260);
+      await botSay("Məlumatları yoxlayın:", null, 220);
       reviewBox();
       reviewControls();
       return;
     }
 
     if (step === "complete") {
-      await botSay("Müraciət artıq göndərilib.", null, 260);
+      await botSay("Müraciət artıq göndərilib.", null, 220);
       quickActions([
         { label: "Yeni müraciət", value: "yeni müraciət" },
         { label: "Əlaqə məlumatları", value: "əlaqə" }
@@ -1177,7 +984,7 @@
 
     if (step === "full_name") {
       if (text.trim().length < 5) {
-        await botSay("Ad və soyadı daha tam yazın, zəhmət olmasa.", null, 240);
+        await botSay("Ad və soyadı daha tam yazın, zəhmət olmasa.", null, 200);
         return;
       }
       updateForm({ step: "fin_code", data: { full_name: text.trim() } });
@@ -1188,7 +995,7 @@
     if (step === "fin_code") {
       const val = text.trim().toUpperCase();
       if (val && !validFin(val)) {
-        await botSay("FİN kod 7 simvollu olmalıdır. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 240);
+        await botSay("FİN kod 7 simvollu olmalıdır. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 200);
         return;
       }
       updateForm({ step: "id_card", data: { fin_code: val } });
@@ -1199,7 +1006,7 @@
     if (step === "id_card") {
       const val = text.trim();
       if (val && !validIdCard(val)) {
-        await botSay("ŞV nömrəsi düzgün görünmür. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 240);
+        await botSay("ŞV nömrəsi düzgün görünmür. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 200);
         return;
       }
       updateForm({ step: "phone", data: { id_card: val } });
@@ -1210,7 +1017,7 @@
     if (step === "phone") {
       const val = text.trim();
       if (!validPhone(val)) {
-        await botSay("Telefon nömrəsi düzgün görünmür. Məsələn: 0501234567 və ya +994501234567", null, 240);
+        await botSay("Telefon nömrəsi düzgün görünmür. Məsələn: 0501234567 və ya +994501234567", null, 200);
         return;
       }
       updateForm({ step: "email", data: { phone: val } });
@@ -1221,7 +1028,7 @@
     if (step === "email") {
       const val = text.trim();
       if (val && !validEmail(val)) {
-        await botSay("E-poçt ünvanı düzgün görünmür. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 240);
+        await botSay("E-poçt ünvanı düzgün görünmür. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 200);
         return;
       }
       updateForm({ step: "subject", data: { email: val } });
@@ -1232,7 +1039,7 @@
     if (step === "address") {
       const val = text.trim();
       if (val.length < 3) {
-        await botSay("Ünvanı bir az daha dəqiq yazın.", null, 240);
+        await botSay("Ünvanı bir az daha dəqiq yazın.", null, 200);
         return;
       }
       updateForm({ step: "priority", data: { address: val } });
@@ -1243,11 +1050,11 @@
     if (step === "message") {
       const val = text.trim();
       if (val.length < 10) {
-        await botSay("Müraciətin məzmununu bir az daha ətraflı yazın.", null, 240);
+        await botSay("Müraciətin məzmununu bir az daha ətraflı yazın.", null, 200);
         return;
       }
-      updateForm({ step: "images", data: { message: val } });
-      await askStepQuestion("images");
+      updateForm({ step: "consent", data: { message: val } });
+      await askStepQuestion("consent");
       return;
     }
 
@@ -1259,11 +1066,11 @@
       }
       if (q === "xeyr") {
         updateForm({ step: "review", data: { consent: "Xeyr" } });
-        await botSay("Qeyd edildi. Amma razılıq olmadan göndərmək mümkün deyil.", null, 240);
+        await botSay("Qeyd edildi. Amma razılıq olmadan göndərmək mümkün deyil.", null, 200);
         await askStepQuestion("review");
         return;
       }
-      await botSay("Zəhmət olmasa `Bəli` və ya `Xeyr` seçin.", null, 240);
+      await botSay("Zəhmət olmasa `Bəli` və ya `Xeyr` seçin.", null, 200);
       quickActions([
         { label: "Bəli", value: "bəli" },
         { label: "Xeyr", value: "xeyr" }
@@ -1272,25 +1079,19 @@
     }
 
     if (step === "subject") {
-      await botSay("Mövzunu aşağıdakı kartlardan seçin.", null, 220);
+      await botSay("Mövzunu aşağıdakı kartlardan seçin.", null, 180);
       subjectCards();
       return;
     }
 
     if (step === "priority") {
-      await botSay("Prioriteti aşağıdakı seçimlərdən seçin.", null, 220);
+      await botSay("Prioriteti aşağıdakı seçimlərdən seçin.", null, 180);
       priorityCards();
       return;
     }
 
-    if (step === "images") {
-      await botSay("Şəkil əlavə etmək üçün düymədən istifadə edin və ya `şəkilsiz davam et` yazın.", null, 220);
-      imageControls();
-      return;
-    }
-
     if (step === "review") {
-      await botSay("Aşağıdakı düymələrdən istifadə edin.", null, 220);
+      await botSay("Aşağıdakı düymələrdən istifadə edin.", null, 180);
       reviewControls();
       return;
     }
@@ -1339,10 +1140,7 @@
           consent: d.consent || "-",
           operator_name: operatorName,
           submit_time: submitTime,
-          message: d.message || "-",
-          image_1: d.image_1 || "https://dummyimage.com/1x1/ffffff/ffffff.png",
-          image_2: "https://dummyimage.com/1x1/ffffff/ffffff.png",
-          image_note: d.image_note || "Şəkil əlavə edilməyib."
+          message: d.message || "-"
         }
       );
 
@@ -1354,43 +1152,38 @@
         }
       });
 
-      return { ok: true, orderId: orderId };
+      return { ok: true, orderId };
     } catch (e) {
-      console.error("Email göndərmə xətası:", e);
+      console.error("EmailJS xətası:", e);
       return { ok: false, error: e };
     }
   }
 
   // =========================
-  // MESAJ MƏNTİQİ
+  // ƏSAS MƏNTİQ
   // =========================
   async function processMessage(text) {
     const q = norm(text);
     const f = getForm();
 
     if (anyIncludes(q, INTENTS.goodbye)) {
-      await botSay("Sizə kömək etmək xoş oldu. Hələlik və xoş günlər! 🌷", null, 220);
+      await botSay("Sizə kömək etmək xoş oldu. Hələlik və xoş günlər! 🌷", null, 180);
       return;
     }
 
     if (anyIncludes(q, INTENTS.thanks)) {
-      await botSay("Siz sağ olun. Mən buradayam 😊", null, 220);
+      await botSay("Siz sağ olun. Mən buradayam 😊", null, 180);
       return;
     }
 
     if (anyIncludes(q, INTENTS.contact)) {
-      await botSay(contactAnswer(), null, 220);
-      return;
-    }
-
-    if (q === "şəkilsiz davam et") {
-      await window.naraSkipImages();
+      await botSay(contactAnswer(), null, 180);
       return;
     }
 
     if (anyIncludes(q, INTENTS.greeting)) {
       if (f.mode === "form" && f.step !== "welcome" && f.step !== "complete") {
-        await botSay("Salam 😊 Qaldığınız yeri yadda saxlamışam. Davam edə bilərik.", null, 220);
+        await botSay("Salam 😊 Qaldığınız yeri yadda saxlamışam. Davam edə bilərik.", null, 180);
         quickActions([
           { label: "Davam et", value: "davam et" },
           { label: "Yeni müraciət", value: "yeni müraciət" }
@@ -1421,7 +1214,7 @@
       return;
     }
 
-    await botSay("Elektron müraciət yaratmaq üçün `müraciət yarat` yaza bilərsiniz.", null, 220);
+    await botSay("Elektron müraciət yaratmaq üçün `müraciət yarat` yaza bilərsiniz.", null, 180);
     quickActions([
       { label: "Müraciət yarat", value: "müraciət yarat" },
       { label: "Əlaqə məlumatları", value: "əlaqə" }
@@ -1429,7 +1222,7 @@
   }
 
   // =========================
-  // GÖNDƏR
+  // GLOBAL FUNKSİYALAR
   // =========================
   async function sendToNara() {
     const input = getInput();
@@ -1463,7 +1256,7 @@
       }
     });
 
-    await botSay("Seçildi: " + title, null, 220);
+    await botSay("Seçildi: " + title, null, 180);
     await askStepQuestion("address");
   };
 
@@ -1477,21 +1270,21 @@
       }
     });
 
-    await botSay("Prioritet qeyd edildi: " + value, null, 220);
+    await botSay("Prioritet qeyd edildi: " + value, null, 180);
     await askStepQuestion("message");
   };
 
   window.naraGoBack = async function () {
     const f = getForm();
     if (f.step === "welcome" || f.step === "complete") {
-      await botSay("Hazırda geri qayıdılacaq addım yoxdur.", null, 200);
+      await botSay("Hazırda geri qayıdılacaq addım yoxdur.", null, 170);
       return;
     }
 
     const prev = previousStep(f.step);
     updateForm({ step: prev });
     addMsg("user", "Geri", null, true);
-    await botSay("Oldu, bir əvvəlki addıma qayıtdıq.", null, 200);
+    await botSay("Oldu, bir əvvəlki addıma qayıtdıq.", null, 170);
 
     if (prev === "welcome") {
       await greetFlow();
@@ -1508,40 +1301,21 @@
     await greetFlow();
   };
 
-  window.naraOpenImagePicker = function () {
-    const input = ensureHiddenImageInput();
-    input.value = "";
-    input.click();
-  };
-
-  window.naraSkipImages = async function () {
-    addMsg("user", "Şəkilsiz davam et", null, true);
-    updateForm({
-      step: "consent",
-      data: {
-        image_1: "",
-        image_2: "",
-        image_note: "Şəkil əlavə edilməyib."
-      }
-    });
-    await askStepQuestion("consent");
-  };
-
   window.naraSendApplication = async function () {
     const f = getForm();
 
     if (f.step !== "review") {
-      await botSay("Əvvəlcə bütün addımları tamamlayın.", null, 220);
+      await botSay("Əvvəlcə bütün addımları tamamlayın.", null, 180);
       return;
     }
 
     if (f.data.consent !== "Bəli") {
-      await botSay("Razılıq olmadan müraciəti göndərmək mümkün deyil.", null, 220);
+      await botSay("Razılıq olmadan müraciəti göndərmək mümkün deyil.", null, 180);
       return;
     }
 
     addMsg("user", "Göndər", null, true);
-    await botSay("Müraciət hazırlanır və göndərilir...", null, 350);
+    await botSay("Müraciət hazırlanır və göndərilir...", null, 260);
 
     const res = await sendEmail();
 
@@ -1550,7 +1324,7 @@
       await botSay(
         "✅ Müraciətiniz uğurla göndərildi.\nMüraciət ID: " + res.orderId + "\n\nMüraciət aidiyyəti üzrə yönləndirildi.",
         null,
-        450
+        340
       );
 
       quickActions([
@@ -1559,7 +1333,7 @@
         { label: "Sağ ol", value: "sağ ol" }
       ]);
     } else {
-      await botSay("Göndərmə zamanı problem yarandı. Zəhmət olmasa bir daha cəhd edin.", null, 300);
+      await botSay("Göndərmə zamanı problem yarandı. Zəhmət olmasa bir daha cəhd edin.", null, 220);
       reviewControls();
     }
   };
@@ -1579,13 +1353,12 @@
   }
 
   // =========================
-  // BAŞLAT
+  // İNİT
   // =========================
   async function initNara() {
     try {
       injectStyles();
       operatorSec();
-      ensureHiddenImageInput();
       updateProgress();
 
       const input = getInput();
@@ -1622,14 +1395,13 @@
   }
 
   window.initNara = initNara;
+  window.operatorSec = operatorSec;
+  window.operatorYazir = operatorYazir;
+  window.toggleNara = toggleNara;
 
-  function bootWhenReady() {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initNara);
-    } else {
-      initNara();
-    }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initNara);
+  } else {
+    initNara();
   }
-
-  bootWhenReady();
 })();
