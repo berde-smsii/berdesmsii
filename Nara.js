@@ -8,7 +8,7 @@
 // =========================
 const NARA_EMAIL = {
   SERVICE_ID: "service_l4gqfcz",
-  TEMPLATE_ID: "template_3i1yl1e",
+  TEMPLATE_ID: "template_v1hu5h1",
   PUBLIC_KEY: "tatcA8fFwhzTeu39T",
   TO_EMAIL: "berde.smsii.09@gmail.com"
 };
