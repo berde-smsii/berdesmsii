@@ -401,12 +401,18 @@
                 padding: 7px 12px;
             }
         }
+
+        
+                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+                <script type="text/javascript">
+                (function() {
+                // Sənin Public Key-in: tatcA8fFwhzTeu39T
+                emailjs.init("tatcA8fFwhzTeu39T");
+                })();
+
+        
+        
     </style>
-
-    
-    
-
-    
 </head>
 <body>
 
@@ -897,13 +903,47 @@ function operatorSec() {
 // Sayt açıldıqda operator seç
 operatorSec();
 
+
+
+
+
+    
+// Bot pəncərəsini açıb-bağlayan funksiya
+function toggleNara() {
+    const chat = document.getElementById('nara-chat');
+    if (chat.style.display === 'none' || chat.style.display === '') {
+        chat.style.display = 'flex';
+        // Əgər ilk dəfə açılırsa və mesaj yoxdursa salamla
+        if (document.getElementById('nara-msgs').children.length === 0) {
+            // Nara.js daxilindəki salamlaşmanı işə salmaq üçün "Salam" göndəririk
+            processForm("salam"); 
+        }
+    } else {
+        chat.style.display = 'none';
+    }
+}
+
+// EmailJS-i sənin Public Key-in ilə aktivləşdiririk
+(function() {
+    emailjs.init("tatcA8fFwhzTeu39T");
+})();
+
+// Nara.js-də istifadə olunan yazı animasiyası üçün köməkçi funksiya (xəta verməməsi üçün)
+function operatorYazir() {
+    // Bu hissəni Nara.js idarə edir, amma index.html-də event listener olduğu üçün boş saxlayırıq
+}
+
+
+
+
+
+
+
+    
 // Inputa fokuslandıqda animasiyanı göstər
 document.getElementById("nara-input").addEventListener("focus", operatorYazir);
 </script>
 
-
-        <!-- EmailJS Kitabxanası -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
         <!-- NARA.JS ÜÇÜN SCRİPT KODUNU ÇAĞIRIR -->
         <script src="Nara.js"></script>
