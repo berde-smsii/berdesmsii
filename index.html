@@ -401,17 +401,6 @@
                 padding: 7px 12px;
             }
         }
-
-        
-                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-                <script type="text/javascript">
-                (function() {
-                // Sənin Public Key-in: tatcA8fFwhzTeu39T
-                emailjs.init("tatcA8fFwhzTeu39T");
-                })();
-
-        
-        
     </style>
 </head>
 <body>
@@ -536,7 +525,8 @@
             <a href="http://e-su.az" target="_blank" class="useful-item"><img class="gov-img" src="https://adsea.gov.az/storage/49/01JM3A61NQ9XSA6F0Y823SD12X.png"><p>Elektron Su Portalı</p></a>
         </div>
 
-        
+
+
 <!-- İçməli Su və SİB.az Milliön vasitəsiylə ödəniş -->
 <div class="divider"></div> 
 <section class="payment-section">
@@ -678,7 +668,11 @@ font-size:18px;
 
 
         <!-- Əlaqə və məlumatlar -->
-        
+
+
+
+
+
         <div class="divider"></div> 
         <div class="info-grid">
             <div class="card">
@@ -824,7 +818,93 @@ getBardaWeather();
             document.body.style.overflow = 'auto';
         }
 
-                
+        // XEBERLERİ YUKLE
+        async function loadNews() {
+            try {
+                const response = await fetch('xeberler.json');
+                const newsData = await response.json();
+                const track = document.getElementById('news-track');
+                const allNewsList = document.getElementById('all-news-list');
+
+                function parseDateScore(t) {
+                    if (!t) return 0;
+                    const m = t.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+                    if (!m) return 0;
+                    const dd = parseInt(m[1], 10);
+                    const mm = parseInt(m[2], 10);
+                    const yy = parseInt(m[3], 10);
+                    if (!yy || mm < 1 || mm > 12 || dd < 1 || dd > 31) return 0;
+                    return yy * 10000 + mm * 100 + dd;
+                }
+
+                const sortedNews = [...newsData].sort((a, b) => {
+                    const da = parseDateScore(a.tarix);
+                    const db = parseDateScore(b.tarix);
+                    if (db !== da) return db - da;
+                    return (b.id || 0) - (a.id || 0);
+                });
+
+                const latestFive = sortedNews.slice(0, 5);
+                const doubledData = [...latestFive, ...latestFive];
+
+                // Ana səhifə lentində yalnız son 5 xəbər
+                track.innerHTML = doubledData.map((item) => {
+                    const imgsHTML = item.esas_sekil.map((img, i) => `<img src="${img}" class="${i === 0 ? 'active' : ''}">`).join('');
+                    
+                    const imagesJSON = JSON.stringify(item.esas_sekil);
+                    const cleanText = item.metn.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const cleanTitle = item.bashliq.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                    return `
+                        <div class="news-card">
+                            <div class="news-img-box">${imgsHTML}</div>
+                            <div class="news-content">
+                                <h4>${item.bashliq}</h4>
+                                <button class="read-more" onclick='openModal(${imagesJSON}, "${cleanTitle}", "${cleanText}", "${item.tarix || ''}")'>Ətraflı</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Bütün xəbərlər modalının içi
+                allNewsList.innerHTML = sortedNews.map((item) => {
+                    const firstImage = (item.esas_sekil && item.esas_sekil.length) ? item.esas_sekil[0] : "";
+                    const imagesJSON = JSON.stringify(item.esas_sekil || []);
+                    const cleanText = item.metn.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const cleanTitle = item.bashliq.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                    return `
+                        <div class="all-news-item">
+                            <img src="${firstImage}" class="all-news-thumb" alt="${item.bashliq}">
+                            <div class="all-news-info">
+                                <h4>${item.bashliq}</h4>
+                                <span class="all-news-date"><i class="far fa-calendar-alt"></i> ${item.tarix || ''}</span>
+                                <div class="all-news-actions">
+                                    <button class="all-news-open-btn" onclick='openModal(${imagesJSON}, "${cleanTitle}", "${cleanText}", "${item.tarix || ''}")'>Ətraflı bax</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Ana səhifədəki slayt kartlarında şəkil dəyişməsi
+                document.querySelectorAll('.news-img-box').forEach(box => {
+                    const imgs = box.querySelectorAll('img');
+                    if (imgs.length > 1) {
+                        let cur = 0;
+                        setInterval(() => {
+                            imgs[cur].classList.remove('active');
+                            cur = (cur + 1) % imgs.length;
+                            imgs[cur].classList.add('active');
+                        }, 3000);
+                    }
+                });
+
+            } catch (e) { console.error("Xəbərlər yüklənmədi."); }
+        }
+        loadNews();
+
+        
     </script>
 
     
@@ -903,54 +983,19 @@ function operatorSec() {
 // Sayt açıldıqda operator seç
 operatorSec();
 
-
-
-
-
-    
-// Bot pəncərəsini açıb-bağlayan funksiya
-function toggleNara() {
-    const chat = document.getElementById('nara-chat');
-    if (chat.style.display === 'none' || chat.style.display === '') {
-        chat.style.display = 'flex';
-        // Əgər ilk dəfə açılırsa və mesaj yoxdursa salamla
-        if (document.getElementById('nara-msgs').children.length === 0) {
-            // Nara.js daxilindəki salamlaşmanı işə salmaq üçün "Salam" göndəririk
-            processForm("salam"); 
-        }
-    } else {
-        chat.style.display = 'none';
-    }
-}
-
-// EmailJS-i sənin Public Key-in ilə aktivləşdiririk
-(function() {
-    emailjs.init("tatcA8fFwhzTeu39T");
-})();
-
-// Nara.js-də istifadə olunan yazı animasiyası üçün köməkçi funksiya (xəta verməməsi üçün)
-function operatorYazir() {
-    // Bu hissəni Nara.js idarə edir, amma index.html-də event listener olduğu üçün boş saxlayırıq
-}
-
-
-
-
-
-
-
-    
 // Inputa fokuslandıqda animasiyanı göstər
 document.getElementById("nara-input").addEventListener("focus", operatorYazir);
 </script>
+
 
     
         <!-- NARA.JS ÜÇÜN SCRİPT KODUNU ÇAĞIRIR -->
         <script src="Nara.js"></script>
 
-              <!-- XƏBƏRLƏR ÜÇÜN SCRİPT KODUNU ÇAĞIRIR -->
+     <!-- XƏBƏRLƏR ÜÇÜN SCRİPT KODUNU ÇAĞIRIR -->
             <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
             <script src="supabase-config.js"></script>
             <script src="news-loader.js"></script>
+    
 </body>
 </html>
