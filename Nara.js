@@ -17,23 +17,26 @@
   };
 
   // =========================
-  // STORAGE
+  // LOCAL STORAGE AÇARLARI
   // =========================
   const NARA_KEYS = {
-    FORM: "nara_form_v3",
-    CHAT: "nara_chat_v3"
+    FORM: "nara_form_v4",
+    CHAT: "nara_chat_v4"
   };
 
   // =========================
   // OPERATORLAR
   // =========================
-  const operatorlar = [
+  const OPERATORS = [
     { ad: "Nara", sekil: "fotolar/nara_operator_foto.jpeg" },
     { ad: "Aynur", sekil: "fotolar/aynur_operator_foto.jpeg" },
     { ad: "Sevda", sekil: "fotolar/sevda_operator_foto.jpeg" },
     { ad: "Nigar", sekil: "fotolar/nigar_operator_foto.jpeg" }
   ];
 
+  // =========================
+  // MÖVZULAR
+  // =========================
   const SUBJECTS = [
     { id: "su_tehcizati", title: "Su təchizatı", icon: "💧", desc: "Su gəlmir, zəif gəlir, təzyiq problemi" },
     { id: "subartezian", title: "Subartezian quyu", icon: "🛠️", desc: "Quyu və nasazlıq müraciətləri" },
@@ -51,14 +54,20 @@
     { value: "Təcili", icon: "🔴" }
   ];
 
+  // =========================
+  // INTENTLƏR
+  // =========================
   const INTENTS = {
-    greeting: ["salam", "slm", "salamlar", "sabahiniz xeyir", "sabahınız xeyir", "gününüz xeyir", "hello", "hi", "hey", "sa", "s.a"],
+    greeting: ["salam", "slm", "salamlar", "sabahınız xeyir", "sabahiniz xeyir", "gününüz xeyir", "hello", "hi", "hey", "sa", "s.a"],
     thanks: ["sağ ol", "sag ol", "çox sağ ol", "cox sag ol", "təşəkkür", "tesekkur", "var olun"],
     goodbye: ["hələlik", "helelik", "görüşərik", "goruserik", "xudahafiz", "salamat qal", "bye", "bay"],
     contact: ["əlaqə", "elaqe", "telefon", "nomre", "nömrə", "whatsapp", "email", "ünvan", "unvan", "iş saatı", "is saati"],
     startForm: ["müraciət", "muraciet", "elektron müraciət", "şikayət", "sikayet", "problem", "yeni müraciət", "müraciət yarat"]
   };
 
+  // =========================
+  // ADDIMLAR
+  // =========================
   const STEP_ORDER = [
     "welcome",
     "full_name",
@@ -80,7 +89,7 @@
   let AUTO_OPEN_DONE = false;
 
   // =========================
-  // HELPERS
+  // KÖMƏKÇİLƏR
   // =========================
   function norm(t) {
     return (t || "").toString().toLowerCase().trim();
@@ -99,8 +108,8 @@
   }
 
   function anyIncludes(q, arr) {
-    const x = looseNormalize(q);
-    return arr.some(k => x.includes(looseNormalize(k)));
+    const text = looseNormalize(q);
+    return arr.some(k => text.includes(looseNormalize(k)));
   }
 
   function esc(str) {
@@ -132,13 +141,63 @@
     localStorage.removeItem(key);
   }
 
+  function getMsgsBox() {
+    return document.getElementById("nara-msgs");
+  }
+
+  function getInput() {
+    return document.getElementById("nara-input");
+  }
+
+  function getChatBox() {
+    return document.getElementById("nara-chat");
+  }
+
+  function nowTime() {
+    return new Date().toLocaleTimeString("az-AZ", { hour: "2-digit", minute: "2-digit" });
+  }
+
   function currentOperator() {
     const saat = new Date().getHours();
     const blok = Math.floor(saat / 2);
-    const index = blok % operatorlar.length;
-    return operatorlar[index];
+    const index = blok % OPERATORS.length;
+    return OPERATORS[index];
   }
 
+  function getSubjectTitle(id) {
+    const found = SUBJECTS.find(x => x.id === id);
+    return found ? found.title : id;
+  }
+
+  function previousStep(step) {
+    const i = STEP_ORDER.indexOf(step);
+    if (i <= 1) return "welcome";
+    return STEP_ORDER[i - 1];
+  }
+
+  function getProgressPercent(step) {
+    const map = {
+      welcome: 5,
+      full_name: 12,
+      fin_code: 20,
+      id_card: 28,
+      phone: 36,
+      email: 44,
+      subject: 54,
+      address: 64,
+      priority: 74,
+      message: 84,
+      images: 92,
+      consent: 96,
+      review: 100,
+      complete: 100
+    };
+    return map[step] || 5;
+  }
+
+  // =========================
+  // FORM MƏLUMATLARI
+  // =========================
   function defaultForm() {
     return {
       mode: "idle",
@@ -193,6 +252,9 @@
     updateProgress();
   }
 
+  // =========================
+  // CHAT HISTORY
+  // =========================
   function getChatHistory() {
     return readLS(NARA_KEYS.CHAT, []);
   }
@@ -212,55 +274,8 @@
     removeLS(NARA_KEYS.CHAT);
   }
 
-  function nowTime() {
-    return new Date().toLocaleTimeString("az-AZ", { hour: "2-digit", minute: "2-digit" });
-  }
-
-  function getMsgsBox() {
-    return document.getElementById("nara-msgs");
-  }
-
-  function getInput() {
-    return document.getElementById("nara-input");
-  }
-
-  function getChatBox() {
-    return document.getElementById("nara-chat");
-  }
-
-  function getSubjectTitle(id) {
-    const found = SUBJECTS.find(x => x.id === id);
-    return found ? found.title : id;
-  }
-
-  function previousStep(step) {
-    const i = STEP_ORDER.indexOf(step);
-    if (i <= 1) return "welcome";
-    return STEP_ORDER[i - 1];
-  }
-
-  function getProgressPercent(step) {
-    const map = {
-      welcome: 5,
-      full_name: 12,
-      fin_code: 20,
-      id_card: 28,
-      phone: 36,
-      email: 44,
-      subject: 54,
-      address: 64,
-      priority: 74,
-      message: 84,
-      images: 92,
-      consent: 96,
-      review: 100,
-      complete: 100
-    };
-    return map[step] || 5;
-  }
-
   // =========================
-  // VALIDATION
+  // YOXLAMALAR
   // =========================
   function validFin(v) {
     if (!v) return true;
@@ -283,7 +298,7 @@
   }
 
   // =========================
-  // UI STYLES
+  // STİLLƏR
   // =========================
   function injectStyles() {
     if (document.getElementById("nara-fixed-styles")) return;
@@ -314,7 +329,7 @@
       .nara-row {
         display: flex;
         width: 100%;
-        gap: 10px;
+        gap: 8px;
         margin-bottom: 2px;
         align-items: flex-end;
         animation: naraMsgIn .22s ease;
@@ -329,14 +344,16 @@
       }
 
       .nara-avatar {
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
         object-fit: cover;
-        flex: 0 0 32px;
-        border: 2px solid rgba(0,74,153,.12);
+        object-position: center;
+        flex: 0 0 24px;
+        border: 1px solid rgba(0,74,153,.12);
         background: #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,.08);
+        box-shadow: 0 3px 8px rgba(0,0,0,.07);
+        display: block;
       }
 
       .nara-bubble {
@@ -581,17 +598,32 @@
   }
 
   // =========================
-  // OPERATOR & BASIC GLOBALS
+  // OPERATOR ŞƏKİL / AD DƏYİŞMƏ
   // =========================
   function operatorSec() {
     const operator = currentOperator();
+
     const adEl = document.getElementById("operatorAd");
     const s1 = document.getElementById("operatorSekil");
     const s2 = document.getElementById("operatorSekilMain");
 
     if (adEl) adEl.innerText = operator.ad;
-    if (s1) s1.src = operator.sekil;
-    if (s2) s2.src = operator.sekil;
+    if (s1) {
+      s1.src = operator.sekil;
+      s1.style.objectFit = "cover";
+      s1.style.objectPosition = "center";
+      s1.style.borderRadius = "50%";
+      s1.style.width = "28px";
+      s1.style.height = "28px";
+      s1.style.display = "block";
+    }
+    if (s2) {
+      s2.src = operator.sekil;
+      s2.style.objectFit = "cover";
+      s2.style.objectPosition = "center";
+      s2.style.borderRadius = "50%";
+      s2.style.display = "block";
+    }
   }
 
   function operatorYazir() {
@@ -606,7 +638,9 @@
   function toggleNara() {
     const chat = getChatBox();
     if (!chat) return;
+
     chat.style.display = chat.style.display === "none" ? "flex" : "none";
+
     if (chat.style.display === "flex") {
       const input = getInput();
       if (input) setTimeout(() => input.focus(), 120);
@@ -618,7 +652,7 @@
   window.toggleNara = toggleNara;
 
   // =========================
-  // AUDIO
+  // SƏS
   // =========================
   function playSound(type) {
     try {
@@ -642,7 +676,7 @@
   }
 
   // =========================
-  // EMAILJS
+  // EMAILJS YÜKLƏMƏ
   // =========================
   function loadEmailJS() {
     return new Promise((resolve, reject) => {
@@ -693,7 +727,7 @@
   }
 
   // =========================
-  // MESSAGE UI
+  // MESAJ GÖSTƏRMƏ
   // =========================
   function addMsg(role, text, html, save) {
     const area = getMsgsBox();
@@ -724,7 +758,6 @@
     area.scrollTop = area.scrollHeight;
 
     if (save !== false) saveChat(role, text, html);
-
     playSound(role === "bot" ? "message" : "send");
   }
 
@@ -805,10 +838,9 @@
   function reviewBox() {
     const d = getForm().data;
 
-    const imagesHtml = (d.image_1 || d.image_2) ? `
+    const imagesHtml = d.image_1 ? `
       <div class="nara-upload-preview-wrap">
-        ${d.image_1 ? `<img class="nara-upload-preview" src="${d.image_1}" alt="Şəkil 1">` : ""}
-        ${d.image_2 ? `<img class="nara-upload-preview" src="${d.image_2}" alt="Şəkil 2">` : ""}
+        <img class="nara-upload-preview" src="${d.image_1}" alt="Şəkil 1">
       </div>
     ` : `<div class="nara-soft-note">Şəkil əlavə edilməyib.</div>`;
 
@@ -860,7 +892,7 @@
         <button class="nara-mini-btn" onclick="window.naraSkipImages()">⏭️ Şəkilsiz davam et</button>
         <button class="nara-mini-btn" onclick="window.naraGoBack()">⬅️ Geri</button>
       </div>
-      <div class="nara-soft-note">Maksimum 2 şəkil əlavə edə bilərsiniz.</div>
+      <div class="nara-soft-note">Maksimum 1 şəkil əlavə edə bilərsiniz.</div>
     `;
     addMsg("bot", "", html, false);
   }
@@ -894,7 +926,7 @@
   }
 
   // =========================
-  // CONTACT
+  // ƏLAQƏ CAVABI
   // =========================
   function contactAnswer() {
     return `Əlaqə məlumatları:
@@ -906,7 +938,7 @@
   }
 
   // =========================
-  // IMAGE PICKER
+  // ŞƏKİL YÜKLƏMƏ
   // =========================
   function ensureHiddenImageInput() {
     let input = document.getElementById("nara-hidden-image-input");
@@ -920,12 +952,12 @@
     input.style.display = "none";
 
     input.addEventListener("change", async function (e) {
-      const files = Array.from(e.target.files || []).slice(0, 2);
+      const files = Array.from(e.target.files || []).slice(0, 1);
       if (!files.length) return;
 
       const converted = [];
       for (const file of files) {
-        const base64 = await compressImage(file, 1100, 0.78);
+        const base64 = await compressImage(file, 700, 0.45);
         converted.push(base64);
       }
 
@@ -933,21 +965,20 @@
         step: "consent",
         data: {
           image_1: converted[0] || "",
-          image_2: converted[1] || "",
-          image_note: converted.length ? "Əlavə edilmiş şəkil sayı: " + converted.length : "Şəkil əlavə edilməyib."
+          image_2: "",
+          image_note: converted.length ? "1 şəkil əlavə edilib." : "Şəkil əlavə edilməyib."
         }
       });
 
       addMsg("user", files.map(f => "Şəkil əlavə edildi: " + f.name).join(", "));
 
       const previewHtml = `
-        <div class="nara-badge">Əlavə edilən şəkillər</div>
+        <div class="nara-badge">Əlavə edilən şəkil</div>
         <div class="nara-upload-preview-wrap">
           ${converted[0] ? `<img class="nara-upload-preview" src="${converted[0]}" alt="Şəkil 1">` : ""}
-          ${converted[1] ? `<img class="nara-upload-preview" src="${converted[1]}" alt="Şəkil 2">` : ""}
         </div>
       `;
-      await botSay("Şəkillər qəbul edildi.", previewHtml, 300);
+      await botSay("Şəkil qəbul edildi.", previewHtml, 300);
 
       await askStepQuestion("consent");
     });
@@ -959,18 +990,23 @@
   function compressImage(file, maxSize, quality) {
     return new Promise((resolve, reject) => {
       const fr = new FileReader();
+
       fr.onload = function () {
         const img = new Image();
+
         img.onload = function () {
           let w = img.width;
           let h = img.height;
 
-          if (w > h && w > maxSize) {
-            h = Math.round((h * maxSize) / w);
-            w = maxSize;
-          } else if (h >= w && h > maxSize) {
-            w = Math.round((w * maxSize) / h);
-            h = maxSize;
+          const LIMIT = 700;
+          const QUALITY = 0.45;
+
+          if (w > h && w > LIMIT) {
+            h = Math.round((h * LIMIT) / w);
+            w = LIMIT;
+          } else if (h >= w && h > LIMIT) {
+            w = Math.round((w * LIMIT) / h);
+            h = LIMIT;
           }
 
           const canvas = document.createElement("canvas");
@@ -980,18 +1016,26 @@
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, w, h);
 
-          resolve(canvas.toDataURL("image/jpeg", quality || 0.8));
+          let base64 = canvas.toDataURL("image/jpeg", QUALITY);
+
+          if (base64.length > 350000) {
+            base64 = canvas.toDataURL("image/jpeg", 0.30);
+          }
+
+          resolve(base64);
         };
+
         img.onerror = reject;
         img.src = fr.result;
       };
+
       fr.onerror = reject;
       fr.readAsDataURL(file);
     });
   }
 
   // =========================
-  // FORM FLOW
+  // FORM AXINI
   // =========================
   async function greetFlow() {
     updateForm({ mode: "idle", step: "welcome" });
@@ -1077,7 +1121,7 @@
     }
 
     if (step === "images") {
-      await botSay("İstəsəniz şəkil əlavə edə bilərsiniz.", null, 260);
+      await botSay("İstəsəniz 1 şəkil əlavə edə bilərsiniz.", null, 260);
       imageControls();
       return;
     }
@@ -1253,7 +1297,7 @@
   }
 
   // =========================
-  // EMAIL SEND
+  // EMAIL GÖNDƏRMƏ
   // =========================
   function generateOrderId() {
     const d = new Date();
@@ -1297,7 +1341,7 @@
           submit_time: submitTime,
           message: d.message || "-",
           image_1: d.image_1 || "https://dummyimage.com/1x1/ffffff/ffffff.png",
-          image_2: d.image_2 || "https://dummyimage.com/1x1/ffffff/ffffff.png",
+          image_2: "https://dummyimage.com/1x1/ffffff/ffffff.png",
           image_note: d.image_note || "Şəkil əlavə edilməyib."
         }
       );
@@ -1318,7 +1362,7 @@
   }
 
   // =========================
-  // QUICK ACTIONS GLOBAL
+  // MESAJ MƏNTİQİ
   // =========================
   async function processMessage(text) {
     const q = norm(text);
@@ -1384,6 +1428,9 @@
     ]);
   }
 
+  // =========================
+  // GÖNDƏR
+  // =========================
   async function sendToNara() {
     const input = getInput();
     if (!input) return;
@@ -1518,7 +1565,7 @@
   };
 
   // =========================
-  // RESTORE
+  // CHAT BƏRPA
   // =========================
   function restoreChat() {
     const area = getMsgsBox();
@@ -1532,7 +1579,7 @@
   }
 
   // =========================
-  // INIT
+  // BAŞLAT
   // =========================
   async function initNara() {
     try {
@@ -1574,7 +1621,6 @@
     }
   }
 
-  // həm inline script, həm də sən çağırasan deyə
   window.initNara = initNara;
 
   function bootWhenReady() {
