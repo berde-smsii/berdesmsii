@@ -938,7 +938,6 @@ getBardaWeather();
         <div id="nara-msgs" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 12px;"></div>
         <div style="padding: 12px; border-top: 1px solid #eee; display: flex; background: white;">
             <input type="text" id="nara-input" placeholder="Yazın..." 
-                   onkeypress="if(event.key === 'Enter') sendToNara()"
                    style="flex: 1; padding: 12px 18px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-size: 14px;">
             <button onclick="sendToNara()" style="margin-left: 10px; background: #004a99; color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
@@ -946,35 +945,7 @@ getBardaWeather();
         </div>
     </div>
 </div>
-    
-<!-- JS kodu -->
-<script>
-const operatorlar = [
- {ad:"Nara", sekil:"fotolar/nara_operator_foto.jpeg"},
- {ad:"Aynur", sekil:"fotolar/aynur_operator_foto.jpeg"},
- {ad:"Sevda", sekil:"fotolar/sevda_operator_foto.jpeg"},
- {ad:"Nigar", sekil:"fotolar/nigar_operator_foto.jpeg"}
-];
-
-function operatorSec() {
-    const saat = new Date().getHours();
-    const blok = Math.floor(saat / 2); 
-    const index = blok % operatorlar.length;
-    const operator = operatorlar[index];
-
-    // Ad və şəkilləri dəyiş
-    document.getElementById("operatorAd").innerText = operator.ad;
-    document.getElementById("operatorSekil").src = operator.sekil;
-    document.getElementById("operatorSekilMain").src = operator.sekil;
-}
-
-// Sayt açıldıqda operator seç
-operatorSec();
-
-// Inputa fokuslandıqda animasiyanı göstər
-document.getElementById("nara-input").addEventListener("focus", operatorYazir);
-</script>
-    
+        
             <!-- NARA.JS ÜÇÜN SCRİPT KODUNU ÇAĞIRIR -->
                 <script src="Nara.js"></script>
 
