@@ -555,8 +555,8 @@
       s1.style.objectFit = "cover";
       s1.style.objectPosition = "center";
       s1.style.borderRadius = "50%";
-      s1.style.width = "26px";
-      s1.style.height = "26px";
+      s1.style.width = "40px";
+      s1.style.height = "40px";
       s1.style.display = "block";
     }
 
