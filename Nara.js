@@ -1,143 +1,80 @@
+/* =========================================================
+   NARA.JS — ULTRA PRO ELEKTRON MÜRACİƏT CHATBOTU
+   index.html dəyişmədən işləmək üçün hazırlanıb
+   ========================================================= */
 
-// NARA JSON ÜÇÜN SCRİPT KODLARI
-        
-        let NARA_DB = null;
+// =========================
+// EMAILJS AYARLARI
+// =========================
+const NARA_EMAIL = {
+  SERVICE_ID: "service_l4gqfcz",
+  TEMPLATE_ID: "template_3i1yl1e",
+  PUBLIC_KEY: "tatcA8fFwhzTeu39T",
+  TO_EMAIL: "berde.smsii.09@gmail.com"
+};
 
-// ====== INTENT WORD LIST (geniş) ======
+// =========================
+// ƏSAS DƏYİŞƏNLƏR
+// =========================
+let EMAILJS_READY = false;
+
+const NARA_KEYS = {
+  FORM: "nara_form_ultra_v1",
+  CHAT: "nara_chat_ultra_v1"
+};
+
+const operatorlar = [
+  { ad: "Nara", sekil: "fotolar/nara_operator_foto.jpeg" },
+  { ad: "Aynur", sekil: "fotolar/aynur_operator_foto.jpeg" },
+  { ad: "Sevda", sekil: "fotolar/sevda_operator_foto.jpeg" },
+  { ad: "Nigar", sekil: "fotolar/nigar_operator_foto.jpeg" }
+];
+
+const SUBJECTS = [
+  { id: "su_tehcizati", title: "Su təchizatı", icon: "💧", desc: "Su gəlmir, təzyiq zəifdir, fasilə var" },
+  { id: "subartezian", title: "Subartezian quyu", icon: "🛠️", desc: "Quyu ilə bağlı nasazlıq və ya sorğu" },
+  { id: "kanal_kollektor", title: "Kanal / kollektor", icon: "🌊", desc: "Tıxanma, daşma, təmizlənmə" },
+  { id: "nasos", title: "Nasos stansiyası", icon: "⚙️", desc: "Nasosla bağlı nasazlıq və ya məlumat" },
+  { id: "odenis", title: "Ödəniş / qəbz", icon: "💳", desc: "Ödəniş, qəbz, sistem problemi" },
+  { id: "teklif", title: "Təklif / təşəkkür", icon: "📝", desc: "Təklif, təşəkkür, rəy" },
+  { id: "diger", title: "Digər", icon: "📌", desc: "Yuxarıdakılara aid olmayan müraciət" }
+];
+
+const PRIORITIES = [
+  { value: "Aşağı", icon: "🟢" },
+  { value: "Orta", icon: "🟡" },
+  { value: "Yüksək", icon: "🟠" },
+  { value: "Təcili", icon: "🔴" }
+];
+
 const INTENTS = {
   greeting: [
-    "salam","slm","salamlar","salam olsun","salam hər kəsə","hamıya salam","hamıya salamlar","hamınıza salam","hamiya salam","haminiza salam",
-    "sabahınız xeyir","sabahiniz xeyir","sabahın xeyir","sabahiniz xeyr","sabahın xeyr","xeyirli sabahlar","xeyirli sabah",
-    "günortanız xeyir","gunortaniz xeyir","günortan xeyir","gunortan xeyir",
-    "axşamınız xeyir","axsaminiz xeyir","axşamın xeyir","axsamin xeyir","xeyirli axşamlar","xeyirli axşam",
-    "hər vaxtınız xeyir","hər vaxtiniz xeyir","her vaxtiniz xeyir","hər vaxtın xeyir","her vaxtin xeyir","hər vaxtınız xeyir olsun",
-    "xeyirli günlər","xeyirli gün","gününüz xeyir","gununuz xeyir","gününüz aydın","gununuz aydin",
-    "gününüz uğurlu olsun","gununuz ugurlu olsun","gününüz mübarək","gununuz mubarek",
-    "xoş gördük","xos gorduk","xoş gördüm","xos gordum","xoş gəldiniz","xos geldiniz","xoş gəldin","xos geldin",
-    "salammm","səəəlam","salammmmm","salam necesiz","salam necəsiz","salam necesen","salam necəsən",
-    "necəsiz","necesiz","necəsən","necesen","salam necesiniz","salam necəsiniz",
-    "əssəlamu aleykum","essalamu aleykum","assalamu aleykum","aleykum salam","salamun aleykum","allahın salamı olsun",
-    "günaydın","gunaydin","s.a","s.a.","sa","s a",
-    "hello","hi","hey","good morning","good afternoon","good evening"
-  ],
-  wellbeing: [
-    "necəsən","necesen","necəsiniz","necesiniz","nətərsən","netersen","nətərsiniz","netersiniz",
-    "necəsen","necesiz","necə gedir","nece gedir","işlər necədir","isler necedir",
-    "hər şey necədir","her sey necedir","hər şey qaydasındadır","her sey qaydasindadir",
-    "necəsən indi","necesen indi","indi necəsən","indi necesen",
-    "necəsiz","necesiz","necəsiniz indi","necesiniz indi",
-    "nə var","ne var","nə xəbər","ne xeber","nə var nə yox","ne var ne yox",
-    "nə yenilik var","ne yenilik var","xəbər var","xeber var",
-    "vəziyyət necədir","veziyyet necedir","vəziyyət necədi","veziyyet necedi",
-    "əhvalın necədir","ehvalin necedir","əhval necədir","ehval necedir",
-    "əhvalın necədi","ehvalin necedi","əhval necədi","ehval necedi",
-    "hər şey yaxşıdır","her sey yaxsidir","yaxşısan","yaxsisan",
-    "yaxşısınız","yaxsisinz","yaxsisin","yaxsisanmi","yaxşısanmı",
-    "işlər necə gedir","isler nece gedir","həyat necə gedir","heyat nece gedir",
-    "necəsən orda","necesen orda","salamsan","yaxsisanmi",
-    "problem yoxdur ki","her sey yaxsidi","her sey yaxsidir"
+    "salam","slm","salamlar","salam necesen","salam necəsən","salam necesiz","salam necəsiz",
+    "sabahınız xeyir","sabahiniz xeyir","gününüz xeyir","gununuz xeyir","axşamınız xeyir",
+    "hi","hello","hey","s.a","sa"
   ],
   thanks: [
-    "təşəkkür","tesekkur","təşəkkür edirəm","tesekkur edirem","çox təşəkkür","cox tesekkur",
-    "çox sağ ol","cox sag ol","sağ ol","sag ol","sağ olun","sag olun",
-    "sagol","sagolun","sağol","sağolun","sagolun","sag oll","sagolll",
-    "minnətdaram","minnetdaram","minnətdar","minnetdar",
-    "allah razı olsun","allah razi olsun","var olun","varolun",
-    "əhsən","ehsen","super","əla","ela",
-    "çox sağ olun","cox sag olun","çox sagol","cox sagol",
-    "təşəkkürlər","tesekkurlar","təşəkkürlər edirəm","tesekkurlar edirem",
-    "böyük təşəkkür","boyuk tesekkur","dərin təşəkkür","derin tesekkur",
-    "çox çox sağ ol","cox cox sag ol","çox çox təşəkkür","cox cox tesekkur",
-    "ürəkdən təşəkkür","urekden tesekkur","çox minnətdaram","cox minnetdaram",
-    "sağolasınız","sagolasiniz","çox sağolasınız","cox sagolasiniz"
+    "sağ ol","sag ol","çox sağ ol","cox sag ol","təşəkkür","tesekkur","var olun","minnətdaram"
   ],
   goodbye: [
-    "hələlik","helelik","hələliklə","helelikle",
-    "görüşərik","goruserik","görüşənədək","gorusenedek","görüşənə qədər","gorusene qeder",
-    "salamat qal","salamat qalın","salamat qalın","salamat qal","salamat ol",
-    "xudahafiz","xuda hafiz","xudahafız","xuda hafız",
-    "sağlıqla qal","saglıqla qal","sagliqla qal","sağlıqla",
-    "özünə yaxşı bax","ozune yaxsi bax","özünüzə yaxşı baxın","ozunuze yaxsi baxin",
-    "görüşənə kimi","gorusene kimi","görüşərik inşallah","goruserik insallah",
-    "bye","bay","byee","bye bye","bay bay",
-    "çıxıram","cixirəm","getdim","mən getdim","men getdim",
-    "yazışarıq","yazisariq","sonra danışarıq","sonra danisariq",
-    "ələ sağlıq","ele sagliq","hələlik sağ olun","helelik sag olun",
-    "salamatlıqla","sagamatliqla","hələliklik","heleliklik"
+    "hələlik","helelik","görüşərik","goruserik","xudahafiz","salamat qal","bye","bay","getdim"
+  ],
+  formStart: [
+    "müraciət","muraciet","elektron müraciət","şikayət","sikayet","problem","müraciət yarat","yeni müraciət"
   ],
   contact: [
-    "əlaqə","elaqe","əlaqə məlumatı","elaqe melumati","əlaqə vasitələri","elaqe vasiteleri",
-    "telefon","telefon nömrəsi","telefon nomresi","nömrə","nomre","nömrəniz","nomreniz",
-    "mobil nömrə","mobil nomre","əlaqə nömrəsi","elaqe nomresi",
-    "whatsapp","vatsap","wp","watsap","whatsap",
-    "email","e-mail","mail","gmail","poçt","poct","elektron poçt","elektron poct",
-    "ünvan","unvan","adres","address","yeriniz","yeriniz haradadır","harada yerləşir",
-    "iş rejimi","is rejimi","iş saatı","is saati","iş saatlarınız","is saatlariniz",
-    "qəbul saatı","qebul saati","neçəyə kimi işləyirsiniz","neceye kimi isleyirsiniz",
-    "saat neçədə açılırsınız","saat necede acilirsiniz",
-    "haradasınız","hardasiniz","haradadır","hardadir","harada yerləşirsiniz",
-    "burdasınız","buradasınız","orda haradadır","yeriniz hardadır",
-    "əlaqə saxlamaq","elaqe saxlamaq","sizinlə necə əlaqə saxlaya bilərəm",
-    "sizinle nece elaqe saxlaya bilerem","əlaqə üçün","elaqe ucun",
-    "zəng etmək","zeng etmek","zəng vura bilərəm","zeng vura bilerem",
-    "nömrəni verin","nomreni verin","telefonu yazın","telefonu yazin",
-    "email ünvanı","email unvani","mail adresi","poçt ünvanı","poct unvani"
-  ],
-  complaint: [
-    "şikayət","sikayet","şikayətim var","sikayetim var","şikayət etmək istəyirəm","sikayet etmek isteyirem",
-    "problem","problem var","ciddi problem","texniki problem",
-    "qeza","qəza baş verib","qeza bas verib",
-    "su gəlmir","su gelmir","su kəsilib","su kesilib","su yoxdur","su yoxdu","su yox","sular kəsilib","sular kesilib",
-    "işləmir","islemir","işləmirəm","islemirem","işləmir sistemi","sistem işləmir","sistem islemir",
-    "sızma","sizma","su sızır","su sizir","axıntı var","axinti var",
-    "nasazlıq","nasazliq","nasazdır","nasazdi","avadanlıq xarabdır","avadanliq xarabdi",
-    "təcili","tecili","təcili baxın","tecili baxin","təcili kömək","tecili komek",
-    "cavab ala bilmirəm","cavab ala bilmirem","müraciət etmişəm cavab yoxdur","muraciet etmisem cavab yoxdur",
-    "gecikir","gecikme var","gecikmə var","vaxtında olunmadı","vaxtinda olunmadi",
-    "xidmət zəifdir","xidmet zeifdir","narazıyam","naraziyam",
-    "düzəldin","duzeldin","baxın buna","baxin buna","problem həll olunmur","problem hell olunmur",
-    "təzyiq yoxdur","tezyiq yoxdur","su zəif gəlir","su zeif gelir",
-    "kanalizasiya dolub","kanalizasiya tıxanıb","kanalizasiya tixanib",
-    "sayt işləmir","sayt islemir","ödəniş alınmadı","odenis alinmadi"
-  ],
-  when_fix: [
-    "nə vaxt düzələcək","ne vaxt duzelecek","nə vaxt düzəldərsiniz","ne vaxt duzeldersiniz",
-    "nə vaxt düzəlir","ne vaxt duzelir","nə vaxt düzələcəkdir","ne vaxt duzelecekdir",
-    "nə vaxt gələcəksiniz","ne vaxt geleceksiniz","nə vaxt gəlirsiz","ne vaxt gelirsiz",
-    "nə vaxt təmir ediləcək","ne vaxt temir edilecek","nə vaxt təmir","ne vaxt temir",
-    "nə vaxt həll olunacaq","ne vaxt hell olunacaq","nə vaxt həll","ne vaxt hell",
-    "problem nə vaxt həll olunacaq","problem ne vaxt hell olunacaq",
-    "su nə vaxt gələcək","su ne vaxt gelecek","su nə vaxt veriləcək","su ne vaxt verilecek",
-    "nə vaxt bərpa olunacaq","ne vaxt berpa olunacaq",
-    "iş nə vaxt bitəcək","is ne vaxt bitecek","nə vaxt tamamlanacaq","ne vaxt tamamlanacaq",
-    "təxmini nə vaxt","texmini ne vaxt","təxminən nə vaxt","texminen ne vaxt",
-    "vaxtını deyin","vaxtini deyin","dəqiq vaxt nədir","deqiq vaxt nedir",
-    "bu gün düzələcək","bu gun duzelecek","sabaha həll olunacaq","sabaha hell olunacaq",
-    "nece vaxt qalib","ne qədər vaxt qalıb","ne qeder vaxt qalib"
+    "əlaqə","elaqe","telefon","nömrə","nomre","whatsapp","email","ünvan","unvan","iş saatı"
   ]
 };
 
-// ====== tiny helpers ======
-function norm(t="") {
-  return (t||"").toString().toLowerCase().trim();
-}
-function anyIncludes(q, arr) {
-  q = norm(q);
-  return arr.some(k => q.includes(k));
-}
-function tokenize(q) {
-  return norm(q)
-    .replace(/[^\p{L}\p{N}\s-]/gu, " ")
-    .split(/\s+/)
-    .filter(Boolean);
-}
-function extractNumbers(q){
-  const m = (q.match(/\d{2,}/g) || []);
-  return m;
+// =========================
+// KÖMƏKÇİLƏR
+// =========================
+function norm(t = "") {
+  return (t || "").toString().toLowerCase().trim();
 }
 
-// ====== NEW: loose normalize for better typo tolerance ======
-function looseNormalize(s="") {
+function looseNormalize(s = "") {
   return norm(s)
     .replaceAll("ə", "e")
     .replaceAll("ı", "i")
@@ -146,302 +83,1567 @@ function looseNormalize(s="") {
     .replaceAll("ş", "s")
     .replaceAll("ç", "c")
     .replaceAll("ğ", "g")
-    .replaceAll("’", "'")
-    .replaceAll("`", "'")
     .replace(/[^\p{L}\p{N}\s-]/gu, " ");
 }
 
-// ====== NEW: Levenshtein distance ======
-function levenshtein(a, b) {
-  a = a || ""; b = b || "";
-  const m = a.length, n = b.length;
-  if (!m) return n;
-  if (!n) return m;
-
-  const dp = Array.from({ length: n + 1 }, (_, i) => Array(m + 1).fill(0));
-  for (let i = 0; i <= n; i++) dp[i][0] = i;
-  for (let j = 0; j <= m; j++) dp[0][j] = j;
-
-  for (let i = 1; i <= n; i++) {
-    for (let j = 1; j <= m; j++) {
-      dp[i][j] = (b[i - 1] === a[j - 1])
-        ? dp[i - 1][j - 1]
-        : Math.min(dp[i - 1][j - 1] + 1, dp[i][j - 1] + 1, dp[i - 1][j] + 1);
-    }
-  }
-  return dp[n][m];
+function anyIncludes(q, arr) {
+  q = looseNormalize(q);
+  return arr.some(k => q.includes(looseNormalize(k)));
 }
 
-// ====== NEW: token fuzzy scoring ======
-function tokenFuzzyScore(qTok, tTok) {
-  if (!qTok || !tTok) return 0;
-
-  // tam uyğunluq
-  if (tTok.includes(qTok)) return 8;
-
-  // çox qısa tokenləri fuzzy etmə
-  if (qTok.length < 4) return 0;
-
-  const dist = levenshtein(qTok, tTok);
-  if (qTok.length <= 6 && dist <= 1) return 5;  // 1 hərf səhv
-  if (qTok.length > 6 && dist <= 2) return 4;   // 2 hərf səhv
-
-  // “hərf düşməsi” kimi hallara tolerant subsequence check
-  let i = 0, j = 0;
-  while (i < qTok.length && j < tTok.length) {
-    if (qTok[i] === tTok[j]) i++;
-    j++;
-  }
-  if (i >= qTok.length - 1) return 3;
-
-  return 0;
+function esc(str = "") {
+  return (str || "").toString()
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
-// ====== UI helpers ======
-function addNaraMsg(sender, text) {
-  const area = document.getElementById('nara-msgs');
-  const m = document.createElement('div');
-  m.style.cssText = "padding: 12px 16px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.5; margin-bottom: 5px; word-wrap: break-word;";
-  if(sender === "bot") {
-    m.style.background = "#f1f3f5";
-    m.style.alignSelf = "flex-start";
-    m.style.color = "#333";
-    m.style.borderBottomLeftRadius = "2px";
-  } else {
-    m.style.background = "#004a99";
-    m.style.color = "white";
-    m.style.alignSelf = "flex-end";
-    m.style.borderBottomRightRadius = "2px";
-  }
-  m.innerHTML = (text || "").toString().replace(/\n/g, "<br>");
-  area.appendChild(m);
-  area.scrollTop = area.scrollHeight;
-  return m;
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+function readLS(key, fallback = null) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeLS(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function removeLS(key) {
+  localStorage.removeItem(key);
+}
+
+function currentOperator() {
+  const saat = new Date().getHours();
+  const blok = Math.floor(saat / 2);
+  const index = blok % operatorlar.length;
+  return operatorlar[index];
+}
+
+function operatorSec() {
+  const operator = currentOperator();
+
+  const adEl = document.getElementById("operatorAd");
+  const s1 = document.getElementById("operatorSekil");
+  const s2 = document.getElementById("operatorSekilMain");
+
+  if (adEl) adEl.innerText = operator.ad;
+  if (s1) s1.src = operator.sekil;
+  if (s2) s2.src = operator.sekil;
+}
+window.operatorSec = operatorSec;
+
+function operatorYazir() {
+  const input = document.getElementById("nara-input");
+  if (!input) return;
+  input.placeholder = `${currentOperator().ad} sizi dinləyir...`;
+  setTimeout(() => {
+    input.placeholder = "Yazın...";
+  }, 1600);
+}
+window.operatorYazir = operatorYazir;
 
 function toggleNara() {
-  const chat = document.getElementById('nara-chat');
-  chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
-}
+  const chat = document.getElementById("nara-chat");
+  if (!chat) return;
+  chat.style.display = chat.style.display === "none" ? "flex" : "none";
 
-// ====== Load JSON database ======
-async function initNara() {
-  try {
-    const res = await fetch('Nara_Bot_Database.json', { cache: "no-store" });
-    NARA_DB = await res.json();
-
-    setTimeout(() => {
-      const chatBox = document.getElementById('nara-chat');
-      if(chatBox) chatBox.style.display = 'flex';
-
-      const hour = new Date().getHours();
-      let welcome = NARA_DB?.bot_info?.welcome_messages?.default
-        || "Salam! 😊 Sizə necə kömək edə bilərəm?";
-      if (hour < 12) welcome = NARA_DB?.bot_info?.welcome_messages?.morning || welcome;
-      else if (hour < 18) welcome = NARA_DB?.bot_info?.welcome_messages?.afternoon || welcome;
-      else welcome = NARA_DB?.bot_info?.welcome_messages?.evening || welcome;
-
-      addNaraMsg("bot", welcome);
-    }, 700);
-
-  } catch(e) {
-    console.error(e);
-    addNaraMsg("bot", "Zəhmət olmasa səhifəni yeniləyin.");
+  if (chat.style.display === "flex") {
+    const input = document.getElementById("nara-input");
+    if (input) setTimeout(() => input.focus(), 120);
   }
 }
+window.toggleNara = toggleNara;
 
-// ====== Build contact answer from JSON (no uydurma) ======
-function contactAnswer() {
-  const c = NARA_DB?.bot_info?.contacts || {};
-  return `Əlaqə məlumatları:
-• Telefon: ${c.phone || "+994202082560"}
-• WhatsApp: ${c.whatsapp || "+994709720209"}
-• E-mail: ${c.email || "Bardasmsii@rsmx.gov.az"}
-• Ünvan: ${c.address || "Bərdə şəhər, S.Zöhrabbəyov küç. 10"}
-• İş rejimi: ${c.work_hours || "Bazar ertəsi – Cümə (09:00 – 18:00"}`;
+function getMsgsBox() {
+  return document.getElementById("nara-msgs");
 }
 
-// ====== Complaint flow memory (browser-side) ======
-function getCase() {
-  try { return JSON.parse(localStorage.getItem("nara_case") || "null"); } catch { return null; }
-}
-function setCase(obj) {
-  localStorage.setItem("nara_case", JSON.stringify(obj));
-}
-function clearCase() {
-  localStorage.removeItem("nara_case");
-}
-function tryExtractLocation(text){
-  const t = norm(text);
-  const m = t.match(/(.+?)\s(kəndində|kendinde|kəndi|kendi|küçəsində|kucəsində|qəsəbəsində|qesebesinde)/i);
-  if (!m) return null;
-  return m[1].trim();
-}
-function tryExtractIssue(text){
-  const t = norm(text);
-  if (t.includes("sızma") || t.includes("sizma")) return "sızma";
-  if (t.includes("su gəlmir") || t.includes("su gelmir") || t.includes("su yoxdu") || t.includes("su yoxdur")) return "su gəlmir";
-  if (t.includes("qəza") || t.includes("qeza")) return "qəza";
-  if (t.includes("nasaz") || t.includes("işləmir") || t.includes("islemir")) return "nasazlıq";
-  return null;
+function getInput() {
+  return document.getElementById("nara-input");
 }
 
-// ====== Search best matching sentence across all sheets (strong fuzzy + numbers priority) ======
-function findBestAnswer(query) {
-  if (!NARA_DB?.data) return null;
+function nowLabel() {
+  return new Date().toLocaleTimeString("az-AZ", { hour: "2-digit", minute: "2-digit" });
+}
 
-  const qRaw = query || "";
-  const qLoose = looseNormalize(qRaw);
-  const qTokens = tokenize(qLoose);
-  const qNums = extractNumbers(qRaw);
+// =========================
+// STYLING
+// =========================
+function injectStyles() {
+  if (document.getElementById("nara-ultra-style")) return;
 
-  let best = null;
+  const style = document.createElement("style");
+  style.id = "nara-ultra-style";
+  style.textContent = `
+    #nara-widget * { box-sizing: border-box; }
 
-  for (const sheetName of NARA_DB.sheets || []) {
-    const items = NARA_DB?.data?.[sheetName]?.items || [];
+    #nara-chat {
+      animation: naraOpen .25s ease;
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,.98) !important;
+    }
 
-    for (const it of items) {
-      const rawText = it.search_text || "";
-      const text = looseNormalize(rawText);
-      const textTokens = tokenize(text);
+    @keyframes naraOpen {
+      from { opacity: 0; transform: translateY(14px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-      let score = 0;
+    #nara-msgs {
+      background:
+        radial-gradient(circle at top right, rgba(0,102,204,.05), transparent 30%),
+        linear-gradient(180deg, #fbfdff 0%, #f5f9ff 100%);
+      scroll-behavior: smooth;
+    }
 
-      // 1) Full phrase match (strong)
-      if (qLoose.length >= 4 && text.includes(qLoose)) score += 40;
+    .nara-row {
+      display: flex;
+      width: 100%;
+      gap: 10px;
+      margin-bottom: 2px;
+      animation: naraMsgIn .22s ease;
+      align-items: flex-end;
+    }
 
-      // 2) Number / year / reper match (very strong)
-      for (const n of qNums) {
-        if (!n) continue;
-        if (rawText.includes(n)) score += 30;
+    .nara-row.bot { justify-content: flex-start; }
+    .nara-row.user { justify-content: flex-end; }
+
+    @keyframes naraMsgIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .nara-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 32px;
+      border: 2px solid rgba(0,74,153,.12);
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+
+    .nara-bubble {
+      max-width: 86%;
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.55;
+      box-shadow: 0 8px 20px rgba(0,0,0,.05);
+      word-break: break-word;
+    }
+
+    .nara-row.bot .nara-bubble {
+      background: #fff;
+      color: #24384d;
+      border: 1px solid rgba(0,74,153,.08);
+      border-bottom-left-radius: 6px;
+    }
+
+    .nara-row.user .nara-bubble {
+      background: linear-gradient(135deg, #004a99, #0066cc);
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .nara-meta {
+      margin-top: 6px;
+      font-size: 11px;
+      opacity: .65;
+    }
+
+    .nara-typing {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      min-height: 18px;
+    }
+
+    .nara-typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #95a7b9;
+      animation: naraTyping 1s infinite ease-in-out;
+    }
+
+    .nara-typing span:nth-child(2) { animation-delay: .15s; }
+    .nara-typing span:nth-child(3) { animation-delay: .3s; }
+
+    @keyframes naraTyping {
+      0%, 80%, 100% { transform: scale(.75); opacity: .45; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .nara-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .nara-chip {
+      border: 1px solid rgba(0,74,153,.14);
+      background: white;
+      color: #004a99;
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,.03);
+    }
+
+    .nara-chip:hover {
+      background: #eef6ff;
+      transform: translateY(-1px);
+    }
+
+    .nara-card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .nara-card {
+      border: 1px solid rgba(0,74,153,.10);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fff, #fbfdff);
+      padding: 12px;
+      cursor: pointer;
+      transition: .25s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,.04);
+    }
+
+    .nara-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px rgba(0,0,0,.08);
+      border-color: rgba(0,74,153,.25);
+    }
+
+    .nara-card-title {
+      font-weight: 800;
+      font-size: 14px;
+      color: #14385f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .nara-card-desc {
+      font-size: 12.5px;
+      color: #627385;
+      line-height: 1.45;
+    }
+
+    .nara-badge {
+      display: inline-block;
+      margin-bottom: 8px;
+      background: #edf5ff;
+      color: #004a99;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .nara-review {
+      background: #f8fbff;
+      border: 1px dashed rgba(0,74,153,.22);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .nara-review b { color: #103962; }
+
+    .nara-mini-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .nara-mini-btn {
+      border: none;
+      background: #eef4fb;
+      color: #004a99;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .nara-mini-btn:hover {
+      background: #e1ecfb;
+      transform: translateY(-1px);
+    }
+
+    .nara-progress-wrap {
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .nara-progress-text {
+      font-size: 11px;
+      opacity: .82;
+      margin-bottom: 6px;
+    }
+
+    .nara-progress {
+      width: 100%;
+      height: 7px;
+      background: rgba(255,255,255,.22);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .nara-progress > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7fd6ff, #ffffff);
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .nara-upload-preview-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .nara-upload-preview {
+      width: 88px;
+      height: 88px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid #d9e5f5;
+      box-shadow: 0 6px 14px rgba(0,0,0,.05);
+      background: #fff;
+    }
+
+    .nara-soft-note {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #688099;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 640px) {
+      #nara-widget {
+        right: 10px !important;
+        bottom: 10px !important;
       }
 
-      // 3) Token exact match
-      for (const tk of qTokens) {
-        if (tk.length < 3) continue;
-        if (text.includes(tk)) score += 6;
+      #nara-chat {
+        width: min(94vw, 380px) !important;
+        height: min(76vh, 560px) !important;
+        bottom: 82px !important;
       }
 
-      // 4) Token fuzzy match (typo tolerance)
-      for (const tk of qTokens) {
-        if (tk.length < 3) continue;
+      .nara-bubble {
+        max-width: 90%;
+        font-size: 13.5px;
+      }
 
-        let bestTok = 0;
-        for (const tt of textTokens) {
-          const s = tokenFuzzyScore(tk, tt);
-          if (s > bestTok) bestTok = s;
-          if (bestTok >= 8) break;
+      .nara-card-title {
+        font-size: 13.5px;
+      }
+
+      .nara-card-desc {
+        font-size: 12px;
+      }
+
+      .nara-upload-preview {
+        width: 76px;
+        height: 76px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// =========================
+// EMAILJS SDK
+// =========================
+function loadEmailJS() {
+  return new Promise((resolve, reject) => {
+    if (window.emailjs) {
+      try {
+        window.emailjs.init({ publicKey: NARA_EMAIL.PUBLIC_KEY });
+        EMAILJS_READY = true;
+        resolve(true);
+      } catch (e) {
+        reject(e);
+      }
+      return;
+    }
+
+    const existing = document.getElementById("nara-emailjs-sdk");
+    if (existing) {
+      existing.onload = () => {
+        try {
+          window.emailjs.init({ publicKey: NARA_EMAIL.PUBLIC_KEY });
+          EMAILJS_READY = true;
+          resolve(true);
+        } catch (e) {
+          reject(e);
         }
-        score += bestTok;
+      };
+      existing.onerror = reject;
+      return;
+    }
+
+    const s = document.createElement("script");
+    s.id = "nara-emailjs-sdk";
+    s.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+    s.async = true;
+
+    s.onload = () => {
+      try {
+        window.emailjs.init({ publicKey: NARA_EMAIL.PUBLIC_KEY });
+        EMAILJS_READY = true;
+        resolve(true);
+      } catch (e) {
+        reject(e);
       }
-
-      // 5) Village/Address boost
-      if (qLoose.includes("kend") || qLoose.includes("kənd") || qLoose.includes("kuc") || qLoose.includes("küç")) score += 2;
-
-      if (!best || score > best.score) best = { score, item: it, sheet: sheetName };
-    }
-  }
-
-  if (!best || best.score < 12) return null;
-  return best;
-}
-
-function outOfScopeOrClarify(query) {
-  return NARA_DB?.bot_info?.auto_responses?.out_of_scope
-    || "Zəhmət olmasa kənd/ünvan və mövzunu (subartezian, kanal/kollektor, şikayət və s.) bir az dəqiqləşdirin.";
-}
-
-// ====== Main send ======
-function sendToNara() {
-  const inp = document.getElementById('nara-input');
-  const val = inp.value.trim();
-  if(!val) return;
-
-  addNaraMsg("user", val);
-  inp.value = "";
-
-  const q = norm(val);
-
-  // 1) pure human intents (NO uydurma, hazır cavablar)
-  if (anyIncludes(q, INTENTS.greeting)) {
-    return setTimeout(() => addNaraMsg("bot", "Salam 😊 Buyurun, nə ilə kömək edim?"), 300);
-  }
-  if (anyIncludes(q, INTENTS.wellbeing)) {
-    return setTimeout(() => addNaraMsg("bot", "Çox sağ olun, yaxşıyam 😊 Siz necəsiniz? Buyurun, nə lazımdırsa yazın."), 300);
-  }
-  if (anyIncludes(q, INTENTS.thanks)) {
-    return setTimeout(() => addNaraMsg("bot", NARA_DB?.bot_info?.auto_responses?.thanks || "Siz sağ olun! 😊"), 300);
-  }
-  if (anyIncludes(q, INTENTS.goodbye)) {
-    return setTimeout(() => addNaraMsg("bot", NARA_DB?.bot_info?.auto_responses?.goodbye || "Hələlik! 😊"), 300);
-  }
-
-  // 2) contact intent
-  if (anyIncludes(q, INTENTS.contact)) {
-    return setTimeout(() => addNaraMsg("bot", contactAnswer()), 350);
-  }
-
-  // 3) complaint intent + complaint memory
-  const existing = getCase();
-  const loc = tryExtractLocation(val);
-  const issue = tryExtractIssue(val);
-
-  if (anyIncludes(q, INTENTS.complaint)) {
-    const c = NARA_DB?.bot_info?.auto_responses?.complaint
-      || "Şikayət və ya probleminizi WhatsApp nömrəmizə şəkil/video ilə göndərə bilərsiniz.";
-
-    const newCase = {
-      location: loc || existing?.location || null,
-      issue: issue || existing?.issue || null,
-      started_at: existing?.started_at || new Date().toISOString()
     };
-    setCase(newCase);
 
-    if (!newCase.location || !newCase.issue) {
-      return setTimeout(() => addNaraMsg("bot",
-        `Başa düşdüm ⚠️\n${c}\n\nBir dəqiqləşdirim: problem haradadır (kənd/ünvan) və nə problemidir? (məs: sızma, su gəlmir, nasazlıq)`), 450);
-    }
-    return setTimeout(() => addNaraMsg("bot",
-      `Qeyd etdim: ${newCase.location} — ${newCase.issue} ⚠️\n${c}\n\nİmkan varsa 1 şəkil/video göndərin — daha tez yönləndirilir.`), 450);
-  }
-
-  // “Sızma var” kimi complaint davamı (şikayət sözünü yazmasa da)
-  if (issue && !anyIncludes(q, INTENTS.contact)) {
-    const c = NARA_DB?.bot_info?.auto_responses?.complaint || "";
-    const newCase = { location: loc || existing?.location || null, issue, started_at: existing?.started_at || new Date().toISOString() };
-    setCase(newCase);
-
-    if (!newCase.location) {
-      return setTimeout(() => addNaraMsg("bot", `Başa düşdüm ⚠️ Sızma ilə bağlıdır. Zəhmət olmasa dəqiq ünvan/kənd yazın.\n\n${c}`), 450);
-    }
-    return setTimeout(() => addNaraMsg("bot", `Qeyd etdim: ${newCase.location} — ${newCase.issue} ⚠️\n\n${c}`), 450);
-  }
-
-  // “Nə vaxt düzələcək?” — əgər case varsa, yönləndir
-  if (anyIncludes(q, INTENTS.when_fix) && existing?.location) {
-    const ct = contactAnswer();
-    return setTimeout(() => addNaraMsg("bot",
-      `Başa düşdüm. Dəqiq vaxtı buradan söz vermək çətindir — briqadanın çıxışı yerində baxışdan asılı olur.\n\nAmma prosesi sürətləndirmək üçün WhatsApp-a 1 şəkil/video + qısa ünvan göndərin.\n\n${ct}`), 450);
-  }
-
-  // 4) DATABASE SEARCH (uydurma YOX: yalnız bazadakı cümlələr)
-const best = findBestAnswer(val);
-if (best) {
-  clearCase(); // ✅ əvvəlki şikayət (xanərəb) yaddaşını sil
-  return setTimeout(() => addNaraMsg("bot", best.item.sentence), 450);
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
 }
 
-  // 5) Not found → clarify (soft)
-  return setTimeout(() => addNaraMsg("bot", outOfScopeOrClarify(val)), 450);
+// =========================
+// SƏS
+// =========================
+function playNaraSound(type = "message") {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+
+    o.type = "sine";
+    o.frequency.value = type === "success" ? 880 : type === "send" ? 660 : 520;
+    g.gain.value = 0.0001;
+
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+
+    g.gain.exponentialRampToValueAtTime(0.03, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (type === "success" ? 0.22 : 0.13));
+    o.stop(ctx.currentTime + (type === "success" ? 0.23 : 0.14));
+  } catch {}
 }
 
-// Enter dəstəyi
-window.addEventListener('load', () => {
-  initNara();
-  const inputField = document.getElementById('nara-input');
-  if(inputField) {
-    inputField.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendToNara();
+// =========================
+// FORM STATE
+// =========================
+const STEP_ORDER = [
+  "welcome",
+  "full_name",
+  "fin_code",
+  "id_card",
+  "phone",
+  "email",
+  "subject",
+  "address",
+  "priority",
+  "message",
+  "images",
+  "consent",
+  "review",
+  "complete"
+];
+
+function defaultForm() {
+  return {
+    mode: "idle",
+    step: "welcome",
+    data: {
+      full_name: "",
+      fin_code: "",
+      id_card: "",
+      phone: "",
+      email: "",
+      app_type: "Elektron müraciət",
+      subject: "",
+      subject_id: "",
+      address: "",
+      priority: "",
+      message: "",
+      consent: "",
+      image_1: "",
+      image_2: "",
+      image_note: "Şəkil əlavə edilməyib.",
+      submit_time: "",
+      operator_name: ""
+    }
+  };
+}
+
+function getForm() {
+  return readLS(NARA_KEYS.FORM, defaultForm()) || defaultForm();
+}
+
+function setForm(v) {
+  writeLS(NARA_KEYS.FORM, v);
+}
+
+function updateForm(partial) {
+  const cur = getForm();
+  const next = {
+    ...cur,
+    ...partial,
+    data: {
+      ...(cur.data || {}),
+      ...((partial && partial.data) || {})
+    }
+  };
+  setForm(next);
+  updateProgress();
+  return next;
+}
+
+function resetForm() {
+  setForm(defaultForm());
+  updateProgress();
+}
+
+function previousStep(step) {
+  const i = STEP_ORDER.indexOf(step);
+  if (i <= 1) return "welcome";
+  return STEP_ORDER[i - 1];
+}
+
+function getProgressPercent(step) {
+  const map = {
+    welcome: 4,
+    full_name: 10,
+    fin_code: 18,
+    id_card: 26,
+    phone: 34,
+    email: 42,
+    subject: 52,
+    address: 62,
+    priority: 72,
+    message: 82,
+    images: 90,
+    consent: 96,
+    review: 100,
+    complete: 100
+  };
+  return map[step] || 4;
+}
+
+// =========================
+// CHAT HISTORY
+// =========================
+function getChatHistory() {
+  return readLS(NARA_KEYS.CHAT, []);
+}
+
+function saveChat(role, text, html = null) {
+  const hist = getChatHistory();
+  hist.push({
+    role,
+    text,
+    html,
+    at: new Date().toISOString()
+  });
+  writeLS(NARA_KEYS.CHAT, hist.slice(-120));
+}
+
+function clearChat() {
+  removeLS(NARA_KEYS.CHAT);
+}
+
+// =========================
+// UI
+// =========================
+function addMsg(role, text, html = null, save = true) {
+  const area = getMsgsBox();
+  if (!area) return;
+
+  const row = document.createElement("div");
+  row.className = `nara-row ${role === "bot" ? "bot" : "user"}`;
+
+  const bubble = document.createElement("div");
+  bubble.className = "nara-bubble";
+
+  if (role === "bot") {
+    const avatar = document.createElement("img");
+    avatar.className = "nara-avatar";
+    avatar.src = currentOperator().sekil;
+    avatar.alt = currentOperator().ad;
+    row.appendChild(avatar);
+  }
+
+  if (html) bubble.innerHTML = html;
+  else bubble.innerHTML = esc(text).replace(/\n/g, "<br>");
+
+  const meta = document.createElement("div");
+  meta.className = "nara-meta";
+  meta.textContent = role === "bot" ? `${currentOperator().ad} • ${nowLabel()}` : `Siz • ${nowLabel()}`;
+
+  bubble.appendChild(meta);
+  row.appendChild(bubble);
+  area.appendChild(row);
+  area.scrollTop = area.scrollHeight;
+
+  if (save) saveChat(role, text, html);
+
+  playNaraSound(role === "bot" ? "message" : "send");
+}
+
+function addTyping() {
+  const area = getMsgsBox();
+  const row = document.createElement("div");
+  row.className = "nara-row bot";
+  row.id = "nara-typing-row";
+
+  const avatar = document.createElement("img");
+  avatar.className = "nara-avatar";
+  avatar.src = currentOperator().sekil;
+  avatar.alt = currentOperator().ad;
+
+  const bubble = document.createElement("div");
+  bubble.className = "nara-bubble";
+  bubble.innerHTML = `
+    <div class="nara-typing">
+      <span></span><span></span><span></span>
+    </div>
+  `;
+
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  area.appendChild(row);
+  area.scrollTop = area.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById("nara-typing-row");
+  if (t) t.remove();
+}
+
+async function botSay(text, html = null, ms = 420, save = true) {
+  addTyping();
+  await delay(ms);
+  removeTyping();
+  addMsg("bot", text, html, save);
+}
+
+function quickActions(actions = []) {
+  const html = `
+    <div class="nara-actions">
+      ${actions.map(a => `<button class="nara-chip" onclick="window.naraQuick('${esc(a.value)}')">${a.label}</button>`).join("")}
+    </div>
+  `;
+  addMsg("bot", "", html, false);
+}
+
+function subjectCards() {
+  const html = `
+    <div class="nara-badge">Mövzu seçimi</div>
+    <div class="nara-card-grid">
+      ${SUBJECTS.map(s => `
+        <div class="nara-card" onclick="window.naraSelectSubject('${s.id}')">
+          <div class="nara-card-title">${s.icon} ${s.title}</div>
+          <div class="nara-card-desc">${s.desc}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+  addMsg("bot", "", html, false);
+}
+
+function priorityCards() {
+  const html = `
+    <div class="nara-badge">Prioritet seçimi</div>
+    <div class="nara-card-grid">
+      ${PRIORITIES.map(p => `
+        <div class="nara-card" onclick="window.naraSelectPriority('${p.value}')">
+          <div class="nara-card-title">${p.icon} ${p.value}</div>
+          <div class="nara-card-desc">Müraciətin vaciblik dərəcəsini seçin</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+  addMsg("bot", "", html, false);
+}
+
+function reviewBox() {
+  const d = getForm().data;
+
+  const imgPreview = `
+    <div class="nara-upload-preview-wrap">
+      ${d.image_1 ? `<img class="nara-upload-preview" src="${d.image_1}" alt="Şəkil 1">` : ""}
+      ${d.image_2 ? `<img class="nara-upload-preview" src="${d.image_2}" alt="Şəkil 2">` : ""}
+    </div>
+  `;
+
+  const html = `
+    <div class="nara-badge">Yekun yoxlama</div>
+    <div class="nara-review">
+      <b>Ad, soyad:</b> ${esc(d.full_name || "-")}<br>
+      <b>FİN kod:</b> ${esc(d.fin_code || "-")}<br>
+      <b>ŞV nömrəsi:</b> ${esc(d.id_card || "-")}<br>
+      <b>Telefon:</b> ${esc(d.phone || "-")}<br>
+      <b>E-poçt:</b> ${esc(d.email || "-")}<br>
+      <b>Növ:</b> ${esc(d.app_type || "-")}<br>
+      <b>Mövzu:</b> ${esc(d.subject || "-")}<br>
+      <b>Ünvan:</b> ${esc(d.address || "-")}<br>
+      <b>Prioritet:</b> ${esc(d.priority || "-")}<br>
+      <b>Müraciət mətni:</b> ${esc(d.message || "-")}<br>
+      <b>Razılıq:</b> ${esc(d.consent || "-")}
+      ${d.image_1 || d.image_2 ? imgPreview : `<div class="nara-soft-note">Şəkil əlavə edilməyib.</div>`}
+    </div>
+  `;
+  addMsg("bot", "", html, false);
+}
+
+function bottomControls() {
+  const html = `
+    <div class="nara-mini-btns">
+      <button class="nara-mini-btn" onclick="window.naraGoBack()">⬅️ Geri</button>
+      <button class="nara-mini-btn" onclick="window.naraResetForm()">🗑️ Formu sıfırla</button>
+      <button class="nara-mini-btn" onclick="window.naraContinueSaved()">💾 Qaldığım yerdən davam</button>
+    </div>
+  `;
+  addMsg("bot", "", html, false);
+}
+
+function reviewControls() {
+  const html = `
+    <div class="nara-mini-btns">
+      <button class="nara-mini-btn" onclick="window.naraSendApplication()">✅ Göndər</button>
+      <button class="nara-mini-btn" onclick="window.naraGoBack()">⬅️ Geri</button>
+      <button class="nara-mini-btn" onclick="window.naraResetForm()">🗑️ Sıfırla</button>
+    </div>
+  `;
+  addMsg("bot", "", html, false);
+}
+
+function imageControls() {
+  const html = `
+    <div class="nara-mini-btns">
+      <button class="nara-mini-btn" onclick="window.naraOpenImagePicker()">🖼️ Şəkil əlavə et</button>
+      <button class="nara-mini-btn" onclick="window.naraSkipImages()">⏭️ Şəkilsiz davam et</button>
+      <button class="nara-mini-btn" onclick="window.naraGoBack()">⬅️ Geri</button>
+    </div>
+    <div class="nara-soft-note">
+      Maksimum 2 şəkil əlavə edə bilərsiniz. Şəkillər sıxılmış formada göndərilir.
+    </div>
+  `;
+  addMsg("bot", "", html, false);
+}
+
+function setProgressHeader() {
+  const header = document.querySelector("#nara-chat > div");
+  if (!header) return;
+
+  if (document.getElementById("nara-progress-wrap")) return;
+
+  const leftBlock = header.querySelector("div");
+  if (!leftBlock) return;
+
+  const wrap = document.createElement("div");
+  wrap.id = "nara-progress-wrap";
+  wrap.className = "nara-progress-wrap";
+  wrap.innerHTML = `
+    <div class="nara-progress-text">Elektron müraciət köməkçisi</div>
+    <div class="nara-progress"><span id="nara-progress-bar"></span></div>
+  `;
+  leftBlock.appendChild(wrap);
+}
+
+function updateProgress() {
+  setProgressHeader();
+  const bar = document.getElementById("nara-progress-bar");
+  if (!bar) return;
+  const step = getForm().step;
+  bar.style.width = getProgressPercent(step) + "%";
+}
+
+function restoreChatHistory() {
+  const area = getMsgsBox();
+  if (!area) return;
+  const hist = getChatHistory();
+  if (!hist.length) return;
+
+  area.innerHTML = "";
+  hist.forEach(item => addMsg(item.role, item.text, item.html, false));
+}
+
+// =========================
+// KONTAKT
+// =========================
+function contactAnswer() {
+  return `Əlaqə məlumatları:
+• Telefon: +994 20 208 25 60
+• WhatsApp: +994 70 972 02 09
+• E-mail: berde.smsii.09@gmail.com
+• Ünvan: Bərdə şəhəri, S. Zöhrabbəyov küçəsi 10
+• İş rejimi: Bazar ertəsi – Cümə, 09:00 – 18:00`;
+}
+
+// =========================
+// VALIDATION
+// =========================
+function validPhone(v) {
+  const t = v.replace(/\s+/g, "");
+  return /^(\+994|0)?(10|20|50|51|55|60|70|77|99)[0-9]{7}$/.test(t);
+}
+
+function validEmail(v) {
+  if (!v) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+function validFin(v) {
+  if (!v) return true;
+  return /^[A-Za-z0-9]{7}$/.test(v.trim());
+}
+
+function validIDCard(v) {
+  if (!v) return true;
+  return /^[A-Za-z0-9\-]{5,20}$/.test(v.trim());
+}
+
+function getSubjectTitle(id) {
+  const s = SUBJECTS.find(x => x.id === id);
+  return s ? s.title : id;
+}
+
+// =========================
+// ŞƏKİL YÜKLƏMƏ
+// =========================
+function ensureHiddenImageInput() {
+  let input = document.getElementById("nara-hidden-image-input");
+  if (input) return input;
+
+  input = document.createElement("input");
+  input.type = "file";
+  input.id = "nara-hidden-image-input";
+  input.accept = "image/*";
+  input.multiple = true;
+  input.style.display = "none";
+
+  input.addEventListener("change", async (e) => {
+    const files = Array.from(e.target.files || []).slice(0, 2);
+    if (!files.length) return;
+
+    const converted = [];
+    for (const file of files) {
+      const base64 = await compressImage(file, 1100, 0.78);
+      converted.push(base64);
+    }
+
+    const d = getForm().data;
+    updateForm({
+      data: {
+        image_1: converted[0] || "",
+        image_2: converted[1] || "",
+        image_note: converted.length ? `Əlavə edilmiş şəkil sayı: ${converted.length}` : "Şəkil əlavə edilməyib."
+      }
+    });
+
+    addMsg("user", files.map(f => `Şəkil əlavə edildi: ${f.name}`).join(", "));
+
+    const previews = `
+      <div class="nara-badge">Əlavə edilən şəkillər</div>
+      <div class="nara-upload-preview-wrap">
+        ${converted[0] ? `<img class="nara-upload-preview" src="${converted[0]}" alt="Şəkil 1">` : ""}
+        ${converted[1] ? `<img class="nara-upload-preview" src="${converted[1]}" alt="Şəkil 2">` : ""}
+      </div>
+    `;
+    await botSay("Şəkillər qəbul edildi.", previews, 350);
+
+    updateForm({ step: "consent" });
+    await botSay("Məlumatların müraciət məqsədilə emalına razısınız?", null, 350);
+    quickActions([
+      { label: "Bəli", value: "bəli" },
+      { label: "Xeyr", value: "xeyr" }
+    ]);
+  });
+
+  document.body.appendChild(input);
+  return input;
+}
+
+function compressImage(file, maxSize = 1100, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width;
+        let h = img.height;
+
+        if (w > h && w > maxSize) {
+          h = Math.round((h * maxSize) / w);
+          w = maxSize;
+        } else if (h >= w && h > maxSize) {
+          w = Math.round((w * maxSize) / h);
+          h = maxSize;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+
+        const data = canvas.toDataURL("image/jpeg", quality);
+        resolve(data);
+      };
+      img.onerror = reject;
+      img.src = fr.result;
+    };
+    fr.onerror = reject;
+    fr.readAsDataURL(file);
+  });
+}
+
+window.naraOpenImagePicker = function() {
+  const input = ensureHiddenImageInput();
+  input.value = "";
+  input.click();
+};
+
+window.naraSkipImages = async function() {
+  addMsg("user", "Şəkilsiz davam et");
+  updateForm({
+    step: "consent",
+    data: {
+      image_1: "",
+      image_2: "",
+      image_note: "Şəkil əlavə edilməyib."
+    }
+  });
+
+  await botSay("Oldu. Şəkilsiz davam edirik. Məlumatların emalına razısınız?", null, 320);
+  quickActions([
+    { label: "Bəli", value: "bəli" },
+    { label: "Xeyr", value: "xeyr" }
+  ]);
+};
+
+// =========================
+// GƏRİ / SIFIRLA
+// =========================
+window.naraGoBack = async function() {
+  const f = getForm();
+  if (f.step === "welcome" || f.step === "complete") {
+    await botSay("Hazırda geri qayıdılacaq addım yoxdur.", null, 250);
+    return;
+  }
+
+  const prev = previousStep(f.step);
+  updateForm({ step: prev });
+
+  addMsg("user", "Geri");
+
+  await botSay("Oldu, bir əvvəlki addıma qayıtdıq.", null, 260);
+  await askStepQuestion(prev);
+};
+
+window.naraResetForm = async function() {
+  resetForm();
+  clearChat();
+  const area = getMsgsBox();
+  if (area) area.innerHTML = "";
+
+  await botSay("Bütün məlumatlar sıfırlandı. Yenidən başlayaq. 🌿", null, 350);
+  await greetFlow();
+};
+
+window.naraContinueSaved = async function() {
+  const f = getForm();
+  addMsg("user", "Qaldığım yerdən davam");
+  await askStepQuestion(f.step);
+};
+
+// =========================
+// YEKUN GÖNDƏRMƏ
+// =========================
+function generateOrderId() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const rand = Math.floor(Math.random() * 9000 + 1000);
+  return `BSMSII-${y}${m}${day}-${rand}`;
+}
+
+async function sendEmail() {
+  try {
+    if (!EMAILJS_READY) await loadEmailJS();
+    if (!window.emailjs) throw new Error("EmailJS tapılmadı");
+
+    const d = getForm().data;
+    const orderId = generateOrderId();
+    const submitTime = new Date().toLocaleString("az-AZ");
+    const operatorName = currentOperator().ad;
+
+    await window.emailjs.send(
+      NARA_EMAIL.SERVICE_ID,
+      NARA_EMAIL.TEMPLATE_ID,
+      {
+        order_id: orderId,
+        full_name: d.full_name || "-",
+        fin_code: d.fin_code || "-",
+        id_card: d.id_card || "-",
+        phone: d.phone || "-",
+        email: d.email || "-",
+        app_type: d.app_type || "Elektron müraciət",
+        subject: d.subject || "-",
+        address: d.address || "-",
+        priority: d.priority || "-",
+        consent: d.consent || "-",
+        operator_name: operatorName,
+        submit_time: submitTime,
+        message: d.message || "-",
+        image_1: d.image_1 || "https://dummyimage.com/1x1/ffffff/ffffff.png&text=.",
+        image_2: d.image_2 || "https://dummyimage.com/1x1/ffffff/ffffff.png&text=.",
+        image_note: d.image_note || "Şəkil əlavə edilməyib."
+      }
+    );
+
+    updateForm({
+      step: "complete",
+      data: {
+        operator_name: operatorName,
+        submit_time: submitTime
+      }
+    });
+
+    return { ok: true, orderId };
+  } catch (e) {
+    console.error("EmailJS xətası:", e);
+    return { ok: false, error: e };
+  }
+}
+
+window.naraSendApplication = async function() {
+  const f = getForm();
+  if (f.step !== "review") {
+    await botSay("Əvvəlcə bütün addımları tamamlamalıyıq.", null, 250);
+    return;
+  }
+
+  if (f.data.consent !== "Bəli") {
+    await botSay("Razılıq olmadan müraciəti göndərmək mümkün deyil.", null, 250);
+    return;
+  }
+
+  addMsg("user", "Göndər");
+  await botSay("Müraciətiniz hazırlanır və göndərilir...", null, 500);
+
+  const res = await sendEmail();
+  if (res.ok) {
+    playNaraSound("success");
+    await botSay(
+      `✅ Müraciətiniz uğurla göndərildi.
+Müraciət ID: ${res.orderId}
+
+Müraciət aidiyyəti üzrə yönləndirildi.`,
+      null,
+      600
+    );
+
+    await botSay("İstəsəniz yeni müraciət yarada bilərəm və ya əlaqə məlumatlarını göstərə bilərəm.", null, 340);
+    quickActions([
+      { label: "Yeni müraciət", value: "yeni müraciət" },
+      { label: "Əlaqə məlumatları", value: "əlaqə" },
+      { label: "Sağ ol", value: "sağ ol" }
+    ]);
+  } else {
+    await botSay("Göndərmə zamanı problem yarandı. Zəhmət olmasa bir daha cəhd edin.", null, 420);
+    reviewControls();
+  }
+};
+
+// =========================
+// STEP SUALLARI
+// =========================
+async function askStepQuestion(step) {
+  updateProgress();
+
+  if (step === "welcome") {
+    await greetFlow();
+    return;
+  }
+
+  if (step === "full_name") {
+    await botSay("Zəhmət olmasa ad və soyadınızı yazın.", null, 280);
+    bottomControls();
+    return;
+  }
+
+  if (step === "fin_code") {
+    await botSay("FİN kodunuzu yazın. İstəmirsinizsə `keç` seçə bilərsiniz.", null, 280);
+    quickActions([{ label: "Keç", value: "keç" }]);
+    bottomControls();
+    return;
+  }
+
+  if (step === "id_card") {
+    await botSay("Şəxsiyyət vəsiqəsinin seriya/nömrəsini yazın. İstəmirsinizsə `keç` seçin.", null, 280);
+    quickActions([{ label: "Keç", value: "keç" }]);
+    bottomControls();
+    return;
+  }
+
+  if (step === "phone") {
+    await botSay("Əlaqə nömrənizi yazın. Məsələn: 0501234567", null, 280);
+    bottomControls();
+    return;
+  }
+
+  if (step === "email") {
+    await botSay("E-poçt ünvanınızı yazın. İstəmirsinizsə `keç` seçin.", null, 280);
+    quickActions([{ label: "Keç", value: "keç" }]);
+    bottomControls();
+    return;
+  }
+
+  if (step === "subject") {
+    await botSay("Müraciətin mövzusunu seçin:", null, 280);
+    subjectCards();
+    bottomControls();
+    return;
+  }
+
+  if (step === "address") {
+    await botSay("Zəhmət olmasa ünvanı yazın. Kənd, küçə və ya obyekt adı qeyd edə bilərsiniz.", null, 280);
+    bottomControls();
+    return;
+  }
+
+  if (step === "priority") {
+    await botSay("Müraciətin prioritetini seçin.", null, 280);
+    priorityCards();
+    bottomControls();
+    return;
+  }
+
+  if (step === "message") {
+    await botSay("Müraciətin məzmununu yazın. Nə baş verdiyini mümkün qədər aydın qeyd edin.", null, 280);
+    bottomControls();
+    return;
+  }
+
+  if (step === "images") {
+    await botSay("İstəsəniz şəkil də əlavə edə bilərsiniz.", null, 280);
+    imageControls();
+    return;
+  }
+
+  if (step === "consent") {
+    await botSay("Məlumatların müraciət məqsədilə emalına razısınız?", null, 280);
+    quickActions([
+      { label: "Bəli", value: "bəli" },
+      { label: "Xeyr", value: "xeyr" }
+    ]);
+    bottomControls();
+    return;
+  }
+
+  if (step === "review") {
+    await botSay("Məlumatları yoxlayın:", null, 280);
+    reviewBox();
+    reviewControls();
+    return;
+  }
+
+  if (step === "complete") {
+    await botSay("Müraciət artıq göndərilib. İstəsəniz yeni müraciət yarada bilərik.", null, 280);
+    quickActions([
+      { label: "Yeni müraciət", value: "yeni müraciət" },
+      { label: "Əlaqə məlumatları", value: "əlaqə" }
+    ]);
+  }
+}
+
+// =========================
+// FLOW BAŞLAT
+// =========================
+async function greetFlow() {
+  updateForm({ mode: "idle", step: "welcome" });
+
+  await botSay(
+    `Salam 👋 Mən ${currentOperator().ad}.
+Sizə elektron müraciətinizi rahat şəkildə burada yaratmağa kömək edə bilərəm.
+
+İstəsəniz addım-addım birlikdə dolduraq.`,
+    null,
+    500
+  );
+
+  quickActions([
+    { label: "Müraciət yarat", value: "müraciət yarat" },
+    { label: "Əlaqə məlumatları", value: "əlaqə" }
+  ]);
+}
+
+async function startFormFlow() {
+  updateForm({ mode: "form", step: "full_name" });
+  await botSay("Əla. Başlayaq. Mən addım-addım sizə kömək edəcəyəm. 🌿", null, 350);
+  await askStepQuestion("full_name");
+}
+
+// =========================
+// İNSANİ CAVABLAR
+// =========================
+async function answerThanks() {
+  await botSay("Siz sağ olun. Mən buradayam, nə vaxt istəsəniz davam edə bilərik. 😊", null, 260);
+}
+
+async function answerGoodbye() {
+  await botSay("Sizə kömək etmək xoş oldu. Hələlik və xoş günlər arzulayıram. 🌷", null, 260);
+}
+
+async function answerContact() {
+  await botSay(contactAnswer(), null, 260);
+}
+
+// =========================
+// QUICK ACTIONS
+// =========================
+window.naraQuick = async function(value) {
+  addMsg("user", value);
+  await processMessage(value);
+};
+
+window.naraSelectSubject = async function(id) {
+  const title = getSubjectTitle(id);
+  addMsg("user", title);
+
+  updateForm({
+    step: "address",
+    data: {
+      subject: title,
+      subject_id: id
+    }
+  });
+
+  await botSay(`Seçildi: ${title}`, null, 260);
+  await askStepQuestion("address");
+};
+
+window.naraSelectPriority = async function(value) {
+  addMsg("user", value);
+
+  updateForm({
+    step: "message",
+    data: { priority: value }
+  });
+
+  await botSay(`Prioritet qeyd edildi: ${value}`, null, 260);
+  await askStepQuestion("message");
+};
+
+// =========================
+// MESAJ EMALI
+// =========================
+async function processFormInput(text) {
+  const q = norm(text);
+  const f = getForm();
+  const step = f.step;
+
+  if (q === "keç") {
+    if (step === "fin_code") {
+      updateForm({ step: "id_card", data: { fin_code: "" } });
+      await askStepQuestion("id_card");
+      return;
+    }
+    if (step === "id_card") {
+      updateForm({ step: "phone", data: { id_card: "" } });
+      await askStepQuestion("phone");
+      return;
+    }
+    if (step === "email") {
+      updateForm({ step: "subject", data: { email: "" } });
+      await askStepQuestion("subject");
+      return;
+    }
+  }
+
+  if (step === "full_name") {
+    if (text.trim().length < 5) {
+      await botSay("Ad və soyadı bir az daha tam yazın, zəhmət olmasa.", null, 260);
+      return;
+    }
+    updateForm({ step: "fin_code", data: { full_name: text.trim() } });
+    await botSay("Təşəkkür edirəm.", null, 220);
+    await askStepQuestion("fin_code");
+    return;
+  }
+
+  if (step === "fin_code") {
+    if (text.trim() && !validFin(text.trim().toUpperCase())) {
+      await botSay("FİN kod 7 simvollu olmalıdır. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 260);
+      return;
+    }
+    updateForm({ step: "id_card", data: { fin_code: text.trim().toUpperCase() } });
+    await askStepQuestion("id_card");
+    return;
+  }
+
+  if (step === "id_card") {
+    if (text.trim() && !validIDCard(text.trim())) {
+      await botSay("ŞV nömrəsi düzgün görünmür. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 260);
+      return;
+    }
+    updateForm({ step: "phone", data: { id_card: text.trim() } });
+    await askStepQuestion("phone");
+    return;
+  }
+
+  if (step === "phone") {
+    if (!validPhone(text.trim())) {
+      await botSay("Telefon nömrəsi düzgün görünmür. Məsələn: 0501234567 və ya +994501234567", null, 260);
+      return;
+    }
+    updateForm({ step: "email", data: { phone: text.trim() } });
+    await askStepQuestion("email");
+    return;
+  }
+
+  if (step === "email") {
+    if (text.trim() && !validEmail(text.trim())) {
+      await botSay("E-poçt ünvanı düzgün görünmür. İstəmirsinizsə `keç` yaza bilərsiniz.", null, 260);
+      return;
+    }
+    updateForm({ step: "subject", data: { email: text.trim() } });
+    await askStepQuestion("subject");
+    return;
+  }
+
+  if (step === "subject") {
+    await botSay("Mövzunu aşağıdakı kartlardan seçin.", null, 240);
+    subjectCards();
+    return;
+  }
+
+  if (step === "address") {
+    if (text.trim().length < 3) {
+      await botSay("Ünvanı bir az daha dəqiq qeyd edin, zəhmət olmasa.", null, 260);
+      return;
+    }
+    updateForm({ step: "priority", data: { address: text.trim() } });
+    await askStepQuestion("priority");
+    return;
+  }
+
+  if (step === "priority") {
+    await botSay("Prioriteti kartlardan seçin.", null, 240);
+    priorityCards();
+    return;
+  }
+
+  if (step === "message") {
+    if (text.trim().length < 10) {
+      await botSay("Müraciət mətni bir az daha ətraflı olsa, daha düzgün yönləndirilər.", null, 260);
+      return;
+    }
+    updateForm({ step: "images", data: { message: text.trim() } });
+    await askStepQuestion("images");
+    return;
+  }
+
+  if (step === "images") {
+    await botSay("Şəkil əlavə etmək üçün düymədən istifadə edin və ya `şəkilsiz davam et` yazın.", null, 240);
+    imageControls();
+    return;
+  }
+
+  if (step === "consent") {
+    if (["bəli", "beli"].includes(q)) {
+      updateForm({ step: "review", data: { consent: "Bəli" } });
+      await askStepQuestion("review");
+      return;
+    }
+    if (q === "xeyr") {
+      updateForm({ step: "review", data: { consent: "Xeyr" } });
+      await botSay("Qeyd edildi. Amma razılıq olmadan göndərmək mümkün olmayacaq.", null, 260);
+      await askStepQuestion("review");
+      return;
+    }
+
+    await botSay("Zəhmət olmasa `Bəli` və ya `Xeyr` seçin.", null, 240);
+    quickActions([
+      { label: "Bəli", value: "bəli" },
+      { label: "Xeyr", value: "xeyr" }
+    ]);
+    return;
+  }
+
+  if (step === "review") {
+    await botSay("Yekun üçün aşağıdakı düymələrdən istifadə edin.", null, 220);
+    reviewControls();
+    return;
+  }
+}
+
+async function processMessage(text) {
+  const q = norm(text);
+  const f = getForm();
+
+  if (anyIncludes(q, INTENTS.goodbye)) {
+    await answerGoodbye();
+    return;
+  }
+
+  if (anyIncludes(q, INTENTS.thanks)) {
+    await answerThanks();
+    return;
+  }
+
+  if (anyIncludes(q, INTENTS.contact)) {
+    await answerContact();
+    return;
+  }
+
+  if (q === "yeni müraciət") {
+    resetForm();
+    await startFormFlow();
+    return;
+  }
+
+  if (q === "şəkilsiz davam et") {
+    await window.naraSkipImages();
+    return;
+  }
+
+  if (q === "qaldığım yerdən davam") {
+    await askStepQuestion(getForm().step);
+    return;
+  }
+
+  if (anyIncludes(q, INTENTS.greeting)) {
+    if (f.mode === "form" && f.step !== "complete" && f.step !== "welcome") {
+      await botSay("Salam 😊 Qaldığınız addımları yadda saxlamışam. İstəsəniz davam edək.", null, 260);
+      quickActions([
+        { label: "Davam et", value: "qaldığım yerdən davam" },
+        { label: "Sıfırdan başla", value: "yeni müraciət" }
+      ]);
+      return;
+    }
+    await greetFlow();
+    return;
+  }
+
+  if (anyIncludes(q, INTENTS.formStart)) {
+    await startFormFlow();
+    return;
+  }
+
+  if (f.mode === "form" && f.step !== "complete" && f.step !== "welcome") {
+    await processFormInput(text);
+    return;
+  }
+
+  await botSay(
+    "Sizə kömək edə bilərəm. Elektron müraciət yaratmaq üçün `müraciət yarat` yazın və ya əlaqə məlumatları üçün `əlaqə` yazın.",
+    null,
+    280
+  );
+  quickActions([
+    { label: "Müraciət yarat", value: "müraciət yarat" },
+    { label: "Əlaqə məlumatları", value: "əlaqə" }
+  ]);
+}
+
+// =========================
+// SEND
+// =========================
+async function sendToNara() {
+  const input = getInput();
+  if (!input) return;
+
+  const val = input.value.trim();
+  if (!val) return;
+
+  addMsg("user", val);
+  input.value = "";
+
+  await processMessage(val);
+}
+window.sendToNara = sendToNara;
+
+// =========================
+// START
+// =========================
+async function initNara() {
+  injectStyles();
+  operatorSec();
+  updateProgress();
+  ensureHiddenImageInput();
+
+  try {
+    await loadEmailJS();
+  } catch (e) {
+    console.warn("EmailJS yüklənmədi:", e);
+  }
+
+  restoreChatHistory();
+
+  const sendBtn = document.querySelector("#nara-chat button");
+  if (sendBtn) sendBtn.style.boxShadow = "0 0 0 0 rgba(0,74,153,.4)";
+
+  if (!getChatHistory().length) {
+    await greetFlow();
+  } else {
+    const f = getForm();
+    if (f.mode === "form" && f.step !== "complete" && f.step !== "welcome") {
+      await botSay("Əvvəlki müraciət addımlarınız yadda saxlanılıb.", null, 240, false);
+      quickActions([
+        { label: "Davam et", value: "qaldığım yerdən davam" },
+        { label: "Yeni müraciət", value: "yeni müraciət" }
+      ]);
+    }
+  }
+}
+
+window.naraResetAll = async function() {
+  resetForm();
+  clearChat();
+  const area = getMsgsBox();
+  if (area) area.innerHTML = "";
+  await initNara();
+};
+
+window.addEventListener("load", async () => {
+  await initNara();
+
+  const input = getInput();
+  if (input) {
+    input.addEventListener("focus", operatorYazir);
+    input.addEventListener("keypress", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        await sendToNara();
+      }
     });
   }
 });
