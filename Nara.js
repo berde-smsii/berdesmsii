@@ -55,7 +55,7 @@
 
   const INTENTS = {
     greeting: ["salam", "slm", "salamlar", "sabahınız xeyir", "sabahiniz xeyir", "gününüz xeyir", "hello", "hi", "hey", "sa", "s.a"],
-    thanks: ["sağ ol", "sag ol", "çox sağ ol", "cox sag ol", "təşəkkür", "tesekkur", "var olun"],
+    thanks: ["sağ ol", "sag ol", "çox sağol", "cox sag ol", "təşəkkür", "tesekkur", "var olun", "sağolun", "sagol"],
     goodbye: ["hələlik", "helelik", "görüşərik", "goruserik", "xudahafiz", "salamat qal", "bye", "bay"],
     contact: ["əlaqə", "elaqe", "telefon", "nomre", "nömrə", "whatsapp", "email", "ünvan", "unvan", "iş saatı", "is saati"],
     startForm: ["müraciət", "muraciet", "elektron müraciət", "şikayət", "sikayet", "problem", "yeni müraciət", "müraciət yarat"]
@@ -555,8 +555,8 @@
       s1.style.objectFit = "cover";
       s1.style.objectPosition = "center";
       s1.style.borderRadius = "50%";
-      s1.style.width = "40px";
-      s1.style.height = "40px";
+      s1.style.width = "50px";
+      s1.style.height = "50px";
       s1.style.display = "block";
     }
 
