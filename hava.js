@@ -1,12 +1,19 @@
 /* =========================================================
    HAVA.JS
-   Dəyişən hissələr:
+
+   GƏLƏCƏKDƏ SAYTI BAŞQA RAYONA SATANDA DƏYİŞƏCƏK HİSSƏLƏR:
+
    1) Rayon adı:
       const HAVA_RAYON_ADI = "Bərdə";
 
-   2) Koordinatlar:
+   2) Rayon koordinatları:
       const HAVA_LAT = 40.3758;
       const HAVA_LON = 47.1261;
+
+   3) Gün sayı:
+      const HAVA_GUN_SAYI = 10;
+
+   Qalan hissələr adətən dəyişmədən qalır.
 ========================================================= */
 
 const HAVA_RAYON_ADI = "Bərdə";
@@ -15,7 +22,7 @@ const HAVA_LON = 47.1261;
 const HAVA_GUN_SAYI = 10;
 const HAVA_AUTO_SLIDE_MS = 3500;
 
-(function havaStilləriniElaveEt() {
+(function havaStilleriniElaveEt() {
     if (document.getElementById("hava-js-stil")) return;
 
     const style = document.createElement("style");
@@ -73,43 +80,41 @@ const HAVA_AUTO_SLIDE_MS = 3500;
             background: #f7fbff;
             border: 1px solid #d8e8f7;
             border-radius: 8px;
-            padding: 5px 4px;
-            text-align: center;
+            padding: 6px 8px;
             box-sizing: border-box;
             flex: 0 0 calc((100% - 54px) / 10);
-            min-width: 72px;
-            min-height: 38px;
+            min-width: 88px;
+            min-height: 34px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
+        }
+
+        .hava-forecast-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            white-space: nowrap;
+            line-height: 1;
         }
 
         .hava-forecast-date {
             font-size: 11px;
             font-weight: 700;
             color: #1a4d7c;
-            margin-bottom: 2px;
-            line-height: 1.1;
         }
 
         .hava-forecast-icon {
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1;
-            margin-bottom: 2px;
-        }
-
-        .hava-forecast-desc {
-            font-size: 10px;
-            color: #4a6882;
-            margin-bottom: 2px;
-            line-height: 1.1;
         }
 
         .hava-forecast-temp {
             font-size: 11px;
             font-weight: 700;
             color: #163c63;
-            line-height: 1.1;
         }
 
         @media (max-width: 768px) {
@@ -128,31 +133,31 @@ const HAVA_AUTO_SLIDE_MS = 3500;
             }
 
             .hava-forecast-card {
-                flex: 0 0 42%;
-                min-width: 42%;
+                flex: 0 0 48%;
+                min-width: 48%;
                 scroll-snap-align: start;
-                padding: 7px 6px;
-                min-height: 52px;
+                min-height: 38px;
+                padding: 7px 8px;
             }
 
             .hava-forecast-slider {
                 scroll-snap-type: x mandatory;
             }
 
+            .hava-forecast-row {
+                gap: 8px;
+            }
+
             .hava-forecast-date {
-                font-size: 11px;
+                font-size: 12px;
             }
 
             .hava-forecast-icon {
-                font-size: 17px;
-            }
-
-            .hava-forecast-desc {
-                font-size: 10px;
+                font-size: 15px;
             }
 
             .hava-forecast-temp {
-                font-size: 11px;
+                font-size: 12px;
             }
         }
     `;
@@ -244,10 +249,11 @@ async function proqnozuGetir() {
             const card = document.createElement("div");
             card.className = "hava-forecast-card";
             card.innerHTML = `
-                <div class="hava-forecast-date">${havaQisaTarix(dates[i])}</div>
-                <div class="hava-forecast-icon">${hava.icon}</div>
-                <div class="hava-forecast-desc">${hava.text}</div>
-                <div class="hava-forecast-temp">${Math.round(maxTemps[i])}°/${Math.round(minTemps[i])}°</div>
+                <div class="hava-forecast-row">
+                    <span class="hava-forecast-date">${havaQisaTarix(dates[i])}</span>
+                    <span class="hava-forecast-icon">${hava.icon}</span>
+                    <span class="hava-forecast-temp">${Math.round(maxTemps[i])}°/${Math.round(minTemps[i])}°</span>
+                </div>
             `;
             track.appendChild(card);
         }
