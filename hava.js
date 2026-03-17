@@ -1,41 +1,20 @@
 /* =========================================================
    HAVA.JS
-   Məqsəd:
-   - Bərdə üçün cari hava
-   - 10 günlük hava proqnozu
-   - PC-də eninə tam görünüş
-   - Telefonda sürüşən görünüş
-   - Avtomatik sürüşmə + barmaqla sürüşdürmə
-
-   GƏLƏCƏKDƏ SAYTI SATANDA NƏLƏR DƏYİŞƏCƏK?
-   1) Rayon adı dəyişəcək:
+   Dəyişən hissələr:
+   1) Rayon adı:
       const HAVA_RAYON_ADI = "Bərdə";
 
-   2) Koordinatlar dəyişəcək:
+   2) Koordinatlar:
       const HAVA_LAT = 40.3758;
       const HAVA_LON = 47.1261;
-
-   3) Başlıq mətni istəsən dəyişəcək:
-      məsələn "Daşkəsən üzrə 10 günlük hava proqnozu"
-
-   Qalan hissələrə çox vaxt dəyməyə ehtiyac olmur.
 ========================================================= */
 
-
-/* =========================
-   AYARLAR
-========================= */
 const HAVA_RAYON_ADI = "Bərdə";
 const HAVA_LAT = 40.3758;
 const HAVA_LON = 47.1261;
 const HAVA_GUN_SAYI = 10;
 const HAVA_AUTO_SLIDE_MS = 3500;
 
-
-/* =========================
-   CSS-i JS içindən əlavə edirik
-   Beləliklə ayrıca CSS faylı lazım olmur
-========================= */
 (function havaStilləriniElaveEt() {
     if (document.getElementById("hava-js-stil")) return;
 
@@ -43,23 +22,23 @@ const HAVA_AUTO_SLIDE_MS = 3500;
     style.id = "hava-js-stil";
     style.textContent = `
         .hava-forecast-section {
-            margin-top: 16px;
+            margin-top: 6px;
             width: 100%;
             background: #ffffff;
             border: 1px solid #d9e8f5;
-            border-radius: 16px;
-            padding: 14px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             box-sizing: border-box;
         }
 
         .hava-forecast-title {
-            margin: 0 0 14px 0;
-            font-size: 18px;
+            margin: 0 0 6px 0;
+            font-size: 13px;
             font-weight: 700;
             color: #114a7a;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.2;
         }
 
         .hava-forecast-slider {
@@ -84,93 +63,102 @@ const HAVA_AUTO_SLIDE_MS = 3500;
 
         .hava-forecast-track {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             width: max-content;
             min-width: 100%;
             box-sizing: border-box;
         }
 
         .hava-forecast-card {
-            background: linear-gradient(180deg, #f8fbff 0%, #eef6fd 100%);
+            background: #f7fbff;
             border: 1px solid #d8e8f7;
-            border-radius: 14px;
-            padding: 14px 10px;
+            border-radius: 8px;
+            padding: 5px 4px;
             text-align: center;
             box-sizing: border-box;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            flex: 0 0 calc((100% - 90px) / 10);
-            min-width: 108px;
-        }
-
-        .hava-forecast-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            flex: 0 0 calc((100% - 54px) / 10);
+            min-width: 72px;
+            min-height: 38px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .hava-forecast-date {
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 700;
             color: #1a4d7c;
-            margin-bottom: 8px;
+            margin-bottom: 2px;
+            line-height: 1.1;
         }
 
         .hava-forecast-icon {
-            font-size: 30px;
+            font-size: 15px;
             line-height: 1;
-            margin-bottom: 8px;
+            margin-bottom: 2px;
         }
 
         .hava-forecast-desc {
-            font-size: 13px;
+            font-size: 10px;
             color: #4a6882;
-            margin-bottom: 8px;
-            min-height: 18px;
+            margin-bottom: 2px;
+            line-height: 1.1;
         }
 
         .hava-forecast-temp {
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 700;
             color: #163c63;
+            line-height: 1.1;
         }
 
         @media (max-width: 768px) {
             .hava-forecast-section {
-                padding: 12px;
-                border-radius: 14px;
+                padding: 6px;
+                border-radius: 10px;
             }
 
             .hava-forecast-title {
-                font-size: 16px;
-                margin-bottom: 12px;
+                font-size: 12px;
+                margin-bottom: 6px;
             }
 
             .hava-forecast-track {
-                gap: 10px;
+                gap: 8px;
             }
 
             .hava-forecast-card {
-                flex: 0 0 78%;
-                min-width: 78%;
+                flex: 0 0 42%;
+                min-width: 42%;
                 scroll-snap-align: start;
-                padding: 16px 12px;
+                padding: 7px 6px;
+                min-height: 52px;
             }
 
             .hava-forecast-slider {
                 scroll-snap-type: x mandatory;
             }
 
+            .hava-forecast-date {
+                font-size: 11px;
+            }
+
             .hava-forecast-icon {
-                font-size: 34px;
+                font-size: 17px;
+            }
+
+            .hava-forecast-desc {
+                font-size: 10px;
+            }
+
+            .hava-forecast-temp {
+                font-size: 11px;
             }
         }
     `;
     document.head.appendChild(style);
 })();
 
-
-/* =========================
-   Yardımçı funksiyalar
-========================= */
 function havaQisaTarix(dateStr) {
     const date = new Date(dateStr);
     const aylar = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
@@ -181,38 +169,17 @@ function havaMelumatiniTap(code, isDay = 1) {
     if (code === 0) {
         return {
             icon: isDay ? "☀️" : "🌙",
-            text: isDay ? "Günəşli" : "Aydın gecə"
+            text: isDay ? "Günəşli" : "Gecə"
         };
     }
-
-    if (code >= 1 && code <= 3) {
-        return { icon: "⛅", text: "Buludlu" };
-    }
-
-    if (code >= 45 && code <= 48) {
-        return { icon: "🌫️", text: "Duman" };
-    }
-
-    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
-        return { icon: "🌧️", text: "Yağış" };
-    }
-
-    if (code >= 71 && code <= 77) {
-        return { icon: "❄️", text: "Qar" };
-    }
-
-    if (code >= 95) {
-        return { icon: "⛈️", text: "Fırtına" };
-    }
-
-    return { icon: "🌤️", text: "Dəyişkən" };
+    if (code >= 1 && code <= 3) return { icon: "⛅", text: "Bulud" };
+    if (code >= 45 && code <= 48) return { icon: "🌫️", text: "Duman" };
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return { icon: "🌧️", text: "Yağış" };
+    if (code >= 71 && code <= 77) return { icon: "❄️", text: "Qar" };
+    if (code >= 95) return { icon: "⛈️", text: "Fırtına" };
+    return { icon: "🌤️", text: "Hava" };
 }
 
-
-/* =========================
-   Cari hava
-   HTML-də id="temp" olmalıdır
-========================= */
 async function cariHavaniGetir() {
     const tempElement = document.getElementById("temp");
     if (!tempElement) return;
@@ -229,16 +196,11 @@ async function cariHavaniGetir() {
         const hava = havaMelumatiniTap(code, isDay);
         tempElement.innerText = `${hava.text} ${hava.icon} ${temp}°C`;
     } catch (error) {
-        tempElement.innerText = "🌡️ Məlumat yüklənmədi";
+        tempElement.innerText = "🌡️ Məlumat yoxdur";
         console.error("Cari hava xətası:", error);
     }
 }
 
-
-/* =========================
-   Proqnoz üçün HTML qururuq
-   HTML-də id="forecastMount" olan boş yer olmalıdır
-========================= */
 function proqnozKonteyneriniHazirla() {
     const mount = document.getElementById("forecastMount");
     if (!mount) return null;
@@ -258,10 +220,6 @@ function proqnozKonteyneriniHazirla() {
     };
 }
 
-
-/* =========================
-   10 günlük proqnoz
-========================= */
 async function proqnozuGetir() {
     const konteyner = proqnozKonteyneriniHazirla();
     if (!konteyner) return;
@@ -289,25 +247,18 @@ async function proqnozuGetir() {
                 <div class="hava-forecast-date">${havaQisaTarix(dates[i])}</div>
                 <div class="hava-forecast-icon">${hava.icon}</div>
                 <div class="hava-forecast-desc">${hava.text}</div>
-                <div class="hava-forecast-temp">${Math.round(maxTemps[i])}° / ${Math.round(minTemps[i])}°</div>
+                <div class="hava-forecast-temp">${Math.round(maxTemps[i])}°/${Math.round(minTemps[i])}°</div>
             `;
             track.appendChild(card);
         }
 
         proqnozSlideriniAktivEt();
     } catch (error) {
-        track.innerHTML = `<div style="padding:12px; color:#35597a;">Hava proqnozu yüklənmədi.</div>`;
+        track.innerHTML = `<div style="padding:8px; color:#35597a;">Hava proqnozu yüklənmədi.</div>`;
         console.error("10 günlük hava proqnozu xətası:", error);
     }
 }
 
-
-/* =========================
-   Slider:
-   - telefonda auto slide
-   - telefonda swipe
-   - PC-də mouse ilə sürüşdürmə
-========================= */
 function proqnozSlideriniAktivEt() {
     const slider = document.getElementById("forecastSlider");
     const track = document.getElementById("forecastTrack");
@@ -346,7 +297,6 @@ function proqnozSlideriniAktivEt() {
 
     function autoSlideBaslat() {
         autoSlideDayandir();
-
         if (window.innerWidth <= 768) {
             autoSlide = setInterval(() => {
                 scrollToIndex(currentIndex + 1);
@@ -390,7 +340,7 @@ function proqnozSlideriniAktivEt() {
         if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.3;
+        const walk = (x - startX) * 1.2;
         slider.scrollLeft = scrollLeft - walk;
     });
 
@@ -411,10 +361,6 @@ function proqnozSlideriniAktivEt() {
     autoSlideBaslat();
 }
 
-
-/* =========================
-   Hamısını başladırırıq
-========================= */
 document.addEventListener("DOMContentLoaded", function () {
     cariHavaniGetir();
     proqnozuGetir();
