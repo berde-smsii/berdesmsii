@@ -3,12 +3,11 @@
 
    NƏ EDİR:
    - Cari havanı göstərir
-   - 15 günlük proqnozu göstərir
-   - Telefonda sürüşür
-   - 1 saniyədən bir auto-slide edir
-   - Başlıq yoxdur
-   - Kölgə yoxdur
-   - Flat, sadə, rəsmi görünüş
+   - Altında 15 günlük hava proqnozu göstərir
+   - PC-də soldan sağa avtomatik hərəkət edir
+   - Telefonda ölçülər daşmır
+   - Telefonda swipe + auto-slide işləyir
+   - Blur, shadow, artıq kölgə söndürülür
 
    BAŞQA RAYONA SATANDA DƏYİŞƏCƏYİN HİSSƏLƏR:
    1) Rayon adı:
@@ -19,40 +18,83 @@
       const HAVA_LON = 47.1261;
 ========================================================= */
 
+
+/* =========================
+   ƏSAS AYARLAR
+========================= */
 const HAVA_RAYON_ADI = "Bərdə";
 const HAVA_LAT = 40.3758;
 const HAVA_LON = 47.1261;
 const HAVA_GUN_SAYI = 15;
-const HAVA_AUTO_SLIDE_MS = 1000;
+const TELEFON_AUTO_MS = 1000;
+const PC_PIXEL_STEP = 1;
+const PC_INTERVAL_MS = 20;
 
+
+/* =========================
+   ƏGƏR LAZIMDIRSA MENYU FUNKSİYASI
+   Əgər bunlar səndə başqa JS-də artıq varsa,
+   burada saxlamağa ehtiyac yoxdur.
+========================= */
+function openNav() {
+    const el = document.getElementById("sideNav");
+    if (el) el.style.width = "280px";
+}
+
+function closeNav() {
+    const el = document.getElementById("sideNav");
+    if (el) el.style.width = "0";
+}
+
+
+/* =========================
+   STILLƏR
+   Burada həm blur, həm shadow söndürülür
+========================= */
 (function havaStilləriniElaveEt() {
     if (document.getElementById("hava-js-stil")) return;
 
     const style = document.createElement("style");
     style.id = "hava-js-stil";
     style.textContent = `
+        #temp,
         #forecastMount,
-        #forecastMount * {
+        #forecastMount *,
+        .hava-forecast-section,
+        .hava-forecast-slider,
+        .hava-forecast-track,
+        .hava-forecast-card {
             box-sizing: border-box;
+            box-shadow: none !important;
+            filter: none !important;
+            backdrop-filter: none !important;
+            text-shadow: none !important;
+        }
+
+        #temp {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 0 8px 0;
         }
 
         #forecastMount {
+            display: block;
             width: 100%;
             max-width: 100%;
             overflow: hidden;
-            margin-top: 6px;
+            margin: 0;
+            padding: 0;
         }
 
         .hava-forecast-section {
             width: 100%;
             max-width: 100%;
-            background: transparent;
-            border: none;
-            border-radius: 0;
-            padding: 0;
+            background: #ffffff !important;
+            border: 1px solid #d9e8f5;
+            border-radius: 8px;
+            padding: 4px;
             margin: 0;
-            box-shadow: none;
-            filter: none;
             overflow: hidden;
         }
 
@@ -61,139 +103,173 @@ const HAVA_AUTO_SLIDE_MS = 1000;
             max-width: 100%;
             overflow-x: auto;
             overflow-y: hidden;
-            scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            scroll-behavior: smooth;
             user-select: none;
             touch-action: pan-x;
-            background: transparent;
-            box-shadow: none;
-            filter: none;
+            background: transparent !important;
         }
 
         .hava-forecast-slider::-webkit-scrollbar {
             display: none;
+            width: 0;
+            height: 0;
         }
 
         .hava-forecast-track {
             display: flex;
-            gap: 4px;
-            width: 100%;
+            align-items: center;
+            gap: 6px;
+            width: max-content;
             min-width: 100%;
-            background: transparent;
+            padding: 0;
+            margin: 0;
+            background: transparent !important;
         }
 
         .hava-forecast-card {
-            flex: 1 1 0;
-            min-width: 0;
-            height: 28px;
-            background: #ffffff;
-            border: 1px solid #d8e8f7;
-            border-radius: 6px;
-            padding: 2px 4px;
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 32px;
+            min-width: 92px;
+            padding: 4px 8px;
+            border: 1px solid #d7e6f3;
+            border-radius: 7px;
+            background: #ffffff !important;
             overflow: hidden;
-            box-shadow: none;
-            filter: none;
+            flex: 0 0 auto;
         }
 
         .hava-forecast-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            width: 100%;
-            min-width: 0;
+            gap: 6px;
             white-space: nowrap;
             line-height: 1;
         }
 
         .hava-forecast-date {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
-            color: #1a4d7c;
-            flex: 0 0 auto;
+            color: #1b4f7a;
         }
 
         .hava-forecast-icon {
-            font-size: 12px;
+            font-size: 13px;
             line-height: 1;
-            flex: 0 0 auto;
         }
 
         .hava-forecast-temp {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
             color: #163c63;
-            flex: 0 0 auto;
         }
 
-        @media (max-width: 768px) {
+        /* PC üçün pro görünüş */
+        @media (min-width: 769px) {
+            .hava-forecast-section {
+                padding: 5px;
+            }
+
             .hava-forecast-track {
-                width: max-content;
-                min-width: 100%;
-                gap: 6px;
+                gap: 7px;
+            }
+
+            .hava-forecast-card {
+                min-width: 98px;
+                height: 34px;
+                padding: 4px 10px;
+            }
+
+            .hava-forecast-date,
+            .hava-forecast-temp {
+                font-size: 11px;
+            }
+
+            .hava-forecast-icon {
+                font-size: 14px;
+            }
+        }
+
+        /* Tablet və telefon */
+        @media (max-width: 768px) {
+            #forecastMount {
+                overflow: hidden;
+            }
+
+            .hava-forecast-section {
+                padding: 4px;
+                border-radius: 8px;
             }
 
             .hava-forecast-slider {
                 scroll-snap-type: x mandatory;
             }
 
+            .hava-forecast-track {
+                gap: 6px;
+                min-width: max-content;
+                width: max-content;
+            }
+
             .hava-forecast-card {
-                flex: 0 0 140px;
-                min-width: 140px;
-                max-width: 140px;
-                height: 32px;
-                padding: 3px 6px;
+                width: 132px;
+                min-width: 132px;
+                max-width: 132px;
+                height: 34px;
+                padding: 4px 8px;
                 scroll-snap-align: start;
             }
 
-            .hava-forecast-date {
+            .hava-forecast-row {
+                gap: 6px;
+            }
+
+            .hava-forecast-date,
+            .hava-forecast-temp {
                 font-size: 11px;
             }
 
             .hava-forecast-icon {
                 font-size: 13px;
             }
-
-            .hava-forecast-temp {
-                font-size: 11px;
-            }
         }
 
+        /* Kiçik telefonlar */
         @media (max-width: 480px) {
             .hava-forecast-card {
-                flex: 0 0 128px;
-                min-width: 128px;
-                max-width: 128px;
-                height: 32px;
+                width: 122px;
+                min-width: 122px;
+                max-width: 122px;
+                height: 33px;
+                padding: 4px 7px;
             }
 
             .hava-forecast-row {
                 gap: 5px;
             }
 
-            .hava-forecast-date {
-                font-size: 11px;
+            .hava-forecast-date,
+            .hava-forecast-temp {
+                font-size: 10px;
             }
 
             .hava-forecast-icon {
-                font-size: 13px;
-            }
-
-            .hava-forecast-temp {
-                font-size: 11px;
+                font-size: 12px;
             }
         }
 
+        /* Çox balaca ekranlar */
         @media (max-width: 360px) {
             .hava-forecast-card {
-                flex: 0 0 120px;
-                min-width: 120px;
-                max-width: 120px;
-                height: 31px;
+                width: 114px;
+                min-width: 114px;
+                max-width: 114px;
+                height: 32px;
+                padding: 3px 6px;
             }
 
             .hava-forecast-date,
@@ -209,29 +285,36 @@ const HAVA_AUTO_SLIDE_MS = 1000;
     document.head.appendChild(style);
 })();
 
+
+/* =========================
+   TARİX
+========================= */
 function havaQisaTarix(dateStr) {
     const date = new Date(dateStr);
     const aylar = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
     return `${date.getDate()} ${aylar[date.getMonth()]}`;
 }
 
+
+/* =========================
+   HAVA KODU -> İKON
+========================= */
 function havaMelumatiniTap(code, isDay = 1) {
     if (code === 0) {
-        return {
-            icon: isDay ? "☀️" : "🌙",
-            text: isDay ? "Günəşli" : "Gecə"
-        };
+        return { icon: isDay ? "☀️" : "🌙", text: isDay ? "Günəşli" : "Gecə" };
     }
-
     if (code >= 1 && code <= 3) return { icon: "⛅", text: "Buludlu" };
     if (code >= 45 && code <= 48) return { icon: "🌫️", text: "Duman" };
     if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return { icon: "🌧️", text: "Yağış" };
     if (code >= 71 && code <= 77) return { icon: "❄️", text: "Qar" };
     if (code >= 95) return { icon: "⛈️", text: "Fırtına" };
-
     return { icon: "🌤️", text: "Hava" };
 }
 
+
+/* =========================
+   CARİ HAVA
+========================= */
 async function cariHavaniGetir() {
     const tempElement = document.getElementById("temp");
     if (!tempElement) return;
@@ -249,8 +332,8 @@ async function cariHavaniGetir() {
         const temp = Math.round(data.current_weather.temperature);
         const code = data.current_weather.weathercode;
         const isDay = data.current_weather.is_day;
-
         const hava = havaMelumatiniTap(code, isDay);
+
         tempElement.innerText = `${hava.text} ${hava.icon} ${temp}°C`;
     } catch (error) {
         tempElement.innerText = "🌡️ Məlumat yoxdur";
@@ -258,6 +341,10 @@ async function cariHavaniGetir() {
     }
 }
 
+
+/* =========================
+   KONTEYNER QUR
+========================= */
 function proqnozKonteyneriniHazirla() {
     const mount = document.getElementById("forecastMount");
     if (!mount) return null;
@@ -276,6 +363,10 @@ function proqnozKonteyneriniHazirla() {
     };
 }
 
+
+/* =========================
+   15 GÜNLÜK PROQNOZ
+========================= */
 async function proqnozuGetir() {
     const konteyner = proqnozKonteyneriniHazirla();
     if (!konteyner) return;
@@ -288,7 +379,7 @@ async function proqnozuGetir() {
         const data = await res.json();
 
         if (!data || !data.daily || !data.daily.time) {
-            track.innerHTML = `<div style="padding:4px; font-size:12px; color:#35597a;">Hava proqnozu yüklənmədi.</div>`;
+            track.innerHTML = `<div style="padding:6px;font-size:12px;color:#35597a;">Hava proqnozu yüklənmədi.</div>`;
             return;
         }
 
@@ -316,11 +407,17 @@ async function proqnozuGetir() {
 
         proqnozSlideriniAktivEt();
     } catch (error) {
-        track.innerHTML = `<div style="padding:4px; font-size:12px; color:#35597a;">Hava proqnozu yüklənmədi.</div>`;
+        track.innerHTML = `<div style="padding:6px;font-size:12px;color:#35597a;">Hava proqnozu yüklənmədi.</div>`;
         console.error("15 günlük hava proqnozu xətası:", error);
     }
 }
 
+
+/* =========================
+   SLIDER
+   PC: soldan sağa avtomatik hərəkət
+   Telefon: swipe + auto-slide
+========================= */
 function proqnozSlideriniAktivEt() {
     const slider = document.getElementById("forecastSlider");
     const track = document.getElementById("forecastTrack");
@@ -329,16 +426,16 @@ function proqnozSlideriniAktivEt() {
     const cards = track.querySelectorAll(".hava-forecast-card");
     if (!cards.length) return;
 
-    let isDown = false;
+    let mouseDown = false;
     let startX = 0;
     let scrollLeft = 0;
-    let autoSlide = null;
+    let phoneAuto = null;
+    let pcAuto = null;
     let currentIndex = 0;
 
     function kartAddimi() {
         const firstCard = cards[0];
-        const trackStyles = window.getComputedStyle(track);
-        const gap = parseInt(trackStyles.gap) || 0;
+        const gap = parseInt(window.getComputedStyle(track).gap) || 0;
         return firstCard.offsetWidth + gap;
     }
 
@@ -350,77 +447,110 @@ function proqnozSlideriniAktivEt() {
         if (index < 0) index = maxIndex;
 
         currentIndex = index;
-
         slider.scrollTo({
             left: step * currentIndex,
             behavior: "smooth"
         });
     }
 
-    function autoSlideBaslat() {
-        autoSlideDayandir();
-
+    function phoneAutoBaslat() {
+        phoneAutoDayandir();
         if (window.innerWidth <= 768) {
-            autoSlide = setInterval(() => {
+            phoneAuto = setInterval(() => {
                 scrollToIndex(currentIndex + 1);
-            }, HAVA_AUTO_SLIDE_MS);
+            }, TELEFON_AUTO_MS);
         }
     }
 
-    function autoSlideDayandir() {
-        if (autoSlide) {
-            clearInterval(autoSlide);
-            autoSlide = null;
+    function phoneAutoDayandir() {
+        if (phoneAuto) {
+            clearInterval(phoneAuto);
+            phoneAuto = null;
         }
+    }
+
+    function pcAutoBaslat() {
+        pcAutoDayandir();
+        if (window.innerWidth > 768) {
+            pcAuto = setInterval(() => {
+                slider.scrollLeft += PC_PIXEL_STEP;
+
+                const maxScroll = slider.scrollWidth - slider.clientWidth;
+                if (slider.scrollLeft >= maxScroll) {
+                    slider.scrollLeft = 0;
+                }
+            }, PC_INTERVAL_MS);
+        }
+    }
+
+    function pcAutoDayandir() {
+        if (pcAuto) {
+            clearInterval(pcAuto);
+            pcAuto = null;
+        }
+    }
+
+    function herSeYiBaslat() {
+        phoneAutoBaslat();
+        pcAutoBaslat();
+    }
+
+    function herSeYiDayandir() {
+        phoneAutoDayandir();
+        pcAutoDayandir();
     }
 
     slider.addEventListener("scroll", () => {
         const step = kartAddimi();
-        currentIndex = Math.round(slider.scrollLeft / step);
+        if (step > 0) currentIndex = Math.round(slider.scrollLeft / step);
     }, { passive: true });
 
     slider.addEventListener("mousedown", (e) => {
-        isDown = true;
+        mouseDown = true;
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
-        autoSlideDayandir();
+        herSeYiDayandir();
     });
 
     slider.addEventListener("mouseleave", () => {
-        isDown = false;
-        autoSlideBaslat();
+        mouseDown = false;
+        herSeYiBaslat();
     });
 
     slider.addEventListener("mouseup", () => {
-        isDown = false;
-        autoSlideBaslat();
+        mouseDown = false;
+        herSeYiBaslat();
     });
 
     slider.addEventListener("mousemove", (e) => {
-        if (!isDown) return;
+        if (!mouseDown) return;
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.05;
+        const walk = (x - startX) * 1.1;
         slider.scrollLeft = scrollLeft - walk;
     });
 
     slider.addEventListener("touchstart", () => {
-        autoSlideDayandir();
+        herSeYiDayandir();
     }, { passive: true });
 
     slider.addEventListener("touchend", () => {
         const step = kartAddimi();
-        currentIndex = Math.round(slider.scrollLeft / step);
-        autoSlideBaslat();
+        if (step > 0) currentIndex = Math.round(slider.scrollLeft / step);
+        herSeYiBaslat();
     }, { passive: true });
 
     window.addEventListener("resize", () => {
-        autoSlideBaslat();
+        herSeYiBaslat();
     });
 
-    autoSlideBaslat();
+    herSeYiBaslat();
 }
 
+
+/* =========================
+   BAŞLAT
+========================= */
 document.addEventListener("DOMContentLoaded", function () {
     cariHavaniGetir();
     proqnozuGetir();
