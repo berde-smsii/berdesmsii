@@ -76,7 +76,7 @@
             background: rgba(255, 255, 255, 0.2);
             padding: 10px 25px;
             border-radius: 50px;
-            backdrop-filter: blur(8px);   /*BULANIQLIQ EDİR*/
+            backdrop-filter: blur(8px);
             font-size: 1.1rem;
             border: 1px solid rgba(255, 255, 255, 0.4);
             display: flex;
@@ -153,16 +153,10 @@
                 </div>
         
         <h2>Bərdə Su Meliorasiya Sistemlərinin<br>İstismarı İdarəsi haqqında</h2>
-
         <div class="weather-box">
-            <div class="top-row">
-                <span>Bərdə Rayonu:</span>
-                <div id="temp">Yüklənir...</div>
-            </div>
-
-            <div id="forecastMount">Yüklənir...</div>
+            <span>Bərdə Rayonu:</span>
+            <strong id="temp">Yüklənir...</strong>
         </div>
-        
     </section>
 
     <div class="container">
@@ -212,9 +206,51 @@
     <script>
         function openNav() { document.getElementById("sideNav").style.width = "280px"; }
         function closeNav() { document.getElementById("sideNav").style.width = "0"; }
-    </script>  
 
-    <script src="hava.js"></script>
+        async function getBardaWeather() {
+    try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.3758&longitude=47.1261&current_weather=true');
+        const data = await res.json();
+
+        const temp = Math.round(data.current_weather.temperature);
+        const code = data.current_weather.weathercode;
+        const isDay = data.current_weather.is_day;
+
+        let icon = "☀️"; // default
+
+        // AÇIQ HAVA
+        if (code === 0) {
+            icon = isDay ? "Günəşli ☀️" : "Aydın gecə 🌙";
+        }
+        // BULUDLU
+        else if (code >= 1 && code <= 3) {
+            icon = "Buludlu ⛅";
+        }
+        // DUMAN
+        else if (code >= 45 && code <= 48) {
+            icon = "Duman 🌫️";
+        }
+        // YAĞIŞ
+        else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
+            icon = "Yağış 🌧️";
+        }
+        // QAR
+        else if (code >= 71 && code <= 77) {
+            icon = "Qar ❄️";
+        }
+        // FIRTINA
+        else if (code >= 95) {
+            icon = "Fırtına ⛈️";
+        }
+        document.getElementById('temp').innerText = `${icon} ${temp}°C`;
+
+    } catch (error) {
+        document.getElementById('temp').innerText = "🌡️ +18°C";
+    }
+}
+
+getBardaWeather();
+    </script>  
     
 </body>
 </html>
