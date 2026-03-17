@@ -1,26 +1,24 @@
 /* =========================================================
    HAVA.JS
 
-   GƏLƏCƏKDƏ SAYTI BAŞQA RAYONA SATANDA DƏYİŞƏCƏK HİSSƏLƏR:
+   Gələcəkdə başqa rayona uyğunlaşdıranda dəyişəcəyin hissələr:
 
    1) Rayon adı:
       const HAVA_RAYON_ADI = "Bərdə";
 
-   2) Rayon koordinatları:
+   2) Koordinatlar:
       const HAVA_LAT = 40.3758;
       const HAVA_LON = 47.1261;
 
    3) Gün sayı:
       const HAVA_GUN_SAYI = 10;
-
-   Qalan hissələr adətən dəyişmədən qalır.
 ========================================================= */
 
 const HAVA_RAYON_ADI = "Bərdə";
 const HAVA_LAT = 40.3758;
 const HAVA_LON = 47.1261;
 const HAVA_GUN_SAYI = 10;
-const HAVA_AUTO_SLIDE_MS = 3500;
+const HAVA_AUTO_SLIDE_MS = 1000;
 
 (function havaStilleriniElaveEt() {
     if (document.getElementById("hava-js-stil")) return;
@@ -34,18 +32,9 @@ const HAVA_AUTO_SLIDE_MS = 3500;
             background: #ffffff;
             border: 1px solid #d9e8f5;
             border-radius: 10px;
-            padding: 6px;
+            padding: 5px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             box-sizing: border-box;
-        }
-
-        .hava-forecast-title {
-            margin: 0 0 6px 0;
-            font-size: 13px;
-            font-weight: 700;
-            color: #114a7a;
-            text-align: center;
-            line-height: 1.2;
         }
 
         .hava-forecast-slider {
@@ -80,11 +69,11 @@ const HAVA_AUTO_SLIDE_MS = 3500;
             background: #f7fbff;
             border: 1px solid #d8e8f7;
             border-radius: 8px;
-            padding: 6px 8px;
+            padding: 5px 6px;
             box-sizing: border-box;
             flex: 0 0 calc((100% - 54px) / 10);
-            min-width: 88px;
-            min-height: 34px;
+            min-width: 84px;
+            min-height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -94,7 +83,7 @@ const HAVA_AUTO_SLIDE_MS = 3500;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
             width: 100%;
             white-space: nowrap;
             line-height: 1;
@@ -107,7 +96,7 @@ const HAVA_AUTO_SLIDE_MS = 3500;
         }
 
         .hava-forecast-icon {
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1;
         }
 
@@ -119,25 +108,20 @@ const HAVA_AUTO_SLIDE_MS = 3500;
 
         @media (max-width: 768px) {
             .hava-forecast-section {
-                padding: 6px;
-                border-radius: 10px;
-            }
-
-            .hava-forecast-title {
-                font-size: 12px;
-                margin-bottom: 6px;
+                padding: 4px;
+                border-radius: 9px;
             }
 
             .hava-forecast-track {
-                gap: 8px;
+                gap: 7px;
             }
 
             .hava-forecast-card {
-                flex: 0 0 48%;
-                min-width: 48%;
+                flex: 0 0 46%;
+                min-width: 46%;
                 scroll-snap-align: start;
-                min-height: 38px;
-                padding: 7px 8px;
+                min-height: 34px;
+                padding: 6px 7px;
             }
 
             .hava-forecast-slider {
@@ -145,19 +129,19 @@ const HAVA_AUTO_SLIDE_MS = 3500;
             }
 
             .hava-forecast-row {
-                gap: 8px;
+                gap: 6px;
             }
 
             .hava-forecast-date {
-                font-size: 12px;
+                font-size: 11px;
             }
 
             .hava-forecast-icon {
-                font-size: 15px;
+                font-size: 14px;
             }
 
             .hava-forecast-temp {
-                font-size: 12px;
+                font-size: 11px;
             }
         }
     `;
@@ -212,7 +196,6 @@ function proqnozKonteyneriniHazirla() {
 
     mount.innerHTML = `
         <div class="hava-forecast-section">
-            <h3 class="hava-forecast-title">${HAVA_RAYON_ADI} üzrə ${HAVA_GUN_SAYI} günlük hava proqnozu</h3>
             <div class="hava-forecast-slider" id="forecastSlider">
                 <div class="hava-forecast-track" id="forecastTrack"></div>
             </div>
@@ -260,7 +243,7 @@ async function proqnozuGetir() {
 
         proqnozSlideriniAktivEt();
     } catch (error) {
-        track.innerHTML = `<div style="padding:8px; color:#35597a;">Hava proqnozu yüklənmədi.</div>`;
+        track.innerHTML = `<div style="padding:6px; color:#35597a; font-size:12px;">Hava proqnozu yüklənmədi.</div>`;
         console.error("10 günlük hava proqnozu xətası:", error);
     }
 }
@@ -346,7 +329,7 @@ function proqnozSlideriniAktivEt() {
         if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.2;
+        const walk = (x - startX) * 1.15;
         slider.scrollLeft = scrollLeft - walk;
     });
 
